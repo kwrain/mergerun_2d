@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90f025d276d6c314e8137017d2b74620, type: 3}
+  m_Name: SODBEditorSettingAsset
+  m_EditorClassIdentifier: 
+  propertyMap:
+    list:
+    - Key: PropertyString
+      Value: string
+    - Key: PropertyBoolean
+      Value: bool
+    - Key: PropertyInteger
+      Value: int
+    - Key: PropertyFloat
+      Value: float
+    - Key: PropertyDouble
+      Value: dobule
+    - Key: PropertyULong
+      Value: ulong
+    - Key: PropertyUShort
+      Value: ushort
+    - Key: PropertyListString
+      Value: List<string>
+    - Key: PropertyListInteger
+      Value: List<int>
+    - Key: PropertyListBoolean
+      Value: List<boolean>
+    keyCollision: 0
+  sodbFolderSettings:
+  - FullPath: Assets/Resources_LocalAddressables/Data/ScriptObjects/Models
+    PopupCategory: Resources_LocalAddressables

@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: a4eee838f383b2b418a71f1046b7dad0
+timeCreated: 1506579138
+licenseType: Store
+TrueTypeFontImporter:
+  serializedVersion: 3
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 1
+  characterPadding: 0
+  includeFontData: 1
+  fontNames: []
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 112560
+  packageName: 'Yoyo: RichText for Unity'
+  packageVersion: 1.0
+  assetPath: Assets/Yoyo/Examples/Fonts/DroidSansMono.ttf
+  uploadId: 232165

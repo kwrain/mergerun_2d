@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 78f5310d75576af46a87a15edc4d3a22
+timeCreated: 1506570055
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 112560
+  packageName: 'Yoyo: RichText for Unity'
+  packageVersion: 1.0
+  assetPath: Assets/Yoyo/Examples/SampleLink.cs
+  uploadId: 232165

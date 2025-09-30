@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" MemoryProfiler="Unity.MemoryProfiler.Editor" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="border-left-width: 0; border-right-width: 0; border-top-width: 2px; border-bottom-width: 0; border-left-color: rgb(91, 91, 91); border-right-color: rgb(91, 91, 91); border-top-color: rgb(91, 91, 91); border-bottom-color: rgb(91, 91, 91); margin-top: 10px;" />
+    <ui:VisualElement style="flex-direction: row; flex-grow: 0; margin-bottom: 3px; margin-top: 3px;">
+        <ui:Foldout text="Foldout" style="justify-content: flex-end; flex-grow: 1; overflow: visible; flex-basis: auto; flex-direction: column; -unity-font-style: bold; -unity-text-align: upper-left;" />
+        <ui:VisualElement name="PreviewControls" style="flex-direction: row; flex-grow: 0; margin-right: 3px; margin-left: 3px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; overflow: hidden; max-width: none; min-width: 50%; justify-content: flex-start; align-items: stretch; min-height: auto; height: 23px;">
+            <ui:Button text="► Play" display-tooltip-when-elided="true" name="Play" style="margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1;" />
+            <ui:Button text="■ Stop" display-tooltip-when-elided="true" name="Stop" style="margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1;" />
+            <ui:Button text="-" display-tooltip-when-elided="true" name="Delete" style="margin-left: 0; margin-right: 0; padding-left: 6px; padding-right: 6px; flex-shrink: 1; flex-grow: 0;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:GroupBox name="Sequences" style="margin-right: 0; margin-left: 0; padding-left: 24px; margin-bottom: 0; background-color: rgb(70, 70, 70); padding-right: 9px; margin-top: 0; padding-top: 1px; padding-bottom: 1px;" />
+</ui:UXML>

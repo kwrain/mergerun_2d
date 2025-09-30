@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" MemoryProfiler="Unity.MemoryProfiler.Editor" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Plugins/Demigiant/DOTweenPro/Editor/DragAndDrop.uss?fileID=7433441132597879392&amp;guid=c0df467267338427d9865831b83bac83&amp;type=3#DragAndDrop" />
+    <ui:VisualElement name="Info" style="flex-direction: row; margin-top: 3px; margin-bottom: 3px;">
+        <ui:VisualElement name="Logo" style="width: 93px; height: 18px; background-image: url(&apos;project://database/Assets/Plugins/Demigiant/DOTween/Editor/Imgs/DOTweenIcon.png?fileID=2800000&amp;guid=8da095e39e9b4df488dfd436f81116d6&amp;type=3#DOTweenIcon&apos;);" />
+        <ui:Label text="Madeby.FAIRSTUDIOS" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+        <ui:VisualElement style="flex-direction: row-reverse; flex-grow: 1; margin-left: 3px; margin-right: 3px;">
+            <ui:Button text="Find All Sequences" display-tooltip-when-elided="true" name="FindAllSequences" style="flex-grow: 0; flex-shrink: 1; align-items: stretch; flex-direction: column; padding-left: 9px; padding-right: 9px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="Sequences" style="margin-left: 3px; margin-right: 3px;" />
+    <ui:VisualElement name="DragArea" class="drop-area" style="margin-left: 3px; margin-right: 3px; border-left-color: rgba(48, 48, 48, 255); border-right-color: rgba(48, 48, 48, 255); border-top-color: rgba(48, 48, 48, 255); border-bottom-color: rgba(48, 48, 48, 255); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+        <ui:Label text="Drag a DOTweenSequence or GameObject here..." display-tooltip-when-elided="true" class="drop-area__label" />
+    </ui:VisualElement>
+    <ui:VisualElement class="background" style="display: none;">
+        <ui:VisualElement class="header" style="display: none;">
+            <ui:Label text="Drag And Drop Sample" display-tooltip-when-elided="true" class="header__label" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="AnimationData" style="flex-direction: column; flex-grow: 0; margin-left: 0; margin-right: 0; flex-shrink: 1; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); margin-top: 2px; margin-bottom: 10px;">
+        <uie:ObjectField label="Animation" binding-path="animation" type="DG.Tweening.DOTweenSequenceAnimation, Assembly-CSharp-firstpass" name="DOTweenAnimation" style="margin-left: 0; margin-right: 0;">
+            <ui:Button text="Open" display-tooltip-when-elided="true" name="OpenPropertyEditorButton" />
+        </uie:ObjectField>
+        <ui:VisualElement name="Information" style="border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-top-left-radius: 3px; border-bottom-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; display: flex;">
+            <ui:Label text="Informations" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+            <ui:Label text="AnimationType :" display-tooltip-when-elided="true" name="AnimationType" />
+            <ui:Label text="Duration :" display-tooltip-when-elided="true" name="Duration" />
+            <ui:Label text="Delay :" display-tooltip-when-elided="true" name="Delay" />
+            <ui:Label text="Loops :" display-tooltip-when-elided="true" name="Loops" />
+            <ui:Label text="Comment :" display-tooltip-when-elided="true" name="Comment" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Options" style="display: flex;">
+            <uie:EnumField label="AddType" binding-path="addType" name="AddType" include-obsolete-values="false" type="DG.Tweening.DOTweenSequence+DOTweenAnimationData+AddType, Assembly-CSharp-firstpass" style="flex-shrink: 1; flex-grow: 0; margin-left: 0; margin-right: 0;" />
+            <UIElements.CustomControls.MinMaxFloatField use-max-value="false" label="Stay" binding-path="stay" name="Stay" style="margin-left: 0; margin-right: 0;" />
+            <uie:PropertyField binding-path="appendCallback" label="OnAppend" name="OnAppend" style="margin-left: 14px;" />
+            <UIElements.CustomControls.MinMaxFloatField label="InsertTime" name="InsertTime" binding-path="insertTime" use-max-value="false" style="margin-left: 0; margin-right: 0;" />
+            <uie:PropertyField binding-path="insertCallback" label="OnInsert" name="OnInsert" style="margin-left: 12px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement style="border-top-width: 2px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);" />
+</ui:UXML>

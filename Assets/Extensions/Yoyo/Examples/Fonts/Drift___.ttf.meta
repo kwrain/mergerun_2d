@@ -1,0 +1,27 @@
+fileFormatVersion: 2
+guid: 041176e40e565b04a8057806b95cb4bc
+timeCreated: 1508118221
+licenseType: Store
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Drift Wood
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 112560
+  packageName: 'Yoyo: RichText for Unity'
+  packageVersion: 1.0
+  assetPath: Assets/Yoyo/Examples/Fonts/Drift___.ttf
+  uploadId: 232165

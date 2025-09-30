@@ -1,0 +1,54 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="Info" style="flex-direction: row; margin-top: 3px; margin-bottom: 3px;">
+        <ui:VisualElement name="Logo" style="width: 93px; height: 18px; background-image: url(&apos;project://database/Assets/Plugins/Demigiant/DOTween/Editor/Imgs/DOTweenIcon.png?fileID=2800000&amp;guid=8da095e39e9b4df488dfd436f81116d6&amp;type=3#DOTweenIcon&apos;);">
+            <ui:Button display-tooltip-when-elided="true" name="GoToUxmlButton" style="visibility: visible; display: flex; background-color: rgba(88, 88, 88, 0); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; overflow: hidden;" />
+        </ui:VisualElement>
+        <ui:Label text="Madeby.FAIRSTUDIOS" display-tooltip-when-elided="true" style="-unity-text-align: lower-left;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="PreviewControls" style="flex-direction: row; flex-grow: 0; margin-right: 3px; margin-left: 3px; padding-left: 0; padding-right: 0; padding-top: 1px; padding-bottom: 1px;">
+        <ui:Button text="► Play" display-tooltip-when-elided="true" name="Play" style="margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1;" />
+        <ui:Button text="■ Stop" display-tooltip-when-elided="true" name="Stop" style="margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Options" style="margin-left: 3px; margin-right: 3px; flex-direction: row;">
+        <ui:Button text="AutoGenerate" display-tooltip-when-elided="true" name="AutoGenerate" style="margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1; background-image: none; -unity-background-scale-mode: scale-and-crop;" />
+        <ui:Button text="AutoPlay" display-tooltip-when-elided="true" name="AutoPlay" style="margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1;" />
+        <ui:Button text="AutoKill" display-tooltip-when-elided="true" name="AutoKill" style="margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1;" />
+    </ui:VisualElement>
+    <ui:ListView focusable="true" binding-path="tweenAnimationDatas" show-border="false" reorderable="true" virtualization-method="DynamicHeight" name="Animations" fixed-item-height="30" show-foldout-header="true" header-title="Animations" show-add-remove-footer="true" reorder-mode="Animated" horizontal-scrolling="false" style="flex-grow: 0; flex-direction: column; max-height: 500px;" />
+    <ui:VisualElement name="RefreshAnimations" style="flex-direction: row-reverse; margin-top: 2px; margin-bottom: 2px;">
+        <ui:Button display-tooltip-when-elided="true" name="RefreshButton" style="max-width: 30px; max-height: 30px; min-width: 30px; min-height: 30px; background-image: url(&apos;project://database/Packages/com.unity.collab-proxy/Editor/PlasticSCM/Assets/Images/d_refresh@2x.png?fileID=2800000&amp;guid=602b72d4617c3694aa94419fc1b68e04&amp;type=3#d_refresh@2x&apos;); flex-grow: 1;" />
+        <ui:Label text="Refresh Animations" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; font-size: 15px;" />
+    </ui:VisualElement>
+    <uie:FloatField label="Duration" value="0" readonly="true" name="Duration" binding-path="duration" style="opacity: 0.5;" />
+    <UIElements.CustomControls.MinMaxFloatField label="Delay" binding-path="delay" UseMaxValue="false" name="Delay" />
+    <UIElements.CustomControls.MinMaxFloatField label="Stay" binding-path="stay" UseMaxValue="false" name="Stay" use-max-value="false" />
+    <ui:VisualElement name="Loop">
+        <UIElements.CustomControls.MinMaxIntegerField label="Loops" name="Loops" MinValue="-1" UseMaxValue="false" min-value="-1" use-max-value="false" binding-path="loops" />
+        <uie:EnumField label="LoopType" value="Center" binding-path="loopType" name="LoopType" style="padding-left: 0; height: 20px; margin-left: 3px; align-items: stretch; padding-right: 0; border-left-width: 0; -unity-slice-left: 0; white-space: normal; word-spacing: 0; -unity-paragraph-spacing: 0; border-top-left-radius: 0; border-right-width: 0; flex-direction: row; justify-content: flex-start;" />
+    </ui:VisualElement>
+    <ui:TextField picking-mode="Ignore" label="ID" value="filler text" text="filler text" binding-path="id" />
+    <ui:VisualElement name="EventsContainer">
+        <ui:Label text="Events" display-tooltip-when-elided="true" style="-unity-font-style: bold; font-size: 11px; -unity-text-align: upper-left; margin-left: 3px; padding-left: 0; margin-right: 3px;" />
+        <ui:VisualElement name="Line" style="border-top-width: 5px; border-left-color: rgb(91, 91, 91); border-right-color: rgb(91, 91, 91); border-top-color: rgb(91, 91, 91); border-bottom-color: rgb(91, 91, 91); margin-left: 3px; margin-right: 3px; margin-bottom: -3px;" />
+        <ui:VisualElement name="Buttons_0" style="align-items: auto; width: auto; flex-direction: row; justify-content: flex-start; flex-wrap: nowrap; margin-left: 3px; margin-right: 3px; color: rgb(210, 210, 210);">
+            <ui:Button text="OnStart" display-tooltip-when-elided="true" focusable="true" name="OnStart" style="display: flex; visibility: visible; overflow: hidden; flex-direction: column; transition-property: all; align-items: stretch; flex-grow: 1; flex-shrink: 1; padding-left: 0; padding-right: 0; margin-right: 0; margin-left: 0; color: rgb(128, 128, 128);" />
+            <ui:Button text="OnPlay" display-tooltip-when-elided="true" focusable="true" enable-rich-text="false" name="OnPlay" style="display: flex; visibility: visible; overflow: hidden; flex-direction: column; transition-property: all; align-items: stretch; min-width: auto; min-height: auto; flex-shrink: 1; flex-grow: 1; margin-left: 0; margin-right: 0; padding-right: 0; padding-left: 0;" />
+            <ui:Button text="OnUpdate" display-tooltip-when-elided="true" focusable="true" name="OnUpdate" style="display: flex; visibility: visible; overflow: hidden; flex-direction: column; transition-property: all; align-items: stretch; min-width: auto; min-height: auto; flex-grow: 1; flex-shrink: 1; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Buttons_1" style="align-items: stretch; width: auto; flex-direction: row; justify-content: space-between; flex-wrap: nowrap; margin-top: -3px; margin-left: 3px; margin-right: 3px;">
+            <ui:Button text="OnStep" display-tooltip-when-elided="true" focusable="true" name="OnStep" style="display: flex; visibility: visible; overflow: hidden; flex-direction: column; transition-property: all; align-items: stretch; justify-content: flex-start; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1;" />
+            <ui:Button text="OnComplete" display-tooltip-when-elided="true" focusable="true" name="OnComplete" style="display: flex; visibility: visible; overflow: hidden; flex-direction: column; transition-property: all; align-items: stretch; min-width: auto; min-height: auto; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; flex-shrink: 1; flex-grow: 1;" />
+            <ui:Button text="OnRewind" display-tooltip-when-elided="true" focusable="true" name="OnRewind" style="display: flex; visibility: visible; overflow: hidden; flex-direction: column; transition-property: all; align-items: auto; min-width: auto; min-height: auto; justify-content: flex-start; margin-right: 0; margin-left: 0; padding-right: 0; padding-left: 0; flex-shrink: 1; flex-grow: 1;" />
+            <ui:Button text="OnAppend" display-tooltip-when-elided="true" focusable="true" name="OnAppend" style="display: flex; visibility: visible; overflow: hidden; flex-direction: column; transition-property: all; align-items: stretch; min-width: auto; min-height: auto; padding-left: 0; padding-right: 0; margin-right: 0; margin-left: 0; flex-shrink: 1; flex-grow: 1; height: auto;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Events" style="margin-left: 3px; margin-right: 3px; background-color: rgb(88, 88, 88); height: auto;">
+            <uie:PropertyField binding-path="onStart" label="OnStart" name="OnStart" />
+            <uie:PropertyField binding-path="onPlay" label="OnPlay" name="OnPlay" />
+            <uie:PropertyField binding-path="onUpdate" label="OnUpdate" name="OnUpdate" />
+            <uie:PropertyField binding-path="onStepComplete" label="OnStep" name="OnStep" />
+            <uie:PropertyField binding-path="onComplete" label="OnComplete" name="OnComplete" />
+            <uie:PropertyField binding-path="onRewind" label="OnRewind" name="OnRewind" />
+            <uie:PropertyField binding-path="onAppendCallback" label="OnAppend" name="OnAppend" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

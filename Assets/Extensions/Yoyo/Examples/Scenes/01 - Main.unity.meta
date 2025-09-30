@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a5cc22158235a36469f988b4633a6a5c
+timeCreated: 1506577723
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 112560
+  packageName: 'Yoyo: RichText for Unity'
+  packageVersion: 1.0
+  assetPath: Assets/Yoyo/Examples/Scenes/01 - Main.unity
+  uploadId: 232165
