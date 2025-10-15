@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,63 +16,15 @@ using UnityEngine.SceneManagement;
 /// - 기능은 통합하되, 클래스를 partial 로 분리
 /// </code>
 /// </summary>
-public partial class GameManager : Singleton<GameManager>, ITouchEvent
+public partial class GameManager : Singleton<GameManager>
 {
-  private const int TOUCH_PRIORITY = 1000;
-
-  /// <summary>
-  /// 풀링 시 제거 대상 처리를 위한 큐
-  /// </summary>
-  private Queue<GameObject> destructionQueue = new();
-
   /// <summary>
   /// 업데이트 구분이 필요한 모델들을 등록해서 사용.
   /// 주로, 애니메이션이 필요하나 건물이나 엔피씨처럼 관리되지 않는 경우에 해당됨.
   /// </summary>
   private List<BaseObject> onUpdateModels = new();
 
-  private Vector2 standardPos;
-  private BaseObject selectedObject;
-
-  private GameCamera gameCamera;
-
-  /// <summary>
-  /// ApplicationPause
-  /// </summary>
-  private DateTime pauseStartTime;
-
-  private bool IsApplicationPause { get; set; }
-
-  public float CpuScore { get; private set; } = 1.0f;
-  public float GpuScore { get; private set; } = 1.0f;
-  public float RamScore { get; private set; } = 1.0f;
-
-  public float SuspendTime { get; private set; }
-
-  public LayerMask AllLayer { get; private set; }
-  public LayerMask BuildingLayer { get; private set; }
-  public LayerMask NpcLayer { get; private set; }
-
-  public GameCamera GameCamera
-  {
-    get
-    {
-      if (gameCamera == null || gameCamera.gameObject.IsDestroyed())
-      {
-        gameCamera = Camera.main.gameObject.GetComponentInParent<GameCamera>();
-      }
-
-      return gameCamera;
-    }
-  }
-  public BaseObject SelectedObject
-  {
-    get => selectedObject;
-    set
-    {
-      selectedObject = value;
-    }
-  }
+  public MergeablePlayer Player { get; set; }
 
   protected override void Awake()
   {
@@ -82,52 +33,9 @@ public partial class GameManager : Singleton<GameManager>, ITouchEvent
     // init layer mask
     AllLayer = LayerMask.GetMask("Default", "Default_2", "Building", "Npc");
     BuildingLayer = LayerMask.GetMask("Building");
-    NpcLayer = LayerMask.GetMask("Npc");  
+    NpcLayer = LayerMask.GetMask("Npc");
 
     AutoSetting();
-
-    void AutoSetting()
-    {
-      (
-        int processorFrequency,
-        int processorCount,
-        int graphicsMemorySize,
-        int graphicsShaderLevel,
-        int maxTextureSize,
-        int systemMemorySize
-        ) referenceSpec = (2150, 4, 3417, 45, 16384, 3417);
-
-      SetNeverSleepMode(); // lds - 25.2.3, 앱 시작 시에는 일단 절전 모드를 비활성화 함.
-
-      //프레임 고정
-      QualitySettings.vSyncCount = 0;
-
-      Input.multiTouchEnabled = true;
-
-      EventSystem.current.pixelDragThreshold = (int)(0.5f * Screen.dpi / 2.54f);
-
-#if UNITY_EDITOR
-      CpuScore *= UnityEngine.Device.SystemInfo.processorFrequency / referenceSpec.processorFrequency;
-      CpuScore *= UnityEngine.Device.SystemInfo.processorCount / referenceSpec.processorCount;
-
-      GpuScore *= UnityEngine.Device.SystemInfo.graphicsMemorySize / referenceSpec.graphicsMemorySize;
-      GpuScore *= UnityEngine.Device.SystemInfo.graphicsShaderLevel / referenceSpec.graphicsShaderLevel;
-      GpuScore *= UnityEngine.Device.SystemInfo.maxTextureSize / referenceSpec.maxTextureSize;
-
-      RamScore *= UnityEngine.Device.SystemInfo.systemMemorySize / referenceSpec.systemMemorySize;
-#else
-      CpuScore *= SystemInfo.processorFrequency / referenceSpec.processorFrequency;
-      CpuScore *= SystemInfo.processorCount / referenceSpec.processorCount;
-
-      GpuScore *= SystemInfo.graphicsMemorySize / referenceSpec.graphicsMemorySize;
-      GpuScore *= SystemInfo.graphicsShaderLevel / referenceSpec.graphicsShaderLevel;
-      GpuScore *= SystemInfo.maxTextureSize / referenceSpec.maxTextureSize;
-
-      RamScore *= SystemInfo.systemMemorySize / referenceSpec.systemMemorySize;
-#endif
-
-      Debug.Log($"Device Score : CPU : {CpuScore} / GPU : {GpuScore} / RAM : {RamScore}");
-    }
   }
 
   protected override void ScenePreloadEvent(Scene currScene)
@@ -248,122 +156,5 @@ public partial class GameManager : Singleton<GameManager>, ITouchEvent
   public void UpdateHUD()
   {
 
-  }
-
-  public void ScheduleForDestruction(GameObject obj)
-  {
-    destructionQueue.Enqueue(obj);
-
-    // 일정 수준 이상 쌓이면 즉시 처리
-    if (destructionQueue.Count > 5)
-    {
-      ProcessDestructionQueue();
-    }
-  }
-
-  /// <summary>
-  /// 호출 시점 체크 필요.
-  /// </summary>
-  public void ProcessDestructionQueue()
-  {
-    while (destructionQueue.Count > 0)
-    {
-      var obj = destructionQueue.Dequeue();
-      if (obj != null)
-      {
-        Destroy(obj);
-      }
-    }
-  }
-
-  #region Touch Event
-
-  public List<BaseObject> GetSortedHitObjects(List<BaseObject> hitObjects, bool onlyLayer = false)
-  {
-    // kw 24.12.17
-    // - 데코레이션 건물은 터치 우선 순위를 최하위로 설정한다.
-    // - BuildingGround 보다는 높아야함.
-
-    hitObjects.Sort(LayerSort);
-    return hitObjects;
-
-    int LayerSort(BaseObject obj1, BaseObject obj2)
-    {
-      GetSortData(obj1, out var sortingLayer1, out var orderInLayer1);
-      GetSortData(obj2, out var sortingLayer2, out var orderInLayer2);
-
-      // 동일 위치 sortingLayer 우선적으로 확인한다.
-      if (sortingLayer1 == sortingLayer2)
-      {
-        return orderInLayer2.CompareTo(orderInLayer1);
-      }
-      else
-      {
-        return sortingLayer2.CompareTo(sortingLayer1);
-      }
-    }
-
-    void GetSortData(BaseObject obj, out int sortingLayer, out int orderInLayer)
-    {
-      sortingLayer = obj.SortingLayerValue;
-      orderInLayer = obj.RenderOrder;
-    }
-
-  }
-
-
-  public void OnTouchBegan(Vector3 pos, bool isFirstTouchedUI)
-  {
-   
-  }
-
-  public void OnTouchStationary(Vector3 pos, float time, bool isFirstTouchedUI)
-  {
-
-  }
-
-  public void OnTouchMoved(Vector3 lastPos, Vector3 newPos, bool isFirstTouchedUI)
-  {
-  }
-
-  public void OnTouchEnded(Vector3 pos, bool isFirstTouchedUI, bool isMoved)
-  {
-   
-  }
-
-  public void OnTouchCanceled(Vector3 pos, bool isFirstTouchedUI, bool isMoved)
-  {
-  }
-
-  public void OnLongTouched(Vector3 pos, bool isFirstTouchedUI)
-  {
-  }
-
-  public void OnClicked(Vector3 pos, bool isFirstTouchedUI)
-  {
-  }
-
-  public void OnPinchUpdated(float offset, float zoomSpeed, bool isFirstTouchedUI)
-  {
-  }
-  public void OnPinchEnded()
-  {
-  }
-
-  public void OnChangeTouchEventState(bool state)
-  {
-
-  }
-
-  #endregion
-
-  public void SetSystemSleepMode()
-  {
-    Screen.sleepTimeout = SleepTimeout.SystemSetting;
-  }
-
-  public void SetNeverSleepMode()
-  {
-    Screen.sleepTimeout = SleepTimeout.NeverSleep;
   }
 }

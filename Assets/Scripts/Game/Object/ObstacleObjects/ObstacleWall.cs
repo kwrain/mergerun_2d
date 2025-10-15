@@ -6,7 +6,7 @@ using UnityEngine;
 public class ObstacleWall : ObstacleBase
 {
   [Tooltip("쿨타임")]
-  [SerializeField] private int limitRelativeGrade = 0;
+  [SerializeField] private uint limitRelativeGrade = 0;
 
-  public int LimitRelativeGrade => limitRelativeGrade;
+  public uint LimitRelativeGrade => limitRelativeGrade;
 }

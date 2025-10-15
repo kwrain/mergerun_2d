@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
-[CreateAssetMenu(fileName = "LevelData", menuName = "Data/Game/LevelData")]
+[CreateAssetMenu(fileName = "LevelDataTable", menuName = "Game/LevelDataTable")]
 public class LevelDataTable : ScriptableObject
 {
   // 마지막 데이터 기준으로 반복처리.
@@ -53,9 +53,9 @@ public class LevelDataTable : ScriptableObject
 
   public SpriteAtlas SpriteAtlas => spriteAtlas;
 
-  public Data GetData(int grade)
+  public Data GetData(uint grade)
   {
-    var index = grade - 1;
+    int index = (int)grade - 1;
     if (index < values.Count)
     {
       return values[index];

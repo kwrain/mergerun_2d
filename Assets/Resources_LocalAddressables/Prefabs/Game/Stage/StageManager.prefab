@@ -79,9 +79,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7320881969354471664}
-  - component: {fileID: 7773101888492613506}
+  - component: {fileID: 5367347239257020983}
   m_Layer: 0
-  m_Name: Stage_01
+  m_Name: StageManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,7 +106,7 @@ Transform:
   - {fileID: 3199905625660298113}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7773101888492613506
+--- !u!114 &5367347239257020983
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,11 +115,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 3646236775737471993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fe931e48ac9c4b668bcafdf8e4e4378, type: 3}
+  m_Script: {fileID: 11500000, guid: 118ea1e07f4e547d4ae30ae16fe02858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  map: {fileID: 335934508283744116}
   startPosition: {fileID: 0}
+  mapParent: {fileID: 0}
+  mergeableParent: {fileID: 0}
+  obstacleParent: {fileID: 0}
+  stageDataTable: {fileID: 11400000, guid: 93e424c98b8d94ee599ab0544dfafa5c, type: 2}
+  stageData:
+    stageId: 0
+    infinity: 0
+    mapData: []
+    obstacleData: []
+    mergeableData: []
 --- !u!1 &4667214210485161608
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,6 +181,8 @@ MonoBehaviour:
   compositeCollider: {fileID: 6359205470999149629}
   overlapThresholdPercentage: 30
   delayBeforeAction: 1.5
+  grounds: []
+  bridges: []
   trackedObjects:
     list:
     - Key: -368752
@@ -348,6 +359,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3622108643639090576, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -441,6 +456,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3622108643639090576, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -522,6 +541,10 @@ PrefabInstance:
     - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3146770703632003999, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_SortingLayer
@@ -773,6 +796,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3622108643639090576, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -870,6 +897,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3622108643639090576, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -966,6 +997,10 @@ PrefabInstance:
     - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3622108643639090576, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
@@ -1201,6 +1236,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3622108643639090576, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -1372,6 +1411,10 @@ PrefabInstance:
     - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1366983769081768950, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3622108643639090576, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
       propertyPath: m_Sprite

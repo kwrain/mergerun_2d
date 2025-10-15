@@ -1,60 +1,39 @@
 
 using System.Collections.Generic;
+using UnityEngine;
 
 public partial class GameManager
 {
   private const int POOLING_MAX_SIZE = 30;
 
-  Queue<MergeableObject> mergeableObjectPool;
+  /// <summary>
+  /// 풀링 시 제거 대상 처리를 위한 큐
+  /// </summary>
+  private Queue<GameObject> destructionQueue = new();
 
-  private MergeableObject CreateMergeableObject(int grade = 0)
+  public void ScheduleForDestruction(GameObject obj)
   {
-    // ResourceManager.Instance.Load
+    destructionQueue.Enqueue(obj);
 
-    return null;
+    // 일정 수준 이상 쌓이면 즉시 처리
+    if (destructionQueue.Count > 5)
+    {
+      ProcessDestructionQueue();
+    }
   }
 
-  public MergeableObject PeekBuildingInPool()
+  /// <summary>
+  /// 호출 시점 체크 필요.
+  /// </summary>
+  public void ProcessDestructionQueue()
   {
-    MergeableObject obj = null;
-    // 풀에서 건물 가져오기
-    if (mergeableObjectPool.Count == 0)
+    while (destructionQueue.Count > 0)
     {
-      // create
-      // 생성 시 생성 위치 지정 필수.
+      var obj = destructionQueue.Dequeue();
+      if (obj != null)
+      {
+        Destroy(obj);
+      }
     }
-    else
-    {
-      obj = mergeableObjectPool.Dequeue();
-    }
-
-    if (obj == null)
-    {
-      // error 
-      return null;
-    }
-
-    obj.SetActive(true);
-
-    return obj;
-  }
-
-  public void PushBuildingInPool(MergeableObject obj)
-  {
-    obj.SetActive(false);
-
-    // nedd check OnUpdate object;
-    RemoveUpdateModel(obj);
-
-    // UI 처리 (안전한 널 체크)
-    // UIManager.Instance?.HideHUD(building);
-
-    if (mergeableObjectPool.Count >= POOLING_MAX_SIZE)
-    {
-      ScheduleForDestruction(obj.gameObject);
-      return;
-    }
-
-    mergeableObjectPool.Enqueue(obj);
   }
 }

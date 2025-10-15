@@ -10,12 +10,11 @@ public class MergeableBase : BaseObject
   [SerializeField] protected TextMeshPro text;
 
   [Header("Settings"), SerializeField] private float bounceForce = 5f;
-
   [Header("Data"), SerializeField] protected LevelDataTable.Data levelData;
 
   private SpriteRenderer spriteRenderer => sprites[0];
 
-  [field: SerializeField] public int Grade { get; protected set; } = 1;
+  [field: SerializeField] public uint Grade { get; protected set; } = 1;
   [field: SerializeField] public bool IsDropCounting { get; private set; }
 
   public bool IsPlayer { get; protected set; } = false;
@@ -73,21 +72,22 @@ public class MergeableBase : BaseObject
     text.text = levelData.PowerOfTwoString;
   }
 
+  public void SetGrade(uint grade = 0)
+  {
+    Grade = grade;
+    UpdateLevelData();
+  }
+
   // 병합 및 레벨업 처리 함수
   protected virtual void Merge(MergeableObject other)
   {
-    // 병합처리 시 확인사항
-    // 1.플레이어와 병합
-    // 2.오브젝트간 병합 - 현재 이동속도가 더 빠른쪽에 메인이되서 머지하도록 함.
-
     // 연출
 
     // 연출 이후 호출
     // 흡수당한 오브젝트는 오브젝트 풀링에 추가
     Grade++;
     UpdateLevelData();
-    other.SetActive(false);
-    // GameManager.Instance.PushBuildingInPool(other);
+    StageManager.Instance.PushMergeableInPool(other);
   }
 
   public void StartDropTimer(float time)

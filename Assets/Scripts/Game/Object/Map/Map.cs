@@ -15,6 +15,11 @@ public class Map : MonoBehaviour
   [Tooltip("벗어난 상태가 이 시간(초) 이상 지속되면 해당 오브젝트의 함수를 호출합니다.")]
   private float delayBeforeAction = 1.5f;
 
+  [Space, Header("[Elements]"), SerializeField]
+  private List<MergeableBase> grounds = new();
+  [SerializeField]
+  private List<MergeableBase> bridges = new();
+
   [Space, Header("[Objects]"), SerializeField]
   private GenericDictionary<int, MergeableBase> trackedObjects = new();
 

@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c024e93bd33434ce6a7bdb2a3c591369, type: 3}
+  m_Name: StageDataTable
+  m_EditorClassIdentifier: 
+  mapElementGround: {fileID: 5543249907709717371, guid: 7514b362f39334d6ea900f78380dcd2f, type: 3}
+  mapElementBridge: {fileID: 7579957141492355722, guid: c16e020ccd45b414a9770a1361907a41, type: 3}
+  obstacleWall: {fileID: 1513020725014085912, guid: 42f2b1dc6b66d4dc0b2b17b13aaa1db5, type: 3}
+  obstacleSpike: {fileID: 3517153253260904725, guid: 5bbedc1f03a6b47e2a0030bdf64eac29, type: 3}
+  mergeableObject: {fileID: 5204195735293174449, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+  stageData:
+    list:
+    - Key: 0
+      Value:
+        stageId: 0
+        infinity: 0
+        mapData:
+        - position: {x: 1.94, y: 6.1, z: 0}
+          scale: {x: 2, y: 10.12, z: 1}
+          size: {x: 1, y: 1}
+          offset: {x: 0, y: 0}
+          type: 1
+        - position: {x: 0, y: -3.97, z: 0}
+          scale: {x: 10, y: 10.12, z: 1}
+          size: {x: 1, y: 1}
+          offset: {x: 0, y: 0}
+          type: 0
+        obstacleData:
+        - position: {x: 0, y: 16.04, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 1, y: 1}
+          offset: {x: 0, y: 0}
+          type: 1
+          cooltime: 0
+          limitRelativeGrade: 0
+        mergeableData:
+        - position: {x: -1.86, y: 13.2, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          grade: 0
+        - position: {x: 3.45, y: 36.03, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          grade: 0
+        - position: {x: -1.83, y: 35.96, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          grade: 0
+        - position: {x: -1.83, y: 31.29, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          grade: 0
+        - position: {x: 2.82, y: 26.87, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          grade: 0
+        - position: {x: 2.82, y: 5.14, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          grade: 0
+        - position: {x: -2.71, y: 5.14, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          grade: 0
+        - position: {x: 1.32, y: 13.07, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          grade: 0
+    keyCollision: 0
+  infinityStagedata:
+    list: []
+    keyCollision: 0
