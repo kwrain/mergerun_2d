@@ -25,7 +25,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
   static public bool IsCreated => instance != null;
 
   static public T Instance
-  {
+  { 
     get
     {
       // Application이 종료되면 null을 리턴한다.
@@ -55,6 +55,14 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
     {
       if (IsCreated == true) return instance;
 
+      instance = FindAnyObjectByType<T>();
+      if (instance != null)
+      {
+        // 씬에서 찾은 경우, 싱글톤의 생명주기를 따라가도록 DontDestroyOnLoad를 적용합니다.
+        DontDestroyOnLoad(instance.gameObject);
+        return instance;
+      }
+
       isApplicationExit = false;
       var className = typeof(T).Name;
       if (instance == null)
@@ -71,6 +79,15 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
     lock (objLock)
     {
       if (IsCreated == true) return instance;
+
+      instance = FindAnyObjectByType<T>();
+      if (instance != null)
+      {
+        // 씬에서 찾은 경우, 싱글톤의 생명주기를 따라가도록 DontDestroyOnLoad를 적용합니다.
+        DontDestroyOnLoad(instance.gameObject);
+        return instance;
+      }
+
       isApplicationExit = false;
       var className = typeof(T).Name;
       var goName = "# " + className;
@@ -117,6 +134,15 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
     lock (objLock)
     {
       if (IsCreated == true) return instance;
+
+      instance = FindAnyObjectByType<T>();
+      if (instance != null)
+      {
+        // 씬에서 찾은 경우, 싱글톤의 생명주기를 따라가도록 DontDestroyOnLoad를 적용합니다.
+        DontDestroyOnLoad(instance.gameObject);
+        return instance;
+      }
+
       isApplicationExit = false;
       var className = typeof(T).Name;
       var goName = "# " + className;
@@ -257,166 +283,3 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
     }
   }
 }
-
-/* old Singleton
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
-using System;
-
-/// <summary>
-/// Unity에서 Singleton으로 존재할 GameObject을 생성 및 관리하는 클래스
-/// Global 하게 동일한 이름은 1개만 존재할 수 있다.
-/// </summary>
-/// <typeparam name="T"></typeparam>
-public abstract class Singleton<T> : MonoBehaviour where T : Component
-{
-  static protected object objLock = new object();
-  static protected Dictionary<Type, object> g_dicInstance;
-  static protected bool isApplicationExit = false;
-
-  static protected string prefabPath = string.Empty;
-
-  static public T Instance
-  {
-    get
-    {
-      // Application이 종료되면 null을 리턴한다.
-      // isAppliactionExit은 OnApplicationQuit에서만 true로 설정되므로,
-      // 종료시점에 SingletoneObject가 destroy 먼저되는 경우엔 Instance값을,
-      // null로 리턴하고 다른쪽에서는 이 값을 체크해서 부작용이 생기지 않도록 한다
-
-      if (isApplicationExit)
-        return null;
-
-      Type classType = typeof(T);
-      if (null != g_dicInstance && g_dicInstance.ContainsKey(classType))
-        return g_dicInstance[classType] as T;
-
-      if (string.IsNullOrEmpty(prefabPath))
-      {
-        return CreateInstance();
-      }
-      else
-      {
-        return CreateInstance(prefabPath);
-      }
-    }
-  }
-
-  static public bool IsApplicationExit { get { return isApplicationExit; } }
-
-  static public bool IsCreated
-  {
-    get
-    {
-      Type classType = typeof(T);
-      if (g_dicInstance == null)
-        return false;
-
-      return g_dicInstance.ContainsKey(classType);
-    }
-  }
-
-  static public T CreateInstance()
-  {
-    lock (objLock)
-    {
-      if (null == g_dicInstance)
-        g_dicInstance = new Dictionary<Type, object>();
-
-      System.Type classType = typeof(T);
-      string className = classType.Name;
-      T _instnace = FindObjectOfType(classType) as T;
-      if (null == _instnace)
-      {
-        GameObject go = new GameObject("# " + className);
-        _instnace = go.AddComponent<T>();
-        DontDestroyOnLoad(_instnace);
-      }
-
-      if (g_dicInstance.ContainsKey(classType))
-        g_dicInstance.Remove(classType);
-      g_dicInstance.Add(classType, _instnace);
-
-      return _instnace;
-    }
-  }
-  static public T CreateInstance(string prefabPath)
-  {
-    lock (objLock)
-    {
-      if (null == g_dicInstance)
-        g_dicInstance = new Dictionary<Type, object>();
-
-      System.Type classType = typeof(T);
-      string className = classType.Name;
-      string goName = "# " + className;
-
-      T _instnace = FindObjectOfType(classType) as T;
-      if (null == _instnace)
-      {
-        GameObject goPrefab = Resources.Load<GameObject>(prefabPath);
-        GameObject go = null;
-        if (null != goPrefab)
-        {
-          go = Instantiate(goPrefab);
-        }
-        else
-        {
-          go = new GameObject(goName);
-        }
-
-        go.name = goName;
-        _instnace = go.GetComponent<T>();
-        if (null == _instnace)
-          _instnace = go.AddComponent<T>();
-        DontDestroyOnLoad(_instnace);
-      }
-
-      if (g_dicInstance.ContainsKey(classType))
-        g_dicInstance.Remove(classType);
-      g_dicInstance.Add(classType, _instnace);
-
-      return _instnace;
-    }
-  }
-
-  public Singleton() { }
-
-
-  /// <summary>
-  /// 씬이 변경되기전에 호출된다.
-  /// </summary>
-  /// <param name="currScene"></param>
-  protected virtual void ScenePreloadEvent(Scene currScene) { }
-  /// <summary>
-  /// 씬이 변경된 후 호출된다.
-  /// </summary>
-  /// <param name="scene"></param>
-  /// <param name="SceneMode"></param>
-  protected virtual void SceneLoadedEvent(Scene scene, LoadSceneMode SceneMode) { }
-
-  public virtual void Awake()
-  {
-    KSceneManager.scenePreload += ScenePreloadEvent;
-    SceneManager.sceneLoaded += SceneLoadedEvent;
-  }
-  public virtual void OnDestroyObject()
-  {
-    KSceneManager.scenePreload -= ScenePreloadEvent;
-    SceneManager.sceneLoaded -= SceneLoadedEvent;
-
-    objLock = null;
-    if (null != g_dicInstance)
-      g_dicInstance.Clear();
-    g_dicInstance = null;
-
-    Destroy(this);
-
-    isApplicationExit = true;
-  }
-
-  public virtual void Initialize() { }
-}
-*/
