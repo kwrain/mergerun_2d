@@ -1310,14 +1310,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 283
-      y: 928
+      x: 0
+      y: 720
       width: 202
       height: 142
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: 282, y: 927}
+    atlasRectOffset: {x: -1, y: 719}
     settingsRaw: 67
-    uvTransform: {x: 100, y: 384, z: 100, w: 999}
+    uvTransform: {x: 100, y: 101, z: 100, w: 791}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.9, y: -0.35}
@@ -1549,14 +1549,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 283
-      y: 928
+      x: 0
+      y: 720
       width: 202
       height: 142
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: 282, y: 927}
+    atlasRectOffset: {x: -1, y: 719}
     settingsRaw: 67
-    uvTransform: {x: 100, y: 384, z: 100, w: 999}
+    uvTransform: {x: 100, y: 101, z: 100, w: 791}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.9, y: -0.35}
@@ -1788,14 +1788,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 283
-      y: 928
+      x: 0
+      y: 720
       width: 202
       height: 142
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: 282, y: 927}
+    atlasRectOffset: {x: -1, y: 719}
     settingsRaw: 67
-    uvTransform: {x: 100, y: 384, z: 100, w: 999}
+    uvTransform: {x: 100, y: 101, z: 100, w: 791}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.9, y: -0.35}
@@ -2027,14 +2027,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 283
-      y: 928
+      x: 0
+      y: 720
       width: 202
       height: 142
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: 282, y: 927}
+    atlasRectOffset: {x: -1, y: 719}
     settingsRaw: 67
-    uvTransform: {x: 100, y: 384, z: 100, w: 999}
+    uvTransform: {x: 100, y: 101, z: 100, w: 791}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.9, y: -0.35}
@@ -2186,7 +2186,7 @@ Sprite:
     downscaleMultiplier: 1
   m_AtlasRD:
     serializedVersion: 3
-    texture: {fileID: 8711939763936270973, guid: 6c57ad51340bf4d7d9e00b0c346e271e, type: 3}
+    texture: {fileID: 2800000, guid: 815ef2e3246264122a031f8854a3789f, type: 3}
     alphaTexture: {fileID: 0}
     secondaryTextures: []
     m_SubMeshes:
@@ -2266,14 +2266,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 0
-      y: 331
+      x: 1
+      y: 2
       width: 260
       height: 319
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: -1, y: 329}
-    settingsRaw: 67
-    uvTransform: {x: 100, y: 130, z: 100, w: 490.5}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 64
+    uvTransform: {x: 100, y: 131, z: 100, w: 161.5}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.76, y: -1.395}
@@ -2642,14 +2642,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 283
-      y: 928
+      x: 0
+      y: 720
       width: 202
       height: 142
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: 282, y: 927}
+    atlasRectOffset: {x: -1, y: 719}
     settingsRaw: 67
-    uvTransform: {x: 100, y: 384, z: 100, w: 999}
+    uvTransform: {x: 100, y: 101, z: 100, w: 791}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.9, y: -0.35}
@@ -2754,6 +2754,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b709d588a9f954f0b9472df75aa3f115, type: 3}
+--- !u!1001 &1386718783
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414817938572617070, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7745098969834073737, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
+      propertyPath: m_Name
+      value: SOManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e8ff0840894ea443da519be9c0e9f1b8, type: 3}
 --- !u!213 &1424945356
 Sprite:
   m_ObjectHideFlags: 0
@@ -2953,14 +3010,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 283
-      y: 928
+      x: 0
+      y: 720
       width: 202
       height: 142
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: 282, y: 927}
+    atlasRectOffset: {x: -1, y: 719}
     settingsRaw: 67
-    uvTransform: {x: 100, y: 384, z: 100, w: 999}
+    uvTransform: {x: 100, y: 101, z: 100, w: 791}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.9, y: -0.35}
@@ -3362,14 +3419,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 283
-      y: 928
+      x: 0
+      y: 720
       width: 202
       height: 142
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: 282, y: 927}
+    atlasRectOffset: {x: -1, y: 719}
     settingsRaw: 67
-    uvTransform: {x: 100, y: 384, z: 100, w: 999}
+    uvTransform: {x: 100, y: 101, z: 100, w: 791}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.9, y: -0.35}
@@ -3601,14 +3658,14 @@ Sprite:
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 283
-      y: 928
+      x: 0
+      y: 720
       width: 202
       height: 142
     textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: 282, y: 927}
+    atlasRectOffset: {x: -1, y: 719}
     settingsRaw: 67
-    uvTransform: {x: 100, y: 384, z: 100, w: 999}
+    uvTransform: {x: 100, y: 101, z: 100, w: 791}
     downscaleMultiplier: 1
   m_PhysicsShape:
   - - {x: 0.9, y: -0.35}
@@ -3766,3 +3823,4 @@ SceneRoots:
   - {fileID: 1286887092}
   - {fileID: 394287232}
   - {fileID: 1175282757}
+  - {fileID: 1386718783}
