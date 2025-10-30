@@ -88,7 +88,6 @@ public class MergeableBase : BaseObject
     spriteRenderer.DOKill();
     spriteRendererShadow.DOKill();
     spriteRenderer.color = spriteRendererShadow.color = text.color = Color.white;
-    spriteRenderer.material.SetFloat("_SineGlowFade", 0);
   }
 
   [ContextMenu("UpdateLevelData")]

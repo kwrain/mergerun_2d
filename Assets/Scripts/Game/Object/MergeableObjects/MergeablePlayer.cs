@@ -131,6 +131,13 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     });
   }
 
+  protected override void Initialize()
+  {
+    base.Initialize();
+
+    spriteRenderer.material.SetFloat("_SineGlowFade", 0);
+  }
+
   public override void SetData(StageDataTable.MergeableData mergeableData)
   {
     base.SetData(mergeableData);
