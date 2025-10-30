@@ -24,16 +24,10 @@ public partial class GameManager : Singleton<GameManager>
   /// </summary>
   private List<BaseObject> onUpdateModels = new();
 
-  public MergeablePlayer Player { get; set; }
 
   protected override void Awake()
   {
     base.Awake();
-
-    // init layer mask
-    AllLayer = LayerMask.GetMask("Default", "Default_2", "Building", "Npc");
-    BuildingLayer = LayerMask.GetMask("Building");
-    NpcLayer = LayerMask.GetMask("Npc");
 
     AutoSetting();
   }

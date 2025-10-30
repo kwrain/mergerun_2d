@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9009949299392495102}
   - component: {fileID: 5229882009039117408}
   - component: {fileID: 6262331201608055906}
-  - component: {fileID: -1231569808424447033}
+  - component: {fileID: 1520310748235901913}
   m_Layer: 10
   m_Name: Bridge
   m_TagString: Untagged
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 44517081
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 9940a7b7fb2c940cdb95ca45b8c7710f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -123,19 +123,19 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 1
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 2.735}
   m_SpriteTilingProperty:
     border: {x: 0.48999998, y: 0.62, z: 0.48999998, w: 0.62}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5, y: 0}
     oldSize: {x: 0.99, y: 1.25}
     newSize: {x: 2.31, y: 5.47}
     adaptiveTilingThreshold: 0.5
     drawMode: 1
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.31, y: 5.47}
   m_EdgeRadius: 0
---- !u!114 &-1231569808424447033
+--- !u!114 &1520310748235901913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,7 +144,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7579957141492355722}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68c22a5cbd55946ab98a4dc3c5527e58, type: 3}
+  m_Script: {fileID: 11500000, guid: 7269003d15d484a36b6640121402cac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ElementType>k__BackingField: 1
+  elementType: 0
+  boxCollider: {fileID: 6262331201608055906}
+  spriteRenderer: {fileID: 5229882009039117408}

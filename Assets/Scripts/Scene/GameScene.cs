@@ -3,17 +3,14 @@ using UnityEngine;
 
 public class GameScene : BaseScene
 {
-  [SerializeField] private YAxisTracker tracker;
   [SerializeField] private CinemachineCamera cinemachine;
 
   [Header("Game"), SerializeField] private MergeablePlayer player;
 
-  protected override void Start()
+  protected override void Awake()
   {
-    base.Start();
+    base.Awake();
 
-    GameManager.Instance.Player = player;
+    StageManager.CreateInstance("BundleLocal/Prefabs/Manager/StageManager.prefab");
   }
-
-
 }

@@ -72,6 +72,46 @@ public static class ExtensionMethod
     return (T[]) field.GetCustomAttributes(typeof(T), false);
   }
 
+
+  /// <summary>
+  /// Get the Description Attributes At Class Level
+  /// </summary>
+  /// <param name="en"></param>
+  /// <returns></returns>
+  static public string GetDescription(this Enum en)
+  {
+    descriptionCacheMap ??= new();
+    string key = en.ToString();
+    if (descriptionCacheMap.ContainsKey(key) == true)
+      return descriptionCacheMap[key];
+
+    var fi = en.GetType().GetField(key);
+    if (fi == null)
+      return string.Empty;
+
+    var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+    if (attributes == null || attributes.Length == 0) return string.Empty;
+    descriptionCacheMap[key] = attributes[0].Description;
+    return descriptionCacheMap[key];
+  }
+
+  static public string GetDescriptionIconType(this Enum en)
+  {
+    descriptionCacheMap ??= new();
+    string key = en.ToString();
+    if (descriptionCacheMap.ContainsKey(key) == true)
+      return descriptionCacheMap[key];
+
+    var fi = en.GetType().GetField(key);
+    if (fi == null)
+      return string.Empty;
+
+    var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+    if (attributes == null || attributes.Length == 0) return string.Empty;
+    descriptionCacheMap[key] = attributes[0].Description;
+    return descriptionCacheMap[key];
+  }
+
   #endregion
 
   #region double
@@ -1021,48 +1061,13 @@ public static class ExtensionMethod
 
   #endregion
 
+  #region Do Tween
+
+  #endregion
+
   // lds - 22.7.8
   // 리플렉션을 통한 Description 결과를 캐싱 ( 최적화 )
   private static Dictionary<string, string> descriptionCacheMap;
-
-  /// <summary>
-  /// Get the Description Attributes At Class Level
-  /// </summary>
-  /// <param name="en"></param>
-  /// <returns></returns>
-  static public string GetDescription(this Enum en)
-  {
-    descriptionCacheMap ??= new();
-    string key = en.ToString();
-    if(descriptionCacheMap.ContainsKey(key) == true)
-      return descriptionCacheMap[key];
-
-    var fi = en.GetType().GetField(key);
-    if (fi == null)
-      return string.Empty;
-
-    var attributes = (DescriptionAttribute[]) fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
-    if(attributes == null || attributes.Length == 0) return string.Empty;
-    descriptionCacheMap[key] = attributes[0].Description;
-    return descriptionCacheMap[key];
-  }
-
-  static public string GetDescriptionIconType(this Enum en)
-  {
-    descriptionCacheMap ??= new();
-    string key = en.ToString();
-    if (descriptionCacheMap.ContainsKey(key) == true)
-      return descriptionCacheMap[key];
-
-    var fi = en.GetType().GetField(key);
-    if (fi == null)
-      return string.Empty;
-
-    var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
-    if (attributes == null || attributes.Length == 0) return string.Empty;
-    descriptionCacheMap[key] = attributes[0].Description;
-    return descriptionCacheMap[key];
-  }
 
   static public void LoadFromJsonEx<T>(this PropertyPlayerPrefsString property, string key, out T output)
   {

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c024e93bd33434ce6a7bdb2a3c591369, type: 3}
   m_Name: StageDataTable
   m_EditorClassIdentifier: 
-  mapElementGround: {fileID: 5543249907709717371, guid: 7514b362f39334d6ea900f78380dcd2f, type: 3}
-  mapElementBridge: {fileID: 7579957141492355722, guid: c16e020ccd45b414a9770a1361907a41, type: 3}
-  obstacleWall: {fileID: 1513020725014085912, guid: 42f2b1dc6b66d4dc0b2b17b13aaa1db5, type: 3}
-  obstacleSpike: {fileID: 3517153253260904725, guid: 5bbedc1f03a6b47e2a0030bdf64eac29, type: 3}
-  mergeableObject: {fileID: 5204195735293174449, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
+  mapElementGround: {fileID: -3880125375115993909, guid: 7514b362f39334d6ea900f78380dcd2f, type: 3}
+  mapElementBridge: {fileID: 1520310748235901913, guid: c16e020ccd45b414a9770a1361907a41, type: 3}
+  obstacleSpike: {fileID: 5044510788286921569, guid: 5bbedc1f03a6b47e2a0030bdf64eac29, type: 3}
+  obstacleGoal: {fileID: 5035774991657833407, guid: 556a28f1126a046abbda1c575834449c, type: 3}
+  mergeableObject: {fileID: 3802848283465455454, guid: 7a16379025bb64d80a680cb318bf316f, type: 3}
   stageData:
     list:
     - Key: 0
@@ -24,66 +24,225 @@ MonoBehaviour:
         stageId: 0
         infinity: 0
         mapData:
-        - position: {x: 1.94, y: 6.1, z: 0}
-          scale: {x: 2, y: 10.12, z: 1}
-          size: {x: 1, y: 1}
-          offset: {x: 0, y: 0}
-          type: 1
-        - position: {x: 0, y: -3.97, z: 0}
-          scale: {x: 10, y: 10.12, z: 1}
-          size: {x: 1, y: 1}
+        - position: {x: 0, y: -10, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 11.5, y: 90.90839}
+          offset: {x: 0, y: 45.454193}
+          type: 0
+          isFrist: 1
+          isLast: 0
+        obstacleData:
+        - position: {x: 0, y: 26, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
           offset: {x: 0, y: 0}
           type: 0
-        obstacleData:
-        - position: {x: 0, y: 16.04, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 1, y: 1}
-          offset: {x: 0, y: 0}
-          type: 1
           cooltime: 0
-          limitRelativeGrade: 0
+          limitRelativeLevel: 0
+        - position: {x: 0, y: 29, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: 0, y: 32, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: 0, y: 35, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: 0, y: 38, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: 0, y: 41, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
         mergeableData:
-        - position: {x: -1.86, y: 13.2, z: 0}
+        - position: {x: 0, y: 5, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          grade: 0
-        - position: {x: 3.45, y: 36.03, z: 0}
+          level: 0
+        - position: {x: 0, y: 9, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          grade: 0
-        - position: {x: -1.83, y: 35.96, z: 0}
+          level: 1
+        - position: {x: 0, y: 13, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          grade: 0
-        - position: {x: -1.83, y: 31.29, z: 0}
+          level: 2
+        - position: {x: 0, y: 17, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          grade: 0
-        - position: {x: 2.82, y: 26.87, z: 0}
+          level: 3
+        - position: {x: 0, y: 21, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          grade: 0
-        - position: {x: 2.82, y: 5.14, z: 0}
+          level: 4
+    - Key: 1
+      Value:
+        stageId: 1
+        infinity: 0
+        mapData:
+        - position: {x: 0, y: -10, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 11.5, y: 90.90839}
+          offset: {x: 0, y: 7.5}
+          type: 0
+          isFrist: 1
+          isLast: 0
+        obstacleData:
+        - position: {x: 0, y: 64.2, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 11.5, y: 2}
+          offset: {x: 0, y: 0}
+          type: 2
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: -2.815, y: 11.15, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: 2.6, y: 11.15, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        mergeableData:
+        - position: {x: 0, y: 5.38, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          grade: 0
-        - position: {x: -2.71, y: 5.14, z: 0}
+          level: 1
+        - position: {x: 0, y: 9.59, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          grade: 0
-        - position: {x: 1.32, y: 13.07, z: 0}
+          level: 1
+        - position: {x: 0, y: 14.87, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          grade: 0
+          level: 0
     keyCollision: 0
   infinityStagedata:
-    list: []
+    list:
+    - Key: 0
+      Value:
+        stageId: 0
+        infinity: 1
+        mapData:
+        - position: {x: 0, y: -10, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 11.5, y: 90.90839}
+          offset: {x: 0, y: 45.454193}
+          type: 0
+          isFrist: 1
+          isLast: 0
+        obstacleData:
+        - position: {x: 0, y: 26, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: 0, y: 29, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: 0, y: 32, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        - position: {x: 0, y: 35, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.55, y: 0.86}
+          offset: {x: 0, y: 0}
+          type: 0
+          cooltime: 0
+          limitRelativeLevel: 0
+        mergeableData:
+        - position: {x: 0, y: 5, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 0
+        - position: {x: 0, y: 9, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 1
+        - position: {x: 0, y: 13, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 2
+        - position: {x: 0, y: 17, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 3
+        - position: {x: 0, y: 21, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 4
+        - position: {x: 0, y: 39.81, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 5
+        - position: {x: 0, y: 43.81, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 5
+        - position: {x: 0, y: 47.81, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 5
+        - position: {x: 0, y: 51.81, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 5
+        - position: {x: 0, y: 55.81, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 0, y: 0}
+          offset: {x: 0, y: 0}
+          level: 5
     keyCollision: 0

@@ -1,23 +1,33 @@
+using System;
 using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using static StageDataTable;
 
 public class MergeableBase : BaseObject
 {
-  private Coroutine timer;
+  protected Coroutine coDropTimer;
+  protected Sequence fadeOutSequence;
 
   [SerializeField] protected Rigidbody2D rb;
   [SerializeField] protected TextMeshPro text;
+  [SerializeField] protected SpriteRenderer spriteRenderer;
+  [SerializeField] protected SpriteRenderer spriteRendererShadow;
 
-  [Header("Settings"), SerializeField] private float bounceForce = 5f;
-  [Header("Data"), SerializeField] protected LevelDataTable.Data levelData;
+  [Header("[Move]"), SerializeField] protected float moveDuration = 0.1f;
+  [Header("[Scale]"), SerializeField] protected float scaleUpDuration = 0.025f; // 커지는 시간
+  [SerializeField] protected float scaleDownDuration = 0.025f; // 작아지는 시간
+  [SerializeField, Tooltip("커지는 비율")] protected float scaleUpFactor = 1.5f; // 커지는 비율 (원래 크기의 1.2배)
+  [SerializeField, Tooltip("작아지는 비율")] protected float scaleDownFactor = 0.7f;
 
-  private SpriteRenderer spriteRenderer => sprites[0];
+  [Header("[Data]"), SerializeField] protected LevelDataTable.Data levelData;
 
-  [field: SerializeField] public uint Grade { get; protected set; } = 1;
-  [field: SerializeField] public bool IsDropCounting { get; private set; }
+  [field: SerializeField] public int Level { get; protected set; } = 1;
 
   public bool IsPlayer { get; protected set; } = false;
+  public bool IsMerging { get; protected set; } = false;
+  public bool IsDropCounting => coDropTimer != null;
 
   protected override void Awake()
   {
@@ -46,73 +56,185 @@ public class MergeableBase : BaseObject
 
   protected virtual void OnCollisionEnter2D(Collision2D collision)
   {
+    if (IsMerging)
+      return;
+
     var otherObject = collision.gameObject.GetComponent<MergeableObject>();
     if (otherObject != null)
     {
-      if (Grade == otherObject.Grade)
-      {
-        // 병합 처리
-        Merge(otherObject);
-      }
-      else    // 2. 다른 레벨인 경우 (튕겨내기 조건)
-      {
-     
-      }
+      if (otherObject.IsMerging || (Level != otherObject.Level))
+        return;
+
+      // 병합 처리
+      Merge(otherObject);
     }
   }
 
+  protected virtual void Initialize()
+  {
+    IsMerging = false;
+
+    rb.simulated = true;
+    circleCollider.enabled = true;
+
+    if (fadeOutSequence != null)
+    {
+      fadeOutSequence.Kill();
+      fadeOutSequence = null;
+    }
+
+    StopAllCoroutines();
+    text.DOKill();
+    spriteRenderer.DOKill();
+    spriteRendererShadow.DOKill();
+    spriteRenderer.color = spriteRendererShadow.color = text.color = Color.white;
+    spriteRenderer.material.SetFloat("_SineGlowFade", 0);
+  }
+
+  [ContextMenu("UpdateLevelData")]
   protected virtual void UpdateLevelData()
   {
+    Debug.Log($"UpdateLevelData {Level}");
     var table = SOManager.Instance.LevelDataTable;
-    levelData = table.GetData(Grade);
+    levelData = table.GetData(Level);
 
     // 이미지 교체
-    spriteRenderer.sprite = table.SpriteAtlas.GetSprite($"m{Grade}");
+    spriteRenderer.sprite = table.SpriteAtlas.GetSprite($"m{Level}");
     // 텍스트 교체
     text.text = levelData.PowerOfTwoString;
   }
 
-  public void SetGrade(uint grade = 0)
+  public virtual void SetData(MergeableData mergeableData)
   {
-    Grade = grade;
+    transform.position = mergeableData.position;
+    transform.localScale = mergeableData.scale;
+    transform.localRotation = Quaternion.identity;
+
+    Initialize();
+    SetLevel(mergeableData.level);
+  }
+
+  public virtual void SetLevel(int level)
+  {
+    Level = level;
     UpdateLevelData();
   }
 
   // 병합 및 레벨업 처리 함수
   protected virtual void Merge(MergeableObject other)
   {
-    // 연출
+    IsMerging = true;
+    // 2. 'other' 오브젝트를 0.3초간 'this'의 위치로 이동
 
-    // 연출 이후 호출
-    // 흡수당한 오브젝트는 오브젝트 풀링에 추가
-    Grade++;
-    UpdateLevelData();
-    StageManager.Instance.PushMergeableInPool(other);
-  }
+    other.circleCollider.enabled = false;
+    StartCoroutine(MoveTowardsTarget(other, transform));
 
-  public void StartDropTimer(float time)
-  {
-    timer = StartCoroutine(Timer());
-
-    IEnumerator Timer()
+    IEnumerator MoveTowardsTarget(MergeableObject from, Transform to)
     {
-      // 연출 시작
-      IsDropCounting = true;
+      float elapsed = 0f;
+      Vector3 start = from.transform.position;
+      while (elapsed < moveDuration)
+      {
+        if (!to || !from)
+          yield break;
 
-      yield return new WaitForSeconds(time);
+        elapsed += Time.deltaTime;
+        float t = elapsed / moveDuration;
+        // 현재 목표 위치를 실시간으로 참조
+        from.transform.position = Vector3.Lerp(start, to.position, t);
+        yield return null;
+      }
 
-      IsDropCounting = false;
-      // 연출 종료
+      from.transform.position = to.position;
+      MoveComplete();
+    }
+
+    void MoveComplete()
+    {
+      IsMerging = false;
+
+      if (!gameObject.activeSelf)
+        return;
+
+      // 이동 완료 후, other 오브젝트를 풀링하기 전에 스케일 애니메이션 시작
+      // 3. 이동이 완료되면 'this' 오브젝트의 스케일을 변경하는 시퀀스 시작
+      // 먼저 커지는 애니메이션
+
+      Debug.Log(Level);
+      SetLevel(Level + 1);
+      StageManager.Instance.PushMergeableInPool(other);
+      TweenScale(Vector3.one * levelData.scale * scaleUpFactor, scaleUpDuration, Ease.InQuad, ScaleComplete);
+    }
+
+    void ScaleComplete()
+    {
+      if (!gameObject.activeSelf)
+        return;
+
+      TweenScale(Vector3.one * levelData.scale, scaleDownDuration, Ease.OutQuad);
     }
   }
 
-  public void StopDropTimer()
+  public void TweenScale(Vector3 to, float duration, Ease ease, TweenCallback onComplete = null)
   {
-    if (timer != null)
+    var tween = transform.DOScale(to, duration).SetEase(Ease.OutQuad);
+    tween.OnComplete(onComplete);
+  }
+
+  public Sequence TweenAlpha(float to, float duration, Ease ease, TweenCallback onComplete = null)
+  {
+    text.DOKill();
+    spriteRenderer.DOKill();
+    spriteRendererShadow.DOKill();
+
+    if (fadeOutSequence != null)
     {
-      StopCoroutine(timer);
-      timer = null;
-      IsDropCounting = false;
+      fadeOutSequence.Kill();
     }
+
+    fadeOutSequence = DOTween.Sequence();
+    fadeOutSequence.Join(text.DOFade(to, duration).SetEase(ease));
+    fadeOutSequence.Join(spriteRenderer.DOFade(to, duration).SetEase(ease));
+    fadeOutSequence.Join(spriteRendererShadow.DOFade(to, duration).SetEase(ease));
+
+    // 람다식(Lambda)을 사용하면 더 간결하게 표현 가능합니다.
+    fadeOutSequence.OnComplete(() => { onComplete?.Invoke(); });
+
+    return fadeOutSequence;
+  }
+
+  public virtual void StartDropTimer(float time)
+  {
+    if (coDropTimer != null)
+      return;
+
+    // 연출 시작
+    spriteRenderer.material.SetFloat("_TimeSpeed", 3);
+    spriteRenderer.material.SetFloat("_SineGlowFade", 1);
+    spriteRenderer.material.SetColor("_SineGlowColor", Color.red);
+    coDropTimer = StartCoroutine(Timer(time, Drop));
+  }
+
+  public virtual void StopDropTimer()
+  {
+    if (coDropTimer == null)
+      return;
+
+    spriteRenderer.material.SetFloat("_SineGlowFade", 0);
+    StopCoroutine(coDropTimer);
+    coDropTimer = null;
+  }
+
+  protected virtual void Drop()
+  {
+    coDropTimer = null;
+    spriteRenderer.material.SetFloat("_SineGlowFade", 0);
+  }
+
+  private IEnumerator Timer(float time, Action onComplete)
+  {
+    yield return new WaitForSeconds(time);
+
+    onComplete?.Invoke();
   }
 }

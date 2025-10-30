@@ -17,7 +17,14 @@ public class SOManager : Singleton<SOManager>
   [SerializeField, Space] private GameModel gameModel;
   [SerializeField] private DeviceInfoModel deviceInfoModel;
   [SerializeField] private PlayerPrefsModel playerPrefsModel;
- 
+
+  static SOManager()
+  {
+    // 부모 클래스(Singleton<T>)의 static protected 필드인 prefabPath를 설정합니다.
+    // 여기에 SOManager 프리팹의 실제 Addressable/Resources 경로를 입력하세요.
+    prefabPath = "BundleLocal/Prefabs/Manager/SOManager.prefab";
+  }
+
   public GameModel GameModel
   {
     get

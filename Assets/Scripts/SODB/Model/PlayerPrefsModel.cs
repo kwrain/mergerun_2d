@@ -135,6 +135,14 @@ public partial class PlayerPrefsModel : ModelBase
 
     #region INT_UserPrefs
     INT_UserPrefs,
+
+    USER_LEVEL,
+    USER_EXP,
+
+    USER_LAST_STAGE, // 일반모드 진행 단계
+
+    USER_BEST_LEVEL, // 무한모드 최고 합성 단계
+
     #endregion
 
     #region FLOAT_UserPrefs
@@ -151,6 +159,7 @@ public partial class PlayerPrefsModel : ModelBase
 
     #region INT_DevicePrefs
     INT_DevicePrefs,
+
     #endregion
 
     #region FLOAT_DevicePrefs
@@ -164,4 +173,29 @@ public partial class PlayerPrefsModel : ModelBase
     Count,
   }
   #endregion
+
+  public int UserLevel
+  {
+    get => userPrefsInt[nameof(PlayerPrefsKey.USER_LEVEL)];
+    set => userPrefsInt[nameof(PlayerPrefsKey.USER_LEVEL)] = value;
+  }
+
+  public int UserExp
+  {
+    get => userPrefsInt[nameof(PlayerPrefsKey.USER_EXP)];
+    set => userPrefsInt[nameof(PlayerPrefsKey.USER_EXP)] = value;
+  }
+
+  public int UserLastStage
+  {
+    get => userPrefsInt[nameof(PlayerPrefsKey.USER_LAST_STAGE)];
+    set => userPrefsInt[nameof(PlayerPrefsKey.USER_LAST_STAGE)] = value;
+  }
+
+  public int UserBestLevel
+  {
+    get => userPrefsInt[nameof(PlayerPrefsKey.USER_BEST_LEVEL)];
+    set => userPrefsInt[nameof(PlayerPrefsKey.USER_BEST_LEVEL)] = value;
+  }
+
 }

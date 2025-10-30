@@ -1,31 +1,39 @@
+using System;
+using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 public class MergeablePlayer : MergeableBase, ITouchEvent
 {
-  [Header("X Axis Settings")]
-  public float baseXSpeed = 5f;       // 좌우 이동 기본 속도
-  public float sensitivityX = 1f;  // 터치 X 민감도
+  [Header("[X Axis Settings]")]
+  [SerializeField] private float baseXSpeed = 5f;       // 좌우 이동 기본 속도
+  [SerializeField] private float sensitivityX = 1f;  // 터치 X 민감도
+  [SerializeField] private float limitX = 5f;            // <<< [추가] X축 최소 좌표
 
-  [Header("Y Axis Settings")]
-  public float baseYSpeed = 2f;       // 기본 Y 속도 (양수=위, 음수=아래)
-  public float accelerationY = 3f;    // Y 초기 가속도 (속도가 0→baseYSpeed까지 가속되는 비율)
-  public float sensitivityY = 0.01f;  // 터치 Y 민감도 (드래그 반영 비율)
+  [Header("[Y Axis Settings]")]
+  [SerializeField] private float baseYSpeed = 2f;       // 기본 Y 속도 (양수=위, 음수=아래)
+  [SerializeField] private float accelerationY = 3f;    // Y 초기 가속도 (속도가 0→baseYSpeed까지 가속되는 비율)
+  [SerializeField] private float sensitivityY = 0.01f;  // 터치 Y 민감도 (드래그 반영 비율)
 
-  [Header("Extra Speed Settings")]
-  public float extraSpeedDecayRate = 2f;  // 초당 감소 속도 (값이 클수록 빨리 0으로 감속)
-  public float maxExtraSpeed = 5f;         // 추가 속도의 최대치
+  [Header("[Extra Speed Settings]")]
+  [SerializeField] private bool appliedExtraYSpeed;       // 터치에 의해 발생한 추가 속도 적용 여부
+  [SerializeField] private float extraSpeedDecayRate = 2f;  // 초당 감소 속도 (값이 클수록 빨리 0으로 감속)
+  [SerializeField] private float maxExtraSpeed = 5f;         // 추가 속도의 최대치
 
-  private float currentXSpeed = 0f;     // 현재 X 속도
-  private float currentYSpeed = 0f;     // 현재 Y 속도 (기본 + 추가)
-  private float extraYSpeed = 0f;       // 터치에 의해 발생한 추가 Y 속도
-  private bool appliedExtraYSpeed;       // 터치에 의해 발생한 추가 속도 적용 여부
+  [Header("[Currernt Speed]")]
+  [SerializeField] private float currentXSpeed = 0f;     // 현재 X 속도
+  [SerializeField] private float currentYSpeed = 0f;     // 현재 Y 속도 (기본 + 추가)
+  [SerializeField] private float extraYSpeed = 0f;       // 터치에 의해 발생한 추가 Y 속도
 
-  private bool isTouching = false;
+  [Header("[Game Settings]"), SerializeField] private float obstacleDelay = 0.5f;
 
   // 새로 추가: OnTouchMoved로 들어온 "즉시 이동할 X 거리(월드 단위)" 누적
   private float pendingXMove = 0f;
 
+  [field: SerializeField] public bool Movable { get; set; }
+
   // 장애물 종류별 감지 시간 필요함.
+  private bool ignoreSpike;
 
   protected override void Awake()
   {
@@ -59,9 +67,12 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   {
     MoveObject();
   }
-
+  
   private void MoveObject()
   {
+    if (!Movable)
+      return;
+
     // 1) Y 속도 보정 (가속)
     currentYSpeed = Mathf.MoveTowards(currentYSpeed, baseYSpeed, accelerationY * Time.fixedDeltaTime);
 
@@ -85,22 +96,206 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     float displacementX = pendingXMove;
 
     // 4) 물리 이동을 한 번에 수행 (충돌 계산 유지)
-    Vector2 newPos = rb.position + new Vector2(displacementX, displacementY);
+    Vector2 currentPos = rb.position; // <<< [수정] 이동 전 현재 위치 저장
+    Vector2 newPos = currentPos + new Vector2(displacementX, displacementY);
+
+    // 5) <<< [추가] X축 경계 처리
+    // newPos.x 값을 minX와 maxX 사이로 제한합니다.
+    newPos.x = Mathf.Clamp(newPos.x, limitX * -1f, limitX);
+
     rb.MovePosition(newPos);
 
-    // 5) 적용 뒤 누적값 초기화
+    // 6) <<< [수정] 적용 뒤 누적값 초기화 (순서 변경)
     pendingXMove = 0f;
 
-    // (선택) 다른 시스템에서 X 속도가 필요하면 현재 프레임의 평균 X 속도로 갱신
-    currentXSpeed = displacementX / Time.fixedDeltaTime;
+    // 7) <<< [수정] 다른 시스템에서 X 속도가 필요하면 '실제' 이동한 거리로 갱신
+    // (경계에 막혔을 경우 displacementX와 실제 이동 거리가 다를 수 있음)
+    float actualDisplacementX = newPos.x - currentPos.x;
+    currentXSpeed = actualDisplacementX / Time.fixedDeltaTime;
   }
+
+  private void StartGame()
+  {
+    Movable = false;
+    transform.DOKill();
+    transform.localScale = Vector3.zero;
+    TweenScale(Vector3.one * levelData.scale * scaleUpFactor, 0.5f, Ease.OutQuad, () =>
+    {
+      if (!gameObject.activeSelf)
+        return;
+
+      TweenScale(Vector3.one * levelData.scale, scaleDownDuration, Ease.OutQuad, () =>
+      {
+        Movable = true;
+      });
+    });
+  }
+
+  public override void SetData(StageDataTable.MergeableData mergeableData)
+  {
+    base.SetData(mergeableData);
+
+    IsMerging = ignoreSpike = false;
+    gameObject.SetActive(true);
+    StartGame();
+  }
+
+  protected override void Merge(MergeableObject other)
+  {
+    base.Merge(other);
+
+    // 최대 합성 단계를 기록해야한다.
+    if (StageManager.Instance.Infinity)
+    {
+      SOManager.Instance.PlayerPrefsModel.UserBestLevel = Level;
+    }
+  }
+
+  public override void StartDropTimer(float time)
+  {
+    base.StartDropTimer(time);
+
+    if (ignoreSpike)
+    {
+      // 컬러와 속도를 바꿔줌.
+      spriteRenderer.material.SetFloat("_TimeSpeed", 3);
+      spriteRenderer.material.SetColor("_SineGlowColor", Color.red);
+    }
+  }
+
+  public override void StopDropTimer()
+  {
+    if (ignoreSpike)
+    {
+      // ignoreSpike 가 아직 유효한 경우
+      spriteRenderer.material.SetFloat("_TimeSpeed", 6);
+      spriteRenderer.material.SetColor("_SineGlowColor", Color.white);
+
+      StopCoroutine(coDropTimer);
+      coDropTimer = null;
+    }
+    else
+    {
+      base.StopDropTimer();
+    }
+  }
+
+  protected override void Drop()
+  {
+    if (ignoreSpike)
+    {
+      spriteRenderer.material.SetFloat("_TimeSpeed", 6);
+      spriteRenderer.material.SetColor("_SineGlowColor", Color.white);
+
+      coDropTimer = null;
+    }
+    else
+    {
+      base.Drop();
+    }
+
+    StageManager.Instance.RestartStage();
+  }
+
 
   #region Collision
 
-  /// <summary>
-  protected virtual void OnCollisionEnter2D(Collision2D collision)
+  IEnumerator Timer(float time, Action onComplete)
   {
-    base.OnCollisionEnter2D(collision);
+    yield return new WaitForSeconds(time);
+    onComplete?.Invoke();
+  }
+
+  private void Spike()
+  {
+    if (ignoreSpike)
+      return;
+
+    if (Level > 0)
+    {
+      // 한 단계 감소하고, MergeableObject 를 생성한다.
+      SetLevel(--Level);
+
+      if (!IsDropCounting) // 맵 외곽 연출이 더 우선순위가 높음.
+      {
+        spriteRenderer.material.SetFloat("_TimeSpeed", 6);
+        spriteRenderer.material.SetFloat("_SineGlowFade", 1);
+        spriteRenderer.material.SetColor("_SineGlowColor", Color.white);
+      }
+
+      StartCoroutine(Timer(obstacleDelay, ()=>
+      {
+        if (!IsDropCounting)
+        {
+          spriteRenderer.material.SetFloat("_SineGlowFade", 0);
+        }
+      }));
+
+      // 단계 변경 시 크기 감소
+      TweenScale(Vector3.one * levelData.scale * scaleDownFactor, scaleDownDuration, Ease.InQuad, () =>
+      {
+        if (!gameObject.activeSelf)
+          return;
+
+        var mergeable = StageManager.Instance.PeekMergeableInPool();
+        if (mergeable != null)
+        {
+          // 무작위 방향으로 튕겨내며, 일정 시간뒤에 사라져야함.
+          // 생성된 오브젝트는 상호작용을 하지 않는다.
+          mergeable.SetLevel(Level);
+          mergeable.circleCollider.enabled = false;
+          mergeable.transform.position = transform.position;
+          mergeable.transform.localScale = Vector3.zero;
+          mergeable.TweenScale(Vector3.one * levelData.scale, 0.1f, Ease.InQuad, () =>
+          {
+            if (!mergeable.gameObject.activeSelf)
+              return;
+
+            var seq = mergeable.TweenAlpha(0, 1f, Ease.OutQuad, () => { StageManager.Instance.PushMergeableInPool(mergeable); });
+            seq.Join(mergeable.transform.DOMove(transform.position - new Vector3(3, 3, 0), 1).SetEase(Ease.InOutQuad));
+          });
+        }
+
+        TweenScale(Vector3.one * levelData.scale, scaleUpDuration, Ease.OutQuad);
+      });
+
+      // 지정된 쿨타임동안 가시 영향을 받지 않도록함.
+      ignoreSpike = true;
+      StartCoroutine(Timer(obstacleDelay, ()=> { ignoreSpike = false; }));
+    }
+    else
+    {
+      // 게임오버 -> 재시작
+      StageManager.Instance.RestartStage();
+    }
+  }
+
+  private void Goal(ObstacleGoal goal)
+  {
+    if (goal != null)
+    {
+      if (StageManager.Instance.Infinity)
+      {
+        // 지정된 단계를 초과하지 못하는 경우
+        if (Level < SOManager.Instance.PlayerPrefsModel.UserLevel + goal.LimitRelativeLevel)
+        {
+          // 벽에 부딪힌 경우 더 이상 진행이 불가능할때,
+          // 이동을 멈추고, 죽는 연출 이후, 광고를 노출한다.
+          // 리워드광고 완료 이후 스테이지 재시작 처리를 한다.
+          Movable = false;
+          StageManager.Instance.RestartStage();
+        }
+        else
+        {
+          StageManager.Instance.PushObstacleInPool(goal);
+        }
+      }
+      else
+      {
+        // 경험치 체크
+        SOManager.Instance.PlayerPrefsModel.UserLevel = Level;
+      }
+    }
   }
 
   public void OnCollisionObstacles(ObstacleBase obstacle)
@@ -108,31 +303,11 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     switch (obstacle.Type)
     {
       case ObstacleBase.ObstacleTypes.Spike:
-        var spike = obstacle as ObstacleSpike;
-        if (spike != null)
-        {
-          if (Grade > 0)
-          {
-
-          }
-          else
-          {
-
-          }
-        }
-        // 지정된 쿨타임 대기 처리 필요.
+        Spike();
         break;
 
-      case ObstacleBase.ObstacleTypes.Wall:
-        var wall = obstacle as ObstacleWall;
-        if (wall != null)
-        {
-          // 지정된 단계를 초과하지 못하는 경우
-          if (Grade < Grade + wall.LimitRelativeGrade)
-          {
-
-          }
-        }
+      case ObstacleBase.ObstacleTypes.Goal:
+        Goal(obstacle as ObstacleGoal);
         break;
 
       default:
@@ -143,7 +318,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     }
   }
 
-#endregion
+  #endregion
 
   #region Touch
 
@@ -169,19 +344,18 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
 
   public void OnTouchBegan(Vector3 pos, bool isFirstTouchedUI)
   {
-    isTouching = true;
   }
 
   public void OnTouchCanceled(Vector3 pos, bool isFirstTouchedUI, bool isMoved)
   {
     currentXSpeed = 0;
-    isTouching = appliedExtraYSpeed = false;
+    appliedExtraYSpeed = false;
   }
 
   public void OnTouchEnded(Vector3 pos, bool isFirstTouchedUI, bool isMoved)
   {
     currentXSpeed = 0;
-    isTouching = appliedExtraYSpeed = false;
+    appliedExtraYSpeed = false;
   }
 
   public void OnTouchMoved(Vector3 lastPos, Vector3 newPos, bool isFirstTouchedUI)

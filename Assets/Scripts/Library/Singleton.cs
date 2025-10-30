@@ -33,7 +33,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
       // 종료시점에 SingletoneObject가 destroy 먼저되는 경우엔 Instance값을,
       // null로 리턴하고 다른쪽에서는 이 값을 체크해서 부작용이 생기지 않도록 한다
 
-      if (isApplicationExit)
+      if (Application.isPlaying && isApplicationExit)
         return null;
 
       if (instance != null) return instance;
@@ -84,7 +84,10 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
       if (instance != null)
       {
         // 씬에서 찾은 경우, 싱글톤의 생명주기를 따라가도록 DontDestroyOnLoad를 적용합니다.
-        DontDestroyOnLoad(instance.gameObject);
+        if (Application.isPlaying)
+        {
+          DontDestroyOnLoad(instance.gameObject);
+        }
         return instance;
       }
 

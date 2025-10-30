@@ -9,7 +9,7 @@ public class StageDataTable : ScriptableObject
   [Serializable]
   public class StageData
   {
-    public uint stageId;       // 스테이지 번호
+    public int stageId;       // 스테이지 번호
     public bool infinity;       // 무한모드 여부
 
     public List<MapData> mapData = new();
@@ -32,6 +32,8 @@ public class StageDataTable : ScriptableObject
   public class MapData : StageObjectData
   {
     public MapElement.MapElementTypes type;
+    public bool isFrist; // ground 전용
+    public bool isLast; // ground 전용
   }
 
   // --- 장애물 데이터 ---
@@ -42,28 +44,28 @@ public class StageDataTable : ScriptableObject
 
     // 각 장애물별 데이터 요소
     public float cooltime;
-    public uint limitRelativeGrade;
+    public int limitRelativeLevel;
   }
 
   [Serializable]
   public class MergeableData : StageObjectData
   {
-    public uint grade;
+    public int level;
   }
 
-  [Header("[Prefabs]")] public GameObject mapElementGround;
-  public GameObject mapElementBridge;
+  [Header("[Prefabs]")] public MapGround mapElementGround;
+  public MapBridge mapElementBridge;
   [Space]
-  public GameObject obstacleWall;
-  public GameObject obstacleSpike;
+  public ObstacleSpike obstacleSpike;
+  public ObstacleGoal obstacleGoal;
   [Space]
-  public GameObject mergeableObject;
+  public MergeableObject mergeableObject;
 
   [Space]
-  public GenericDictionary<uint, StageData> stageData;
-  public GenericDictionary<uint, StageData> infinityStagedata;
+  public GenericDictionary<int, StageData> stageData;
+  public GenericDictionary<int, StageData> infinityStagedata;
 
-  public StageData GetStageData(uint stageID, bool infinity)
+  public StageData GetStageData(int stageID, bool infinity)
   {
     var datas = infinity ? infinityStagedata : stageData;
     if (datas.ContainsKey(stageID))

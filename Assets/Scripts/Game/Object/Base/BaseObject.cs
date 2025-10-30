@@ -55,20 +55,6 @@ public partial class BaseObject : MonoBehaviour
     if (Initialized)
       return false;
 
-    this.sprites.Clear();
-    var sprites = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
-    foreach (var sprite in sprites)
-    {
-      this.sprites.Add(sprite);
-      settingOrders[sprite.GetInstanceID()] = sprite.sortingOrder;
-    }
-
-    if (sprites != null && sprites.Length > 0)
-    {
-      _propertyBlock = new MaterialPropertyBlock();
-      sprites[0].GetPropertyBlock(_propertyBlock);
-    }
-
     if (animator == null)
     {
       animator = gameObject.GetComponent<Animator>();
@@ -118,14 +104,6 @@ public partial class BaseObject : MonoBehaviour
 
   private void CleanupResources()
   {
-    foreach (var sprite in sprites)
-    {
-      if (sprite != null)
-      {
-        sprite.sortingOrder = settingOrders[sprite.GetInstanceID()];
-      }
-    }
-
     animationEvents?.Clear();
     animationClips?.Clear();
     StopAnimationTimer();

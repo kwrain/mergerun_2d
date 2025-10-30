@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static StageDataTable;
 
 public class ObstacleBase : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class ObstacleBase : MonoBehaviour
     None = -1,
 
     Spike = 0,
-    Wall,
+    Goal,
 
     Count
   }
@@ -22,7 +23,7 @@ public class ObstacleBase : MonoBehaviour
   private float overlapPercentage = 50.0f;
 
   public ObstacleTypes Type => type;
-  
+
   protected virtual void Awake()
   {
     // 시작할 때 자신의 BoxCollider2D 컴포넌트를 가져옵니다.
@@ -40,7 +41,6 @@ public class ObstacleBase : MonoBehaviour
   // 두 오브젝트 중 하나 이상에 Rigidbody2D가 있고, 하나 이상 isTrigger가 체크되어야 합니다.
   private void OnTriggerStay2D(Collider2D other)
   {
-    Debug.Log("dmdkdkdkdkdk");
     // 겹침 비율을 계산합니다.
     float overlapPercentage = CalculateOverlapPercentage(other);
     // 계산된 비율이 우리가 설정한 임계값을 넘었는지 확인합니다.
@@ -96,5 +96,11 @@ public class ObstacleBase : MonoBehaviour
 
     // (겹친 면적 / 박스 전체 면적) * 100 을 하여 백분율을 반환합니다.
     return overlapArea / boxArea * 100f;
+  }
+
+  public void SetData(ObstacleData obstacleData)
+  {
+    transform.position = obstacleData.position;
+    transform.localScale = obstacleData.scale;
   }
 }

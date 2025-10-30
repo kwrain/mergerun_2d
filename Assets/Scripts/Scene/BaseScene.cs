@@ -18,8 +18,6 @@ public class BaseScene : MonoBehaviour
 
   public bool IsFirstLoad { get; private set; }
 
-  protected Action<UIManager> onCustomEscape;
-
   protected virtual void Awake()
   {
     // lds - 24.11.20, 해당 조건을 모두 만족하는 경우 로그가 발생하지 않게함
@@ -39,18 +37,12 @@ public class BaseScene : MonoBehaviour
 
     if (Application.isPlaying)
     {
-      // WebManager.CreateInstance();
       SOManager.CreateInstance("BundleLocal/Prefabs/Manager/SOManager.prefab");
       GameManager.CreateInstance();
       KSceneManager.CreateInstance();
-      // ResourceManager.CreateInstance();
-      //ThemeManager.CreateInstance();
       SoundManager.CreateInstance();
       TouchManager.CreateInstance();
-      UIManager.CreateInstance();
     }
-
-    UIManager.Instance.onEscapeAction = CustomEscape;
   }
   protected virtual void Start()
   {
@@ -80,14 +72,6 @@ public class BaseScene : MonoBehaviour
       UnityEngine.Device.Screen.orientation = ScreenOrientation.LandscapeRight;
     }
 #endif
-  }
-
-  /// <summary>
-  /// 사용자 정의 뒤로가기 동작
-  /// </summary>
-  /// <param name="uiManager"></param>
-  protected virtual void CustomEscape(UIManager uiManager)
-  {
   }
 
   public virtual void LoadScene(ESceneName eSceneName) { KSceneManager.Instance.LoadScene(eSceneName); }

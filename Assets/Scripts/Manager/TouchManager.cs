@@ -173,55 +173,6 @@ public class TouchManager : Singleton<TouchManager>
   }
 
   /// <summary>
-  /// 마우스를 따라 다니는 오브젝트를 지정한다.
-  /// 스케일은 로컬기준
-  /// </summary>
-  /// <param name="go"></param>
-  /// <param name="position"></param>
-  /// <param name="scale"></param>
-  public void SetCursorFollowGameObject(GameObject go, Vector3? scale = null)
-  {
-    if (null == go)
-      return;
-
-    CursorFollowGameObjectClear();
-
-    if (scale.HasValue)
-      go.transform.localScale = scale.Value;
-
-    cursorFollowGameObject = go;
-  }
-  public void CursorFollowGameObjectSetPosition(Vector3 pos)
-  {
-    if (null == CursorFollowGameObject)
-      return;
-
-    if (!CursorFollowGameObject.activeSelf)
-      CursorFollowGameObject.SetActive(true);
-
-    var rt = CursorFollowGameObject.GetComponent<RectTransform>();
-    if (null != rt)
-    {
-      pos = UIManager.Instance.UICamera.ScreenToWorldPoint(pos);
-      pos.y += 2f;
-      pos.z = UIManager.Instance.GetCanvas().planeDistance;
-      rt.transform.position = pos;
-    }
-    else
-    {
-      CursorFollowGameObject.transform.position = Camera.main.ScreenToWorldPoint(pos);
-    }
-  }
-  public void CursorFollowGameObjectClear()
-  {
-    if (null != CursorFollowGameObject)
-    {
-      Destroy(CursorFollowGameObject);
-      cursorFollowGameObject = null;
-    }
-  }
-
-  /// <summary>
   /// 리스너 등록 (priority 낮을수록 먼저 실행)
   /// </summary>
   public static void AddListenerTouchEvent(ITouchEvent listener, int priority = 0)
@@ -315,8 +266,6 @@ public class TouchManager : Singleton<TouchManager>
 
     isTouch = isMoved = isLongTouch = false;
     fLongTouchCnt = 0;
-
-    CursorFollowGameObjectClear();
   }
 
   private void TouchEvent()
@@ -446,9 +395,6 @@ public class TouchManager : Singleton<TouchManager>
   {
     // Debug.LogFormat("OnTouchBegan / Pos : {0}", touchPos);
 
-    if (nFingerID != fingerID)
-      CursorFollowGameObjectClear();
-
     fLongTouchCnt = 0;
     vStartPos = touchPos;
     vLastPos = touchPos;
@@ -488,15 +434,11 @@ public class TouchManager : Singleton<TouchManager>
       {
         fLongTouchCnt += 0.1f;
 
-        CursorFollowGameObjectSetPosition(touchPos);
-
         OnTouchStationary?.Invoke(touchPos, fLongTouchCnt, isFirstTouchedUI);
       }
       else
       {
         fLongTouchCnt = 0;
-
-        CursorFollowGameObjectSetPosition(touchPos);
 
         OnTouchMoved?.Invoke(lastPos, touchPos, isFirstTouchedUI);
 
@@ -521,8 +463,6 @@ public class TouchManager : Singleton<TouchManager>
     if (IsTouchInRange(vStartPos, touchPos))
     {
       fLongTouchCnt += 0.1f;
-
-      CursorFollowGameObjectSetPosition(touchPos);
 
       OnTouchStationary?.Invoke(touchPos, fLongTouchCnt, isFirstTouchedUI);
     }
