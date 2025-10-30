@@ -88,7 +88,7 @@ public class MergeableBase : BaseObject
     spriteRenderer.DOKill();
     spriteRendererShadow.DOKill();
     spriteRendererShadow.color = new Color(1f, 1f, 1f, 0.3f);
-    spriteRenderer.color = spriteRendererShadow.color = text.color = Color.white;
+    spriteRenderer.color = text.color = Color.white;
   }
 
   [ContextMenu("UpdateLevelData")]
