@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ShadowLock2D : MonoBehaviour
 {
-  private readonly Vector3 OFFSET = new Vector3(0f, -1.2f, 0f);
+  private readonly Vector3 OFFSET = new Vector3(0f, -0.88f, 0f);
 
   [SerializeField] private Transform target;
   void LateUpdate()

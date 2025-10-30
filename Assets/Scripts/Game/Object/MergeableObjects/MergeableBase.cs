@@ -87,6 +87,7 @@ public class MergeableBase : BaseObject
     text.DOKill();
     spriteRenderer.DOKill();
     spriteRendererShadow.DOKill();
+    spriteRendererShadow.color = new Color(1f, 1f, 1f, 0.3f);
     spriteRenderer.color = spriteRendererShadow.color = text.color = Color.white;
   }
 
