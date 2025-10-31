@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: f12e07ea21d664559a0950bab875aff9
+guid: f75041ff1204f479093c33dc46eb9e30
 labels:
 - f3b6b51f661694404bca8391828dd043
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6280654314609205625
-    second: UIIconVibrationOff_0
+      213: 4742918028144542651
+    second: UIIconWifi_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,7 +48,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -115,23 +115,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UIIconVibrationOff_0
+      name: UIIconWifi_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 147
-        height: 134
+        width: 308
+        height: 308
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9716e43a2dd592750800000000000000
-      internalID: 6280654314609205625
+      spriteID: bb30a5a41da32d140800000000000000
+      internalID: 4742918028144542651
       vertices: []
       indices: 
       edges: []
@@ -140,7 +140,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 011f33c34696043beb175b97e28fbde6
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -150,7 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UIIconVibrationOff_0: 6280654314609205625
+      UIIconWifi_0: 4742918028144542651
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
