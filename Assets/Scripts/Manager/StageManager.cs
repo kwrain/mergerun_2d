@@ -197,27 +197,25 @@ public class StageManager : Singleton<StageManager>
 
   #region Obstacle
 
-  private Dictionary<Type, Queue<ObstacleBase>> obstaclePool = new();
+  private Dictionary<ObstacleTypes, Queue<ObstacleBase>> obstaclePool = new();
 
-  public T PeekObstacleInPool<T>() where T : ObstacleBase
+  public ObstacleBase PeekObstacleInPool(ObstacleTypes type)
   {
-    var type = typeof(T);
-
-    T obstacle;
+    ObstacleBase obstacle = null;
     if (obstaclePool.ContainsKey(type))
     {
       if (obstaclePool[type].Count == 0)
       {
-        obstacle = Create<T>();
+        obstacle = Create();
       }
       else
       {
-        obstacle = (T)obstaclePool[type].Dequeue();
+        obstacle = obstaclePool[type].Dequeue();
       }
     }
     else
     {
-      obstacle = Create<T>();
+      obstacle = Create();
     }
 
     if (obstacle == null)
@@ -229,19 +227,20 @@ public class StageManager : Singleton<StageManager>
     stageObstalce.Add(obstacle);
     return obstacle;
 
-    T Create<T>() where T : ObstacleBase
+    ObstacleBase Create()
     {
-      if (stageDataTable.mergeableObject == null)
-        return null;
+      switch (type)
+      {
+        case ObstacleTypes.Spike:
+          obstacle = Instantiate(StageDataTable.obstacleSpike, obstacleParent);
+          break;
 
-      var go = Instantiate(stageDataTable.mergeableObject, obstacleParent);
-      if (go == null)
-        return null;
+        case ObstacleTypes.Goal:
+          obstacle = Instantiate(StageDataTable.obstacleGoal, obstacleParent);
+          break;
+      }
 
-#if UNITY_EDITOR
-      go.name = go.GetHashCode().ToString();
-#endif
-      return go.GetComponent<T>();
+      return obstacle;
     }
   }
 
@@ -252,7 +251,7 @@ public class StageManager : Singleton<StageManager>
 
     // // nedd check OnUpdate object;
     // GameManager.Instance.RemoveUpdateModel(obj);
-    var type = obstacle.GetType();
+    var type = obstacle.Type;
     if (!obstaclePool.ContainsKey(type))
     {
       obstaclePool.Add(type, new Queue<ObstacleBase>());
@@ -376,18 +375,7 @@ public class StageManager : Singleton<StageManager>
 
     foreach (var obstacleData in data.obstacleData)
     {
-      ObstacleBase obstacle = null;
-      switch (obstacleData.type)
-      {
-        case ObstacleTypes.Spike:
-          obstacle = PeekObstacleInPool<ObstacleSpike>();
-          break;
-
-        case ObstacleTypes.Goal:
-          obstacle = PeekObstacleInPool<ObstacleGoal>();
-          break;
-      }
-
+      var obstacle = PeekObstacleInPool(obstacleData.type);
       if (obstacle != null)
       {
         obstacle.SetData(obstacleData);
@@ -400,8 +388,8 @@ public class StageManager : Singleton<StageManager>
       if (mergeable != null)
       {
         mergeable.SetData(mergeableData);
+        mergeable.SetLevel(SOManager.Instance.PlayerPrefsModel.UserLevel + mergeableData.level);
       }
-      mergeable.SetLevel(SOManager.Instance.PlayerPrefsModel.UserLevel + mergeableData.level);
     }
   }
 
@@ -419,6 +407,7 @@ public class StageManager : Singleton<StageManager>
     var stage = SOManager.Instance.PlayerPrefsModel.UserLastStage;
     PlayerSetting();
     LoadStage(stage, infinity);
+    Debug.Log("StartStage");
   }
 
   public void RestartStage()
