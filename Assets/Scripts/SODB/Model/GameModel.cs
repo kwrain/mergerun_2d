@@ -5,24 +5,16 @@ using FAIRSTUDIOS.SODB.Property;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// 디바이스 관련된 정보나, 옵션 정보를 멤버로 갖는다.
-/// </summary>
 [CreateAssetMenu(fileName = "GameModel", menuName = "Model/GameModel")]
 public class GameModel : ModelBase
 {
-  // Default
-  [SerializeField] protected PropertyString deviceToken;
+  [SerializeField] protected PropertyString currnetStage;
+  [SerializeField] protected PropertyString bestLevel;
 
-  [SerializeField] protected PropertyString gameVersion;
-  [SerializeField] protected PropertyString currentVersion;
+  [SerializeField] protected PropertyBoolean stageComplete;
+  [SerializeField] protected PropertyBoolean infinityMode;
+  [SerializeField] protected PropertyBoolean disconnectInternet;
 
-  [SerializeField] protected PropertyString marketType;
-
-  // Refresh
-  [SerializeField] protected PropertyBoolean refresh;
-
-  // TODO : rename to onUnloadIslandScene
   [NonSerialized] private Dictionary<object, Dictionary<string, Action>> onLogOutSucceeded;
 
   public static GameModel Global
@@ -36,13 +28,37 @@ public class GameModel : ModelBase
     }
   }
 
-  public string DeviceToken
+  public string CountryCode => "ko_KR";
+
+  public string CurrentStage
   {
-    get => deviceToken.RuntimeValue;
-    set => deviceToken.RuntimeValue = value;
+    get => currnetStage.RuntimeValue;
+    set => currnetStage.RuntimeValue = value;
   }
 
-  public string CountryCode => "ko_KR";
+  public string BestLevel
+  {
+    get => bestLevel.RuntimeValue;
+    set => bestLevel.RuntimeValue = value;
+  }
+
+  public bool StageComplete
+  {
+    get => stageComplete.RuntimeValue;
+    set => stageComplete.RuntimeValue = value;
+  }
+
+  public bool InfinityMode
+  {
+    get => infinityMode.RuntimeValue;
+    set => infinityMode.RuntimeValue = value;
+  }
+
+  public bool DisconnectInternet
+  {
+    get => disconnectInternet.RuntimeValue;
+    set => disconnectInternet.RuntimeValue = value;
+  }
 
   public override void OnApplicationPauseModel(bool pauseStatus)
   {
@@ -58,14 +74,6 @@ public class GameModel : ModelBase
       {
       }
     }
-  }
-
-  public void Reset()
-  {
-  }
-
-  public void ResetLoginInfo()
-  {
   }
 
   /// <summary>

@@ -79,7 +79,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          level: 0
+          level: 1
         - position: {x: 0, y: 9, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
@@ -149,7 +149,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          level: 0
+          level: 1
     keyCollision: 0
   infinityStagedata:
     list:
@@ -199,7 +199,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}
           offset: {x: 0, y: 0}
-          level: 0
+          level: 1
         - position: {x: 0, y: 9, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 0, y: 0}

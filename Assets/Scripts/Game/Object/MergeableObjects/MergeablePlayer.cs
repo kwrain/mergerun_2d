@@ -16,7 +16,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   [SerializeField] private float sensitivityY = 0.01f;  // 터치 Y 민감도 (드래그 반영 비율)
 
   [Header("[Extra Speed Settings]")]
-  [SerializeField] private bool appliedExtraYSpeed;       // 터치에 의해 발생한 추가 속도 적용 여부
+  private bool appliedExtraYSpeed;       // 터치에 의해 발생한 추가 속도 적용 여부
   [SerializeField] private float extraSpeedDecayRate = 2f;  // 초당 감소 속도 (값이 클수록 빨리 0으로 감속)
   [SerializeField] private float maxExtraSpeed = 5f;         // 추가 속도의 최대치
 
@@ -155,6 +155,8 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     if (StageManager.Instance.Infinity)
     {
       SOManager.Instance.PlayerPrefsModel.UserBestLevel = Level;
+      var text = SOManager.Instance.GameDataTable.PowerOfTwoString(Level);
+      StageManager.Instance.SetText(text);
     }
   }
 
@@ -284,7 +286,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       if (StageManager.Instance.Infinity)
       {
         // 지정된 단계를 초과하지 못하는 경우
-        if (Level < SOManager.Instance.PlayerPrefsModel.UserLevel + goal.LimitRelativeLevel)
+        if (Level < SOManager.Instance.PlayerPrefsModel.UserSavedLevel + goal.LimitRelativeLevel)
         {
           // 벽에 부딪힌 경우 더 이상 진행이 불가능할때,
           // 이동을 멈추고, 죽는 연출 이후, 광고를 노출한다.
@@ -299,8 +301,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       }
       else
       {
-        // 경험치 체크
-        SOManager.Instance.PlayerPrefsModel.UserLevel = Level;
+        StageManager.Instance.CompleteStage();
       }
     }
   }

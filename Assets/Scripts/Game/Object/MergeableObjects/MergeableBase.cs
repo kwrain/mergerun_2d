@@ -21,7 +21,7 @@ public class MergeableBase : BaseObject
   [SerializeField, Tooltip("커지는 비율")] protected float scaleUpFactor = 1.5f; // 커지는 비율 (원래 크기의 1.2배)
   [SerializeField, Tooltip("작아지는 비율")] protected float scaleDownFactor = 0.7f;
 
-  [Header("[Data]"), SerializeField] protected LevelDataTable.Data levelData;
+  [Header("[Data]"), SerializeField] protected GameDataTable.LevelData levelData;
 
   [field: SerializeField] public int Level { get; protected set; } = 1;
 
@@ -94,13 +94,9 @@ public class MergeableBase : BaseObject
   [ContextMenu("UpdateLevelData")]
   protected virtual void UpdateLevelData()
   {
-    Debug.Log($"UpdateLevelData {Level}");
-    var table = SOManager.Instance.LevelDataTable;
-    levelData = table.GetData(Level);
-
-    // 이미지 교체
-    spriteRenderer.sprite = table.SpriteAtlas.GetSprite($"m{Level}");
-    // 텍스트 교체
+    var table = SOManager.Instance.GameDataTable;
+    levelData = table.GetLevelData(Level);
+    spriteRenderer.sprite = table.SpriteAtlas.GetSprite($"m{(Level - 1) % 11 + 1}");
     text.text = levelData.PowerOfTwoString;
   }
 
@@ -111,7 +107,6 @@ public class MergeableBase : BaseObject
     transform.localRotation = Quaternion.identity;
 
     Initialize();
-    SetLevel(mergeableData.level);
   }
 
   public virtual void SetLevel(int level)

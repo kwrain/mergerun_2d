@@ -136,10 +136,10 @@ public partial class PlayerPrefsModel : ModelBase
     #region INT_UserPrefs
     INT_UserPrefs,
 
-    USER_LEVEL,
-    USER_EXP,
+    USER_SAVED_LEVEL,
+    USER_SAVED_EXP,
 
-    USER_LAST_STAGE, // 일반모드 진행 단계
+    USER_SAVED_STAGE, // 일반모드 진행 단계
 
     USER_BEST_LEVEL, // 무한모드 최고 합성 단계
 
@@ -160,6 +160,7 @@ public partial class PlayerPrefsModel : ModelBase
     #region INT_DevicePrefs
     INT_DevicePrefs,
 
+    MAX_SAVED_LEVEL,
     #endregion
 
     #region FLOAT_DevicePrefs
@@ -168,34 +169,48 @@ public partial class PlayerPrefsModel : ModelBase
 
     #region BOOL_DevicePrefs
     BOOL_DevicePrefs,
+
+    VIBRATION_ENABLED,
     #endregion
 
     Count,
   }
   #endregion
 
-  public int UserLevel
+  public int UserSavedLevel
   {
-    get => userPrefsInt[nameof(PlayerPrefsKey.USER_LEVEL)];
-    set => userPrefsInt[nameof(PlayerPrefsKey.USER_LEVEL)] = value;
+    get => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_LEVEL)];
+    set => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_LEVEL)] = value;
   }
 
-  public int UserExp
+  public int UserSavedExp
   {
-    get => userPrefsInt[nameof(PlayerPrefsKey.USER_EXP)];
-    set => userPrefsInt[nameof(PlayerPrefsKey.USER_EXP)] = value;
+    get => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_EXP)];
+    set => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_EXP)] = value;
   }
 
-  public int UserLastStage
+  public int UserSavedStage
   {
-    get => userPrefsInt[nameof(PlayerPrefsKey.USER_LAST_STAGE)];
-    set => userPrefsInt[nameof(PlayerPrefsKey.USER_LAST_STAGE)] = value;
+    get => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_STAGE)];
+    set => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_STAGE)] = value;
   }
 
   public int UserBestLevel
   {
     get => userPrefsInt[nameof(PlayerPrefsKey.USER_BEST_LEVEL)];
     set => userPrefsInt[nameof(PlayerPrefsKey.USER_BEST_LEVEL)] = value;
+  }
+
+  public int MaxSavedLevel
+  {
+    get => devicePrefsInt[nameof(PlayerPrefsKey.MAX_SAVED_LEVEL)];
+    set => devicePrefsInt[nameof(PlayerPrefsKey.MAX_SAVED_LEVEL)] = value;
+  }
+
+  public bool VibrationEnabled
+  {
+    get => devicePrefsBool[nameof(PlayerPrefsKey.VIBRATION_ENABLED)];
+    set => devicePrefsBool[nameof(PlayerPrefsKey.VIBRATION_ENABLED)] = value;
   }
 
 }

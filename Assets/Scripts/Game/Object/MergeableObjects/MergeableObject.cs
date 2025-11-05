@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class MergeableObject : MergeableBase
 {
+  [field: SerializeField, Header("[For Edit]")] public int RelativeLevel { get; private set; }
+
   protected Vector2 lastVelocity; // 충돌 직전 속도를 비교하기 위해 사용
 
   public bool IsMergeable { get; set; }
@@ -10,6 +12,27 @@ public class MergeableObject : MergeableBase
   protected virtual void FixedUpdate()
   {
     lastVelocity = rb.linearVelocity;
+  }
+
+  public override void SetData(StageDataTable.MergeableData mergeableData)
+  {
+    base.SetData(mergeableData);
+
+    RelativeLevel = mergeableData.relativeLevel;
+    SetLevel(mergeableData.relativeLevel);
+  }
+
+  protected override void UpdateLevelData()
+  {
+    if (Application.isPlaying)
+    {
+      base.UpdateLevelData();
+    }
+    else
+    {
+      // spriteRenderer.sprite = table.SpriteAtlas.GetSprite($"m{Level - 1}");
+      text.text = RelativeLevel.ToString();
+    }
   }
 
   protected override void Merge(MergeableObject other)

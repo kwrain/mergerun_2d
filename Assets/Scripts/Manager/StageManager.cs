@@ -6,12 +6,13 @@ using static ObstacleBase;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif 
 
-public class StageManager : Singleton<StageManager>
+public partial class StageManager : Singleton<StageManager>
 {
   private const int POOLING_MAX_SIZE = 30;
 
@@ -74,7 +75,29 @@ public class StageManager : Singleton<StageManager>
   {
     base.Start();
 
+    SetUI();
     StartStage();
+  }
+
+  private void OnEnable()
+  {
+#if !UNITY_EDITOR
+    AdManager.Instance.AddOnInternetLostListener(OnInternetLost);
+    AdManager.Instance.AddOnInternetRestoredListener(OnInternetRestored);
+#endif
+  }
+
+  private void OnDisable()
+  {
+#if !UNITY_EDITOR
+    AdManager.Instance.RemoveOnInternetLostListener(OnInternetLost);
+    AdManager.Instance.RemoveOnInternetRestoredListener(OnInternetRestored);
+#endif
+  }
+
+  private void Update()
+  {
+
   }
 
 #if UNITY_EDITOR
@@ -141,7 +164,7 @@ public class StageManager : Singleton<StageManager>
 
   #region Map
 
-  private Queue<MapElement> mapElementPool = new ();
+  private Queue<MapElement> mapElementPool = new();
 
   public MapElement PeekMapElementInPool(MapElementTypes elementType)
   {
@@ -316,7 +339,7 @@ public class StageManager : Singleton<StageManager>
   {
     obj.SetActive(false);
     stageMergeable.Remove(obj);
-    
+
     // nedd check OnUpdate object;
     GameManager.Instance.RemoveUpdateModel(obj);
 
@@ -339,16 +362,17 @@ public class StageManager : Singleton<StageManager>
   {
     if (player != null)
     {
-      var levelData = SOManager.Instance.LevelDataTable.GetData(SOManager.Instance.PlayerPrefsModel.UserLevel);
+      var savedLevel = SOManager.Instance.PlayerPrefsModel.UserSavedLevel;
+      var levelData = SOManager.Instance.GameDataTable.GetLevelData(savedLevel);
       if (levelData != null)
       {
         MergeableData data = new()
         {
-          level = levelData.level,
           scale = Vector3.one * levelData.scale
         };
 
         player.SetData(data);
+        player.SetLevel(savedLevel);
       }
     }
   }
@@ -364,14 +388,19 @@ public class StageManager : Singleton<StageManager>
       return;
 
     stageData = data;
-    foreach (var mapData in data.mapData)
+    GameModel.Global.InfinityMode = data.infinity;
+    if (!data.infinity)
     {
-      var element = PeekMapElementInPool(mapData.type);
-      if (element != null)
-      {
-        element.SetData(mapData);
-      }
+      SetText(data.stageId.ToString());
     }
+    foreach (var mapData in data.mapData)
+      {
+        var element = PeekMapElementInPool(mapData.type);
+        if (element != null)
+        {
+          element.SetData(mapData);
+        }
+      }
 
     foreach (var obstacleData in data.obstacleData)
     {
@@ -388,14 +417,9 @@ public class StageManager : Singleton<StageManager>
       if (mergeable != null)
       {
         mergeable.SetData(mergeableData);
-        mergeable.SetLevel(SOManager.Instance.PlayerPrefsModel.UserLevel + mergeableData.level);
+        mergeable.SetLevel(SOManager.Instance.PlayerPrefsModel.UserSavedLevel + mergeableData.relativeLevel);
       }
     }
-  }
-
-  public void UnloadStage()
-  {
-
   }
 
   /// <summary>
@@ -404,7 +428,7 @@ public class StageManager : Singleton<StageManager>
   public void StartStage(bool infinity = false)
   {
     Debug.Log("StartStage");
-    var stage = SOManager.Instance.PlayerPrefsModel.UserLastStage;
+    var stage = SOManager.Instance.PlayerPrefsModel.UserSavedStage;
     PlayerSetting();
     LoadStage(stage, infinity);
     Debug.Log("StartStage");
@@ -416,6 +440,80 @@ public class StageManager : Singleton<StageManager>
     PlayerSetting();
     LoadStage(stageData.stageId, stageData.infinity);
   }
+
+  public void CompleteStage()
+  {
+    // 경험치 체크
+    var level = SOManager.Instance.PlayerPrefsModel.UserSavedLevel;
+    var expData = SOManager.Instance.GameDataTable.GetExpData(level);
+    if (expData != null)
+    {
+      var exp = (int)Math.Pow(2, player.Level); // 쌓을수잇는 경험치
+      var currExp = SOManager.Instance.PlayerPrefsModel.UserSavedExp;
+      if (currExp + exp >= expData.exp)
+      {
+        // 최대 레벨이 아닌 경우
+        if (level < SOManager.Instance.PlayerPrefsModel.MaxSavedLevel)
+        {
+          SOManager.Instance.PlayerPrefsModel.UserSavedLevel = ++level;
+          currExp = currExp + exp - expData.exp;
+          expData = SOManager.Instance.GameDataTable.GetExpData(level);
+        }
+        else // 최대 레벨인 경우
+        {
+          currExp = expData.exp;
+        }
+      }
+      else
+      {
+        currExp += exp;
+      }
+
+      SOManager.Instance.PlayerPrefsModel.UserSavedExp = currExp;
+
+      expProgressBar.SetProgress(currExp / expData.exp);
+      expProgressBar.SetText($"{currExp}/{expData.exp}");
+    }
+
+    SOManager.Instance.GameModel.StageComplete = true;
+    SOManager.Instance.PlayerPrefsModel.UserSavedStage = StageID + 1;
+
+    StartCoroutine(Timer(3f, () =>
+    {
+      // 전면 광고 노출
+#if UNITY_EDITOR
+      InterstitialAdCompleted();
+#else
+      AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
+#endif
+    }));
+
+    // 레벨 완료 연출 시간 보장(3 ~ 5초) -> 광고 노출 이후 스테이지 재시작 처리를 한다.
+
+    IEnumerator Timer(float time, Action onComplete)
+    {
+      yield return new WaitForSeconds(time);
+      onComplete?.Invoke();
+    }
+
+    void InterstitialAdCompleted()
+    {
+      SOManager.Instance.GameModel.StageComplete = false;
+      StartStage();
+    }
+  }
+
+#if !UNITY_EDITOR
+  private void OnInternetLost()
+  {
+    SOManager.Instance.GameModel.DisconnectInternet = true;
+  }
+
+  private void OnInternetRestored()
+  {
+    SOManager.Instance.GameModel.DisconnectInternet = false;
+  }
+#endif
 }
 
 #region EDITOR
@@ -565,7 +663,7 @@ public class StageManagerEditor : Editor
           scale = mergeable.transform.localScale,
           // size = mergeable.GetComponent<CircleCollider2D>().size,
           offset = mergeable.GetComponent<CircleCollider2D>().offset,
-          level = mergeable.Level
+          relativeLevel = mergeable.RelativeLevel
         };
 
         stageData.mergeableData.Add(data);

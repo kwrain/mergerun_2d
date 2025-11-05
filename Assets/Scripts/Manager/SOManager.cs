@@ -56,9 +56,9 @@ public class SOManager : Singleton<SOManager>
 
   #region Game Data
 
-  [SerializeField] private LevelDataTable levelDataTable;
+  [SerializeField] private GameDataTable gameDataTable;
 
-  public LevelDataTable LevelDataTable => levelDataTable;
+  public GameDataTable GameDataTable => gameDataTable;
   #endregion
 
   protected override void Awake()

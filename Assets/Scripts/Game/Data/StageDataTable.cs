@@ -50,7 +50,7 @@ public class StageDataTable : ScriptableObject
   [Serializable]
   public class MergeableData : StageObjectData
   {
-    public int level;
+    public int relativeLevel;
   }
 
   [Header("[Prefabs]")] public MapGround mapElementGround;

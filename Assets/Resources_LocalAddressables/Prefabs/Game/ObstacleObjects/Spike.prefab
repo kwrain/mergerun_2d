@@ -149,5 +149,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   boxCollider: {fileID: 6278321898404254134}
-  overlapPercentage: 50
-  cooltime: 2
+  overlapPercentage: 0.1
