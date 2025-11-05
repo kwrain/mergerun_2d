@@ -389,9 +389,15 @@ public partial class StageManager : Singleton<StageManager>
 
     stageData = data;
     GameModel.Global.InfinityMode = data.infinity;
-    if (!data.infinity)
+    if (data.infinity)
     {
-      SetText(data.stageId.ToString());
+      var level = SOManager.Instance.PlayerPrefsModel.UserBestLevel;
+      var text = SOManager.Instance.GameDataTable.PowerOfTwoString(level);
+      SetText(text);
+    }
+    else
+    {
+      SetText((data.stageId + 1).ToString());
     }
     foreach (var mapData in data.mapData)
       {

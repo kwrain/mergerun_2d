@@ -119,6 +119,7 @@ public class MergeableBase : BaseObject
   protected virtual void Merge(MergeableObject other)
   {
     IsMerging = true;
+    Level++;
     // 2. 'other' 오브젝트를 0.3초간 'this'의 위치로 이동
 
     other.circleCollider.enabled = false;
@@ -155,8 +156,7 @@ public class MergeableBase : BaseObject
       // 3. 이동이 완료되면 'this' 오브젝트의 스케일을 변경하는 시퀀스 시작
       // 먼저 커지는 애니메이션
 
-      Debug.Log(Level);
-      SetLevel(Level + 1);
+      SetLevel(Level);
       StageManager.Instance.PushMergeableInPool(other);
       TweenScale(Vector3.one * levelData.scale * scaleUpFactor, scaleUpDuration, Ease.InQuad, ScaleComplete);
     }
