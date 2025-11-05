@@ -19,7 +19,14 @@ public class MergeableObject : MergeableBase
     base.SetData(mergeableData);
 
     RelativeLevel = mergeableData.relativeLevel;
-    SetLevel(mergeableData.relativeLevel);
+    if (Application.isPlaying)
+    {
+      SetLevel(SOManager.Instance.PlayerPrefsModel.UserSavedLevel + RelativeLevel);
+    }
+    else
+    {
+      SetLevel(mergeableData.relativeLevel);
+    }
   }
 
   protected override void UpdateLevelData()

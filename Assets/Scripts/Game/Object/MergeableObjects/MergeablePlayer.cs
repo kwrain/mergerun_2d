@@ -220,7 +220,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     if (ignoreSpike)
       return;
 
-    if (Level > 0)
+    if (Level > 1)
     {
       // 한 단계 감소하고, MergeableObject 를 생성한다.
       SetLevel(--Level);
