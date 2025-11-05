@@ -31,5 +31,6 @@ public partial class StageManager
   public void OnToggleModeChange(bool value)
   {
     GameModel.Global.InfinityMode = value;
+    StartStage(value);
   }
 }
