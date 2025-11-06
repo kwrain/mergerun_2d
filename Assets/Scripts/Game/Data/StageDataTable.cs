@@ -32,8 +32,6 @@ public class StageDataTable : ScriptableObject
   public class MapData : StageObjectData
   {
     public MapElement.MapElementTypes type;
-    public bool isFrist; // ground 전용
-    public bool isLast; // ground 전용
   }
 
   // --- 장애물 데이터 ---

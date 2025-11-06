@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.U2D;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,27 +10,13 @@ public class MapGround : MapElement
   public SpriteRenderer spriteRendererTexture;
   [SerializeField] private SpriteAtlas atlas;
 
-  public bool IsFirst => Data.isFrist;
-  public bool IsLast => Data.isLast;
-
   public override void SetData(StageDataTable.MapData mapData)
   {
     base.SetData(mapData);
 
-    if (IsFirst)
-    {
-      spriteRenderer.sprite = atlas.GetSprite("MapRoadTop");
-    }
-    else if (IsLast)
-    {
-      spriteRenderer.sprite = atlas.GetSprite("MapRoadBottom");
-    }
-    else
-    {
-      spriteRenderer.sprite = atlas.GetSprite("MapRoad");
-    }
+    spriteRenderer.sprite = atlas.GetSprite("MapRoad");
 
-    var size = mapData.size - Vector2.one * 0.5f;
+    var size = mapData.size - Vector2.one * 0.15f;
     spriteRendererTexture.size = size;
     spriteRendererTexture.transform.localPosition = new Vector3(0f, (mapData.size.y - size.y) * 0.5f, 0f);
   }
