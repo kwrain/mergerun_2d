@@ -203,7 +203,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       base.Drop();
     }
 
-    StageManager.Instance.RestartStage();
+    StageManager.Instance.StartStage();
   }
 
 
@@ -275,7 +275,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     else
     {
       // 게임오버 -> 재시작
-      StageManager.Instance.RestartStage();
+      StageManager.Instance.StartStage();
     }
   }
 
@@ -292,7 +292,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           // 이동을 멈추고, 죽는 연출 이후, 광고를 노출한다.
           // 리워드광고 완료 이후 스테이지 재시작 처리를 한다.
           Movable = false;
-          StageManager.Instance.RestartStage();
+          StageManager.Instance.StartStage();
         }
         else
         {

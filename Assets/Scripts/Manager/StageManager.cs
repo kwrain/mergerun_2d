@@ -1,12 +1,12 @@
+using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using static StageDataTable;
 using static MapElement;
 using static ObstacleBase;
-using System;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -19,7 +19,6 @@ public partial class StageManager : Singleton<StageManager>
   [SerializeField] private MergeablePlayer player;
 
   [Header("[Settings]")]
-  [SerializeField] private bool isTest;
   [SerializeField] private Transform startPosition;
 
   [Header("[Parents]")]
@@ -29,11 +28,14 @@ public partial class StageManager : Singleton<StageManager>
 
   [Header("[Data]")]
   [SerializeField] private StageDataTable stageDataTable;
-  [SerializeField] private StageData stageData;
 
-  private List<MapElement> stageMapElements = new();
-  private List<MergeableObject> stageMergeable = new();
-  private List<ObstacleBase> stageObstalce = new();
+  [SerializeField] private StageData prevStageData;
+  [SerializeField] private StageData stageData;
+  [SerializeField] private StageData nextStageData;
+
+  private Dictionary<int, List<MapElement>> stageMapElements = new();
+  private Dictionary<int, List<MergeableObject>> stageMergeables = new();
+  private Dictionary<int, List<ObstacleBase>> stageObstalces = new();
 
   public StageDataTable StageDataTable => stageDataTable;
   public StageData StageData => stageData;
@@ -95,268 +97,6 @@ public partial class StageManager : Singleton<StageManager>
 #endif
   }
 
-  private void Update()
-  {
-
-  }
-
-#if UNITY_EDITOR
-  /// <summary>
-  /// 에디터의 "Game" 뷰에서만 테스트용 버튼을 노출합니다.
-  /// </summary>
-  private void OnGUI()
-  {
-    // OnGUI는 매 프레임 여러 번 호출될 수 있으므로, 
-    // GUI 스타일을 한 번만 설정하는 것이 좋습니다.
-    GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
-    buttonStyle.fontSize = 20; // 폰트 크기 조절
-
-    // 화면 우측 상단에 "Restart Stage" 버튼을 그립니다.
-    // Rect(x, y, width, height)
-    if (GUI.Button(new Rect(Screen.width - 210, 10, 200, 60), "Restart Stage", buttonStyle))
-    {
-      // 버튼을 클릭하면 RestartStage 함수를 호출합니다.
-      RestartStage();
-    }
-
-    if (GUI.Button(new Rect(Screen.width - 210, 70, 200, 60), "Normal Stage", buttonStyle))
-    {
-      StartStage(false);
-    }
-
-    if (GUI.Button(new Rect(Screen.width - 210, 130, 200, 60), "Limit Stage", buttonStyle))
-    {
-      StartStage(true);
-    }
-  }
-#endif
-
-  public override Task Initialize()
-  {
-    ClearStageObjects();
-
-    return base.Initialize();
-  }
-
-  private void ClearStageObjects()
-  {
-    for (int i = stageMapElements.Count - 1; i >= 0; i--)
-    {
-      var value = stageMapElements[i];
-      PushMapElementInPool(value);
-    }
-
-    for (int i = stageObstalce.Count - 1; i >= 0; i--)
-    {
-      var value = stageObstalce[i];
-      PushObstacleInPool(value);
-    }
-
-    for (int i = stageMergeable.Count - 1; i >= 0; i--)
-    {
-      var value = stageMergeable[i];
-      PushMergeableInPool(value);
-    }
-    stageMapElements.Clear();
-    stageObstalce.Clear();
-    stageMergeable.Clear();
-  }
-
-  #region Map
-
-  private Queue<MapElement> mapElementPool = new();
-
-  public MapElement PeekMapElementInPool(MapElementTypes elementType)
-  {
-    MapElement element = null;
-    if (mapElementPool.Count == 0)
-    {
-      element = Create();
-    }
-    else
-    {
-      element = mapElementPool.Dequeue();
-    }
-
-    element.SetActive(true);
-    stageMapElements.Add(element);
-    return element;
-
-    MapElement Create()
-    {
-      switch (elementType)
-      {
-        case MapElementTypes.Ground:
-          element = Instantiate(stageDataTable.mapElementGround, mapParent);
-          break;
-
-        case MapElementTypes.Bridge:
-          element = Instantiate(stageDataTable.mapElementBridge, mapParent);
-          break;
-      }
-
-      return element;
-    }
-  }
-
-  public void PushMapElementInPool(MapElement element)
-  {
-    element.SetActive(false);
-    stageMapElements.Remove(element);
-
-    // // nedd check OnUpdate object;
-    // GameManager.Instance.RemoveUpdateModel(obj);
-    if (mapElementPool.Count >= POOLING_MAX_SIZE)
-    {
-      GameManager.Instance.ScheduleForDestruction(element.gameObject);
-    }
-    else
-    {
-      mapElementPool.Enqueue(element);
-    }
-  }
-
-  #endregion Map
-
-  #region Obstacle
-
-  private Dictionary<ObstacleTypes, Queue<ObstacleBase>> obstaclePool = new();
-
-  public ObstacleBase PeekObstacleInPool(ObstacleTypes type)
-  {
-    ObstacleBase obstacle = null;
-    if (obstaclePool.ContainsKey(type))
-    {
-      if (obstaclePool[type].Count == 0)
-      {
-        obstacle = Create();
-      }
-      else
-      {
-        obstacle = obstaclePool[type].Dequeue();
-      }
-    }
-    else
-    {
-      obstacle = Create();
-    }
-
-    if (obstacle == null)
-    {
-      return null;
-    }
-
-    obstacle.SetActive(true);
-    stageObstalce.Add(obstacle);
-    return obstacle;
-
-    ObstacleBase Create()
-    {
-      switch (type)
-      {
-        case ObstacleTypes.Spike:
-          obstacle = Instantiate(StageDataTable.obstacleSpike, obstacleParent);
-          break;
-
-        case ObstacleTypes.Goal:
-          obstacle = Instantiate(StageDataTable.obstacleGoal, obstacleParent);
-          break;
-      }
-
-      return obstacle;
-    }
-  }
-
-  public void PushObstacleInPool(ObstacleBase obstacle)
-  {
-    obstacle.SetActive(false);
-    stageObstalce.Remove(obstacle);
-
-    // // nedd check OnUpdate object;
-    // GameManager.Instance.RemoveUpdateModel(obj);
-    var type = obstacle.Type;
-    if (!obstaclePool.ContainsKey(type))
-    {
-      obstaclePool.Add(type, new Queue<ObstacleBase>());
-    }
-
-    if (obstaclePool[type].Count >= POOLING_MAX_SIZE)
-    {
-      GameManager.Instance.ScheduleForDestruction(obstacle.gameObject);
-    }
-    else
-    {
-      obstaclePool[type].Enqueue(obstacle);
-    }
-  }
-
-  #endregion Obstacle
-
-  #region MergeableObject
-
-  private Queue<MergeableObject> mergeablePool = new();
-
-  public MergeableObject PeekMergeableInPool()
-  {
-    MergeableObject obj;
-
-    // 풀에서 건물 가져오기
-    if (mergeablePool.Count == 0)
-    {
-      // create
-      // 생성 시 생성 위치 지정 필수.
-      obj = Create();
-    }
-    else
-    {
-      obj = mergeablePool.Dequeue();
-    }
-
-    if (obj == null)
-    {
-      return null;
-    }
-
-
-    obj.SetActive(true);
-    stageMergeable.Add(obj);
-    return obj;
-
-    MergeableObject Create()
-    {
-      if (stageDataTable.mergeableObject == null)
-        return null;
-
-      var go = Instantiate(stageDataTable.mergeableObject, mergeableParent);
-      if (go == null)
-        return null;
-
-      return go.GetComponent<MergeableObject>();
-    }
-  }
-
-  public void PushMergeableInPool(MergeableObject obj)
-  {
-    obj.SetActive(false);
-    stageMergeable.Remove(obj);
-
-    // nedd check OnUpdate object;
-    GameManager.Instance.RemoveUpdateModel(obj);
-
-    // UI 처리 (안전한 널 체크)
-    // UIManager.Instance?.HideHUD(building);
-
-    if (mergeablePool.Count >= POOLING_MAX_SIZE)
-    {
-      GameManager.Instance.ScheduleForDestruction(obj.gameObject);
-    }
-    else
-    {
-      mergeablePool.Enqueue(obj);
-    }
-  }
-
-  #endregion MergeableObject
 
   private void PlayerSetting()
   {
@@ -377,43 +117,66 @@ public partial class StageManager : Singleton<StageManager>
     }
   }
 
-  public void LoadStage(int stage, bool infinity)
+  private float CalculateStageEndY(List<MapElement> mapElements)
   {
-    Debug.Log($"Load Staget : {stage} / {infinity}");
-    ClearStageObjects();
+    if (mapElements.Count == 0)
+      return 0f;
 
-    // 풀에 있는 오브젝트를 꺼내서 사용한다.
-    var data = stageDataTable.GetStageData(stage, infinity);
-    if (data == null)
-      return;
+    float value = 0;
+    foreach (var e in mapElements)
+    {
+      if (e == null) continue;
+      var sprite = e.GetComponent<SpriteRenderer>();
+      float sizeY = sprite ? sprite.bounds.size.y : e.transform.localScale.y;
+      value = e.transform.position.y + sizeY;
+    }
 
-    stageData = data;
-    GameModel.Global.InfinityMode = data.infinity;
-    if (data.infinity)
+    return value; // 다음 스테이지 시작 기준점
+  }
+
+  private void GenerateStageObjects(StageData data, float offsetY = 0f, bool active = true)
+  {
+    var stageId = data.stageId;
+    if (!stageMapElements.ContainsKey(stageId))
     {
-      var level = SOManager.Instance.PlayerPrefsModel.UserBestLevel;
-      var text = SOManager.Instance.GameDataTable.PowerOfTwoString(level);
-      SetText(text);
+      stageMapElements.Add(stageId, new());
     }
-    else
+    if (!stageObstalces.ContainsKey(stageId))
     {
-      SetText((data.stageId + 1).ToString());
+      stageObstalces.Add(stageId, new());
     }
+    if (!stageMergeables.ContainsKey(stageId))
+    {
+      stageMergeables.Add(stageId, new());
+    }
+
     foreach (var mapData in data.mapData)
+    {
+      var element = PeekMapElementInPool(mapData.type);
+      if (element != null)
       {
-        var element = PeekMapElementInPool(mapData.type);
-        if (element != null)
-        {
-          element.SetData(mapData);
-        }
+        var pos = mapData.position;
+        pos.y += offsetY;
+        element.SetData(mapData);
+        element.transform.position = pos;
+        element.SetActive(active);
+
+        stageMapElements[stageId].Add(element);
       }
+    }
 
     foreach (var obstacleData in data.obstacleData)
     {
       var obstacle = PeekObstacleInPool(obstacleData.type);
       if (obstacle != null)
       {
+        var pos = obstacleData.position;
+        pos.y += offsetY;
         obstacle.SetData(obstacleData);
+        obstacle.transform.position = pos;
+        obstacle.SetActive(active);
+
+        stageObstalces[stageId].Add(obstacle);
       }
     }
 
@@ -422,8 +185,13 @@ public partial class StageManager : Singleton<StageManager>
       var mergeable = PeekMergeableInPool();
       if (mergeable != null)
       {
+        var pos = mergeableData.position;
+        pos.y += offsetY;
         mergeable.SetData(mergeableData);
-        mergeable.SetLevel(SOManager.Instance.PlayerPrefsModel.UserSavedLevel + mergeableData.relativeLevel);
+        mergeable.transform.position = pos;
+        mergeable.SetActive(active);
+
+        stageMergeables[stageId].Add(mergeable);
       }
     }
   }
@@ -433,19 +201,72 @@ public partial class StageManager : Singleton<StageManager>
   /// </summary>
   public void StartStage(bool infinity = false)
   {
-    Debug.Log("StartStage");
-    var stage = SOManager.Instance.PlayerPrefsModel.UserSavedStage;
     PlayerSetting();
-    LoadStage(stage, infinity);
-    Debug.Log("StartStage");
+
+    if (infinity)
+    {
+      LoadInfinityStage();
+    }
+    else
+    {
+      LoadStage();
+    }
   }
 
-  public void RestartStage()
+  private void ClearStageObjects()
   {
-    Debug.Log("RestartStage");
-    PlayerSetting();
-    LoadStage(stageData.stageId, stageData.infinity);
+    foreach (var kv in stageMapElements)
+    {
+      for (int i = kv.Value.Count - 1; i >= 0; i--)
+      {
+        var value = kv.Value[i];
+        PushMapElementInPool(value);
+      }
+    }
+
+    foreach (var kv in stageObstalces)
+    {
+      for (int i = kv.Value.Count - 1; i >= 0; i--)
+      {
+        var value = kv.Value[i];
+        PushObstacleInPool(value);
+      }
+    }
+
+    foreach (var kv in stageMergeables)
+    {
+      for (int i = kv.Value.Count - 1; i >= 0; i--)
+      {
+        var value = kv.Value[i];
+        PushMergeableInPool(value);
+      }
+    }
+
+    stageMapElements.Clear();
+    stageObstalces.Clear();
+    stageMergeables.Clear();
   }
+
+  #region Normal
+
+  public void LoadStage(bool restart = false)
+  {
+    ClearStageObjects();
+
+    if (!restart)
+    {
+      var stage = SOManager.Instance.PlayerPrefsModel.UserSavedStage;
+      var data = stageDataTable.GetStageData(stage, false);
+      if (data == null)
+        return;
+
+      stageData = data;
+      SetText((data.stageId + 1).ToString());
+    }
+
+    GenerateStageObjects(stageData, 0, true);
+  }
+
 
   public void CompleteStage()
   {
@@ -509,6 +330,111 @@ public partial class StageManager : Singleton<StageManager>
     }
   }
 
+  #endregion
+
+  #region Infinity
+
+  private void LoadInfinityStage(bool restart = false)
+  {
+    ClearStageObjects();
+
+    if (restart)
+    {
+
+    }
+    else
+    {
+      var infinityStages = stageDataTable.infinityStagedata.Values.ToList();
+      if (infinityStages.Count == 0)
+      {
+        Debug.LogError("Infinity stage data is empty!");
+        return;
+      }
+
+      stageData = infinityStages[UnityEngine.Random.Range(0, infinityStages.Count)];
+      GenerateStageObjects(stageData, 0f, true);
+
+
+      var level = SOManager.Instance.PlayerPrefsModel.UserBestLevel;
+      var text = SOManager.Instance.GameDataTable.PowerOfTwoString(level);
+      SetText(text);
+    }
+
+    // 다음 스테이지 미리 로드
+    PreloadNextInfinityStage();
+  }
+
+  public void UnloadPrevInfiniytyStage()
+  {
+    if (prevStageData == null)
+      return;
+
+    // 이전 스테이지 정보가 있으면 풀에 넣어준다.
+    var stageId = prevStageData.stageId;
+    var mapElements = stageMapElements[stageId];
+    for (int i = mapElements.Count - 1; i >= 0; i--)
+    {
+      var value = mapElements[i];
+      PushMapElementInPool(value);
+    }
+
+    var obstacles = stageObstalces[stageId];
+    for (int i = obstacles.Count - 1; i >= 0; i--)
+    {
+      var value = obstacles[i];
+      PushObstacleInPool(value);
+    }
+
+    var mergeables = stageMergeables[stageId];
+    for (int i = mergeables.Count - 1; i >= 0; i--)
+    {
+      var value = mergeables[i];
+      PushMergeableInPool(value);
+    }
+  }
+
+  private void PreloadNextInfinityStage()
+  {
+    var infinityStages = stageDataTable.infinityStagedata.Values.ToList();
+    infinityStages.RemoveAll(s => s.stageId == stageData.stageId);
+    if (nextStageData != null)
+    {
+      infinityStages.RemoveAll(s => s.stageId == nextStageData.stageId);
+    }
+    if (prevStageData != null)
+    {
+      infinityStages.RemoveAll(s => s.stageId == prevStageData.stageId);
+    }
+
+    if (infinityStages.Count == 0)
+      return;
+
+    // 오프셋 계산 (이전 스테이지의 마지막 Y)
+    var offsetY = 0f;
+    var mepElements = stageMapElements[stageData.stageId];
+    if (mepElements != null)
+    {
+      offsetY = CalculateStageEndY(mepElements);
+    }
+
+    nextStageData = infinityStages[UnityEngine.Random.Range(0, infinityStages.Count)];
+    // 다음 스테이지 오브젝트 생성 (비활성 상태)
+    GenerateStageObjects(nextStageData, offsetY, true);
+  }
+
+  public void CompleteInfinityStage()
+  {
+    UnloadPrevInfiniytyStage();
+
+    prevStageData = stageData;
+    stageData = nextStageData;
+    nextStageData = null;
+
+    PreloadNextInfinityStage();
+  }
+
+  #endregion
+
 #if !UNITY_EDITOR
   private void OnInternetLost()
   {
@@ -529,6 +455,7 @@ public partial class StageManager : Singleton<StageManager>
 public class StageManagerEditor : Editor
 {
   private int stageId;
+  // private int nextStageId;
   private bool infinity;       // 무한모드 여부
 
   public override void OnInspectorGUI()
@@ -541,6 +468,7 @@ public class StageManagerEditor : Editor
     EditorGUILayout.Space();
     EditorGUILayout.LabelField("[Editor Only]", EditorStyles.boldLabel);
     stageId = EditorGUILayout.IntField("Stage ID", stageId);
+    // nextStageId = EditorGUILayout.IntField("Next Stage ID", nextStageId);
     infinity = EditorGUILayout.Toggle("Infinity", infinity);
 
     // --- ScriptableObject 섹션 ---
@@ -609,15 +537,6 @@ public class StageManagerEditor : Editor
           size = ground.spriteRenderer.size,
           offset = ground.GetComponent<BoxCollider2D>().offset
         };
-
-        if (i == 0)
-        {
-          data.isFrist = true;
-        }
-        else if (i == mapGrounds.Length - 1)
-        {
-          data.isLast = true;
-        }
 
         stageData.mapData.Add(data);
       }
