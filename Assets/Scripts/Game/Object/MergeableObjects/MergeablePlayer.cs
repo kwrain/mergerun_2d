@@ -30,10 +30,24 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   // 새로 추가: OnTouchMoved로 들어온 "즉시 이동할 X 거리(월드 단위)" 누적
   private float pendingXMove = 0f;
 
-  [field: SerializeField] public bool Movable { get; set; }
-
   // 장애물 종류별 감지 시간 필요함.
   private bool ignoreSpike;
+
+  [field: SerializeField] public bool Movable { get; set; }
+
+  public override int Level
+  {
+    get => base.Level;
+    protected set
+    {
+      base.Level = value;
+
+      if (!StageManager.Instance.Infinity)
+      {
+        GameModel.Global.ObstacleGoalColor = GetObstacleGoalColor(value);
+      }
+    }
+  }
 
   protected override void Awake()
   {
@@ -131,6 +145,27 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     });
   }
 
+  public Color GetObstacleGoalColor(int level)
+  {
+    string hex = level switch
+    {
+      1 => "EF471C",// 2 : #EF471C
+      2 => "FF6B32",// 4 : #FF6B32
+      3 => "A04EC0",// 8 : #A04EC0
+      4 => "FFB902",// 16 : #FFB902
+      5 => "FC8C1C",// 32 : #FC8C1C
+      6 => "EF471C",// 64 : #EF471C
+      7 => "CEDA0D",// 128 : #CEDA0D
+      8 => "FF8661",// 256 : #FF8661
+      9 => "F5BD26",// 512 : #F5BD26
+      10 => "A2D03C",// 1024 : #A2D03C
+      11 => "49A837",// 2048 : #49A837
+      _ => null,
+    };
+
+    return hex.ToColorFromHex();
+  }
+
   protected override void Initialize()
   {
     base.Initialize();
@@ -145,6 +180,24 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     IsMerging = ignoreSpike = false;
     gameObject.SetActive(true);
     StartGame();
+  }
+
+  protected override void UpdateLevelData()
+  {
+    base.UpdateLevelData();
+
+    // 팔다리 Mergeable Object 별 Color HexCode
+    // m1 : #C01B09
+    // m2 : #AA3D1E
+    // m3 : #7A289C
+    // m4 : #E5651E
+    // m5 : #C03D07
+    // m6 : #C01B09
+    // m7 : #729301
+    // m8 : #C9370C
+    // m9 : #D3851F
+    // m10 : #447925
+    // m11 : #577133
   }
 
   protected override void Merge(MergeableObject other)

@@ -15,6 +15,8 @@ public class GameModel : ModelBase
   [SerializeField] protected PropertyBoolean infinityMode;
   [SerializeField] protected PropertyBoolean disconnectInternet;
 
+  [SerializeField] protected PropertyColor obstacleGoalColor;
+
   [NonSerialized] private Dictionary<object, Dictionary<string, Action>> onLogOutSucceeded;
 
   public static GameModel Global
@@ -58,6 +60,12 @@ public class GameModel : ModelBase
   {
     get => disconnectInternet.RuntimeValue;
     set => disconnectInternet.RuntimeValue = value;
+  }
+
+  public Color ObstacleGoalColor
+  {
+    get => obstacleGoalColor.RuntimeValue;
+    set => obstacleGoalColor.RuntimeValue = value;
   }
 
   public override void OnApplicationPauseModel(bool pauseStatus)

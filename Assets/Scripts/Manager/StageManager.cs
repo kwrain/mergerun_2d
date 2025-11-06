@@ -43,6 +43,8 @@ public partial class StageManager : Singleton<StageManager>
   public int StageID => stageData.stageId;
   public bool Infinity => stageData.infinity;
 
+  public MergeablePlayer Player => player;
+
   static StageManager()
   {
     // 부모 클래스(Singleton<T>)의 static protected 필드인 prefabPath를 설정합니다.
@@ -201,8 +203,6 @@ public partial class StageManager : Singleton<StageManager>
   /// </summary>
   public void StartStage(bool infinity = false, bool restart = false)
   {
-    PlayerSetting();
-
     if (infinity)
     {
       LoadInfinityStage(restart);
@@ -211,6 +211,8 @@ public partial class StageManager : Singleton<StageManager>
     {
       LoadStage(restart);
     }
+
+    PlayerSetting();
   }
 
   private void ClearStageObjects()

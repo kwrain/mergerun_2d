@@ -23,7 +23,7 @@ public class MergeableBase : BaseObject
 
   [Header("[Data]"), SerializeField] protected GameDataTable.LevelData levelData;
 
-  [field: SerializeField] public int Level { get; protected set; } = 1;
+  [field: SerializeField] public virtual int Level { get; protected set; } = 1;
 
   public bool IsPlayer { get; protected set; } = false;
   public bool IsMerging { get; protected set; } = false;

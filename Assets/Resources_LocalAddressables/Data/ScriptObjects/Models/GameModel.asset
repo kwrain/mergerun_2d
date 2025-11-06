@@ -43,11 +43,13 @@ MonoBehaviour:
   - {fileID: 17078927776824189}
   - {fileID: 4337281253882905390}
   - {fileID: 1493157059084229541}
+  - {fileID: 4954767732407406535}
   currnetStage: {fileID: -6740467918638742975}
   bestLevel: {fileID: 352619467830857559}
   stageComplete: {fileID: 17078927776824189}
   infinityMode: {fileID: 4337281253882905390}
   disconnectInternet: {fileID: 1493157059084229541}
+  obstacleGoalColor: {fileID: 4954767732407406535}
 --- !u!114 &17078927776824189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,6 +135,28 @@ MonoBehaviour:
   runtimeType: 0
   defaultValue: 0
   runtimeValue: 0
+  onPropertyChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4954767732407406535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6739fabbe5ee6b14d983719d317591b3, type: 3}
+  m_Name: obstacleGoalColor
+  m_EditorClassIdentifier: 
+  Comment: 
+  ContextKey: GameModel.obstacleGoalColor
+  model: {fileID: 11400000}
+  dataManageType: 0
+  runtimeType: 0
+  defaultValue: {r: 0, g: 0, b: 0, a: 0}
+  runtimeValue: {r: 0, g: 0, b: 0, a: 0}
   onPropertyChangedEvent:
     m_PersistentCalls:
       m_Calls: []
