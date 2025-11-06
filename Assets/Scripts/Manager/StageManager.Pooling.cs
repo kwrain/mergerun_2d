@@ -43,6 +43,9 @@ public partial class StageManager
 
   public void PushMapElementInPool(MapElement element)
   {
+    if (mapElementPool.Contains(element))
+      return;
+
     element.SetActive(false);
 
     if (mapElementPool.Count >= POOLING_MAX_SIZE)
@@ -107,13 +110,18 @@ public partial class StageManager
 
   public void PushObstacleInPool(ObstacleBase obstacle)
   {
-    obstacle.SetActive(false);
-
     var type = obstacle.Type;
-    if (!obstaclePool.ContainsKey(type))
+    if (obstaclePool.ContainsKey(type))
+    {
+      if(obstaclePool[type].Contains(obstacle))
+        return;
+    }
+    else
     {
       obstaclePool.Add(type, new Queue<ObstacleBase>());
     }
+
+    obstacle.SetActive(false);
 
     if (obstaclePool[type].Count >= POOLING_MAX_SIZE)
     {
@@ -168,8 +176,10 @@ public partial class StageManager
 
   public void PushMergeableInPool(MergeableObject obj)
   {
-    obj.SetActive(false);
+    if (mergeablePool.Contains(obj))
+      return;
 
+    obj.SetActive(false);
     if (mergeablePool.Count >= POOLING_MAX_SIZE)
     {
       GameManager.Instance.ScheduleForDestruction(obj.gameObject);

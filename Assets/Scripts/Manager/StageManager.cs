@@ -29,9 +29,9 @@ public partial class StageManager : Singleton<StageManager>
   [Header("[Data]")]
   [SerializeField] private StageDataTable stageDataTable;
 
-  [SerializeField] private StageData prevStageData;
-  [SerializeField] private StageData stageData;
-  [SerializeField] private StageData nextStageData;
+  private StageData prevStageData;
+  private StageData stageData;
+  private StageData nextStageData;
 
   private Dictionary<int, List<MapElement>> stageMapElements = new();
   private Dictionary<int, List<MergeableObject>> stageMergeables = new();
@@ -199,17 +199,17 @@ public partial class StageManager : Singleton<StageManager>
   /// <summary>
   /// 디바이스에 저장된 정보를 사용한다.
   /// </summary>
-  public void StartStage(bool infinity = false)
+  public void StartStage(bool infinity = false, bool restart = false)
   {
     PlayerSetting();
 
     if (infinity)
     {
-      LoadInfinityStage();
+      LoadInfinityStage(restart);
     }
     else
     {
-      LoadStage();
+      LoadStage(restart);
     }
   }
 
