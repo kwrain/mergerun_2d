@@ -25,6 +25,7 @@ public class GameDataTable : ScriptableObject
     public float speed = 2f;
     public float accel = 3f;
     public float scale = 1.0f;
+    public float animationSpeed = 1.0f;
 
     public long PowerOfTwo
     {
