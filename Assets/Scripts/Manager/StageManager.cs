@@ -478,7 +478,21 @@ public class StageManagerEditor : Editor
     {
       if (GUILayout.Button("Save to ScriptableObject"))
       {
-        SaveStageToSO(stage);
+        bool confirm = EditorUtility.DisplayDialog(
+          "저장 확인",
+          "현재 Stage 데이터를 ScriptableObject에 저장하시겠습니까?",
+          "저장",
+          "취소"
+        );
+
+        if (confirm)
+        {
+          SaveStageToSO(stage);
+        }
+        else
+        {
+          Debug.Log("저장 작업이 취소되었습니다.");
+        }
       }
       if (GUILayout.Button("Load from ScriptableObject"))
       {
