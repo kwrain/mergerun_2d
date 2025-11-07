@@ -17,6 +17,7 @@ public class MapGround : MapElement
     spriteRenderer.sprite = atlas.GetSprite("MapRoad");
 
     var size = mapData.size - Vector2.one * 0.15f;
+    size.x *= 0.9f;
     spriteRendererTexture.size = size;
     spriteRendererTexture.transform.localPosition = new Vector3(0f, (mapData.size.y - size.y) * 0.5f, 0f);
   }
@@ -56,7 +57,9 @@ public class MapGroundEditor : Editor
             Undo.RecordObject(srTexture, "Sync SpriteRenderer Texture Size");
             mapGround.boxCollider.offset = new Vector2(0, mainSize.y * 0.5f);
             mapGround.boxCollider.size = mainSize;
-            srTexture.size = mainSize - Vector2.one * 0.5f;
+            var size = mainSize - Vector2.one * 0.5f;
+            size.x *= 0.91f;
+            srTexture.size = size;
             srTexture.transform.localPosition = new Vector3(0f, (mainSize.y - srTexture.size.y) * 0.5f, 0f);
 
             // 즉시 에디터에 반영
