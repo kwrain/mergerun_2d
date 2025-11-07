@@ -152,12 +152,12 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       1 => "EF471C",// 2 : #EF471C
       2 => "FF6B32",// 4 : #FF6B32
       3 => "A04EC0",// 8 : #A04EC0
-      4 => "FFB902",// 16 : #FFB902
+      4 => "FF9102",// 16 : #FFB902
       5 => "FC8C1C",// 32 : #FC8C1C
       6 => "EF471C",// 64 : #EF471C
       7 => "CEDA0D",// 128 : #CEDA0D
       8 => "FF8661",// 256 : #FF8661
-      9 => "F5BD26",// 512 : #F5BD26
+      9 => "FF9102",// 512 : #F5BD26
       10 => "A2D03C",// 1024 : #A2D03C
       11 => "49A837",// 2048 : #49A837
       _ => null,
