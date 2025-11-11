@@ -206,6 +206,8 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   {
     base.SetData(mergeableData);
 
+
+
     IsMerging = ignoreSpike = false;
     gameObject.SetActive(true);
     StartGame();
@@ -214,6 +216,9 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   protected override void UpdateLevelData()
   {
     base.UpdateLevelData();
+
+    baseXSpeed = levelData.speed;
+    accelerationY = levelData.accel;
 
     armLegSpeedControl.Speed= levelData.animationSpeed;
     
