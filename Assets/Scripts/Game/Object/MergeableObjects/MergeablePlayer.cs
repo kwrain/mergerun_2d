@@ -137,6 +137,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   private void StartGame()
   {
     Movable = false;
+    currentYSpeed = extraYSpeed = 0;
     transform.DOKill();
     transform.localScale = Vector3.zero;
     TweenScale(Vector3.one * levelData.scale * scaleUpFactor, 0.5f, Ease.OutQuad, () =>
