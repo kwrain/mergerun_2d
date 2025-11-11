@@ -5,7 +5,7 @@ using UnityEngine;
 
 public partial class BaseObject
 {
-  [Space, Header("[Animation]"), SerializeField] private Animator animator;
+  [Space, Header("[Animation]"), SerializeField] protected Animator animator;
   private AnimatorControllerParameter[] parameters;
   private Dictionary<string, AnimationClip> animationClips;
   private Dictionary<string, Action> animationEvents;
@@ -81,7 +81,7 @@ public partial class BaseObject
       animationTimerCoroutine = null;
     }
   }
-  
+
   public float GetAnimationLength(string name) => animationClips.ContainsKey(name) ? animationClips[name].length : -1;
 
   private void SetAnimatorController(RuntimeAnimatorController controller)

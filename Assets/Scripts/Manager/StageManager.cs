@@ -7,6 +7,8 @@ using UnityEngine;
 using static StageDataTable;
 using static MapElement;
 using static ObstacleBase;
+using FAIRSTUDIOS.Manager;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -37,8 +39,9 @@ public partial class StageManager : Singleton<StageManager>
   private Dictionary<int, List<MergeableObject>> stageMergeables = new();
   private Dictionary<int, List<ObstacleBase>> stageObstalces = new();
 
+  private bool ReadyInterstitialAd { get; set; }
+
   public StageDataTable StageDataTable => stageDataTable;
-  public StageData StageData => stageData;
 
   public int StageID => stageData.stageId;
   public bool Infinity => stageData.infinity;
@@ -99,6 +102,35 @@ public partial class StageManager : Singleton<StageManager>
 #endif
   }
 
+  private void OnGUI()
+  {
+    // OnGUI는 매 프레임 여러 번 호출될 수 있으므로, 
+    // GUI 스타일을 한 번만 설정하는 것이 좋습니다.
+    GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+    buttonStyle.fontSize = 20; // 폰트 크기 조절
+
+    // 화면 우측 상단에 "Restart Stage" 버튼을 그립니다.
+    // Rect(x, y, width, height)
+    if (GUI.Button(new Rect(Screen.width - 210, 10, 200, 60), "Reset UserData", buttonStyle))
+    {
+      ClearUserData();
+    }
+  }
+
+  [ContextMenu("ClearUserData")]
+  private void ClearUserData()
+  {
+    SOManager.Instance.PlayerPrefsModel.UserBestLevel = 1;
+    SOManager.Instance.PlayerPrefsModel.UserSavedLevel = 1;
+    SOManager.Instance.PlayerPrefsModel.UserSavedExp = 0;
+    SOManager.Instance.PlayerPrefsModel.UserSavedStage = 0;
+  }
+
+  private IEnumerator Timer(float time, Action onComplete)
+  {
+    yield return new WaitForSeconds(time);
+    onComplete?.Invoke();
+  }
 
   private void PlayerSetting()
   {
@@ -203,6 +235,9 @@ public partial class StageManager : Singleton<StageManager>
   /// </summary>
   public void StartStage(bool infinity = false, bool restart = false)
   {
+    StopAllCoroutines();
+    stageCompleteAnimator.SetActive(false);
+
     if (infinity)
     {
       LoadInfinityStage(restart);
@@ -269,9 +304,11 @@ public partial class StageManager : Singleton<StageManager>
     GenerateStageObjects(stageData, 0, true);
   }
 
-
+  [ContextMenu("CompleteStage")]
   public void CompleteStage()
   {
+    player.Movable = false;
+
     // 경험치 체크
     var level = SOManager.Instance.PlayerPrefsModel.UserSavedLevel;
     var expData = SOManager.Instance.GameDataTable.GetExpData(level);
@@ -300,6 +337,7 @@ public partial class StageManager : Singleton<StageManager>
 
       SOManager.Instance.PlayerPrefsModel.UserSavedExp = currExp;
 
+      // expProgressBar.AutoProgress()
       expProgressBar.SetProgress(currExp / expData.exp);
       expProgressBar.SetText($"{currExp}/{expData.exp}");
     }
@@ -307,7 +345,10 @@ public partial class StageManager : Singleton<StageManager>
     SOManager.Instance.GameModel.StageComplete = true;
     SOManager.Instance.PlayerPrefsModel.UserSavedStage = StageID + 1;
 
-    StartCoroutine(Timer(3f, () =>
+    stageCompleteAnimator.SetActive(true);
+    stageCompleteAnimator.SetTrigger("Show");
+
+    StartCoroutine(Timer(stageCompleteWaitTime, () =>
     {
       // 전면 광고 노출
 #if UNITY_EDITOR
@@ -319,19 +360,12 @@ public partial class StageManager : Singleton<StageManager>
 
     // 레벨 완료 연출 시간 보장(3 ~ 5초) -> 광고 노출 이후 스테이지 재시작 처리를 한다.
 
-    IEnumerator Timer(float time, Action onComplete)
-    {
-      yield return new WaitForSeconds(time);
-      onComplete?.Invoke();
-    }
-
     void InterstitialAdCompleted()
     {
       SOManager.Instance.GameModel.StageComplete = false;
       StartStage();
     }
-  }
-
+  } 
   #endregion
 
   #region Infinity
@@ -342,7 +376,13 @@ public partial class StageManager : Singleton<StageManager>
 
     if (restart)
     {
-
+      if (ReadyInterstitialAd)
+      {
+#if !UNITY_EDITOR
+        AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
+#endif
+        ReadyInterstitialAd = false;
+      }
     }
     else
     {
@@ -354,16 +394,23 @@ public partial class StageManager : Singleton<StageManager>
       }
 
       stageData = infinityStages[UnityEngine.Random.Range(0, infinityStages.Count)];
-      GenerateStageObjects(stageData, 0f, true);
-
 
       var level = SOManager.Instance.PlayerPrefsModel.UserBestLevel;
       var text = SOManager.Instance.GameDataTable.PowerOfTwoString(level);
       SetText(text);
+
     }
+
+    GenerateStageObjects(stageData, 0f, true);
 
     // 다음 스테이지 미리 로드
     PreloadNextInfinityStage();
+
+    StartCoroutine(Timer(30,
+    () =>
+     {
+       ReadyInterstitialAd = true;
+     }));
   }
 
   public void UnloadPrevInfiniytyStage()

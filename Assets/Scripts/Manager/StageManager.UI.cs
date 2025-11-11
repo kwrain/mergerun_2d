@@ -11,6 +11,9 @@ public partial class StageManager
 
   [SerializeField] private TextMeshProUGUI text;
 
+  [SerializeField] private Animator stageCompleteAnimator;
+  [SerializeField] private float stageCompleteWaitTime = 3f;
+
   private void SetUI()
   {
     toogleVibe.Set(SOManager.Instance.PlayerPrefsModel.VibrationEnabled, false);

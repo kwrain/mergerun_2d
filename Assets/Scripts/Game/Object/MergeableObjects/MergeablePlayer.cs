@@ -26,6 +26,8 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   [SerializeField] private float extraYSpeed = 0f;       // 터치에 의해 발생한 추가 Y 속도
 
   [Header("[Game Settings]"), SerializeField] private float obstacleDelay = 0.5f;
+  [SerializeField] private SpriteRenderer[] armLegs;
+  private ArmLegSpeedControl armLegSpeedControl;
 
   // 새로 추가: OnTouchMoved로 들어온 "즉시 이동할 X 거리(월드 단위)" 누적
   private float pendingXMove = 0f;
@@ -54,6 +56,10 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     base.Awake();
 
     IsPlayer = true;
+    if (animator != null)
+    {
+      armLegSpeedControl = animator.GetBehaviour<ArmLegSpeedControl>();
+    }
   }
 
   protected override void Start()
@@ -166,6 +172,29 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     return hex.ToColorFromHex();
   }
 
+  public Color GetArmLegColor(int level)
+  {
+    // 팔다리 Mergeable Object 별 Color HexCode
+    string hex = level switch
+    {
+      1 => "C01B09",// 2 : #C01B09
+      2 => "AA3D1E",// 4 : #AA3D1E
+      3 => "7A289C",// 8 : #7A289C
+      4 => "E5651E",// 16 : #E5651E
+      5 => "C03D07",// 32 : #C03D07
+      6 => "C01B09",// 64 : #C01B09
+      7 => "729301",// 128 : #729301
+      8 => "C9370C",// 256 : #C9370C
+      9 => "D3851F",// 512 : #D3851F
+      10 => "447925",// 1024 : #447925
+      11 => "577133",// 2048 : #577133
+      _ => null,
+    };
+
+    return hex.ToColorFromHex();
+  }
+
+
   protected override void Initialize()
   {
     base.Initialize();
@@ -186,18 +215,13 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   {
     base.UpdateLevelData();
 
-    // 팔다리 Mergeable Object 별 Color HexCode
-    // m1 : #C01B09
-    // m2 : #AA3D1E
-    // m3 : #7A289C
-    // m4 : #E5651E
-    // m5 : #C03D07
-    // m6 : #C01B09
-    // m7 : #729301
-    // m8 : #C9370C
-    // m9 : #D3851F
-    // m10 : #447925
-    // m11 : #577133
+    armLegSpeedControl.Speed= levelData.animationSpeed;
+    
+    var color = GetArmLegColor(Level);
+    foreach (var sr in armLegs)
+    {
+      sr.color = color;
+    }
   }
 
   protected override void Merge(MergeableObject other)
@@ -345,17 +369,22 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           // 이동을 멈추고, 죽는 연출 이후, 광고를 노출한다.
           // 리워드광고 완료 이후 스테이지 재시작 처리를 한다.
           Movable = false;
+          goal.Animator.SetTrigger("");
           StageManager.Instance.StartStage(restart: true);
         }
         else
         {
+          goal.Animator.SetTrigger("");
           StageManager.Instance.PushObstacleInPool(goal);
         }
       }
       else
       {
+        goal.Animator.SetTrigger("");
+
         StageManager.Instance.CompleteStage();
       }
+
     }
   }
 

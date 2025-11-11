@@ -23,7 +23,7 @@ public class KProgressBarEditor : Editor
 
   public override void OnInspectorGUI()
   {
-    //base.OnInspectorGUI();
+    base.OnInspectorGUI();
 
     serializedObject.Update();
 

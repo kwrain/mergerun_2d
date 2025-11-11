@@ -49,43 +49,54 @@ MonoBehaviour:
     speed: 2
     accel: 3
     scale: 1
+    animationSpeed: 1
   - level: 2
     speed: 3
     accel: 3
     scale: 1.025
+    animationSpeed: 1
   - level: 3
     speed: 4
     accel: 3
     scale: 1.05
+    animationSpeed: 1
   - level: 4
     speed: 5
     accel: 3
     scale: 1.075
+    animationSpeed: 1
   - level: 5
     speed: 5
     accel: 5
     scale: 1.1
+    animationSpeed: 1
   - level: 6
     speed: 6
     accel: 5
     scale: 1.125
+    animationSpeed: 1
   - level: 7
     speed: 7
     accel: 3
     scale: 1.15
+    animationSpeed: 1
   - level: 8
     speed: 8
     accel: 5
     scale: 1.175
+    animationSpeed: 1
   - level: 9
     speed: 10
     accel: 10
     scale: 1.2
+    animationSpeed: 1
   - level: 10
     speed: 13
     accel: 3
     scale: 1.225
+    animationSpeed: 1
   - level: 11
     speed: 15
     accel: 10
     scale: 1.25
+    animationSpeed: 1

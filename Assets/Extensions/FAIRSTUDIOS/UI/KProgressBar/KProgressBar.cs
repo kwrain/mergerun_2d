@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using Coffee.UISoftMask;
+using TMPro;
 
 namespace FAIRSTUDIOS.UI
 {
@@ -51,7 +52,7 @@ namespace FAIRSTUDIOS.UI
     private RectTransform rtAmount;
 
     [SerializeField]
-    private Text txtProgress;
+    private TextMeshProUGUI txtProgress;
 
     [SerializeField]
     private bool showPercent = false;
@@ -253,13 +254,13 @@ namespace FAIRSTUDIOS.UI
 
       if (txtProgress == null)
       {
-        txtProgress = gameObject.FindChild<Text>("Text");
+        txtProgress = gameObject.FindChild<TextMeshProUGUI>("Text");
         if (txtProgress == null)
         {
-          GameObject go = new GameObject("Text", typeof(Text));
+          GameObject go = new GameObject("Text", typeof(TextMeshProUGUI));
           go.SetParent(gameObject);
 
-          txtProgress = go.GetComponent<Text>();
+          txtProgress = go.GetComponent<TextMeshProUGUI>();
         }
       }
 

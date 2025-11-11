@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee33722c384d4b70b0641c189f74564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 696519063138901145}
   circleCollider: {fileID: 3016753888930979691}
   rb: {fileID: 4333348728294201419}
   text: {fileID: 7043571451838177985}
@@ -241,6 +241,7 @@ MonoBehaviour:
     speed: 1
     accel: 3
     scale: 1
+    animationSpeed: 1
   <Level>k__BackingField: 1
   baseXSpeed: 10
   sensitivityX: 1
@@ -564,6 +565,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2325f9031a3a4ede8a77679fd6b7c29, type: 3}
+--- !u!95 &696519063138901145 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 867567954652809401, guid: b2325f9031a3a4ede8a77679fd6b7c29, type: 3}
+  m_PrefabInstance: {fileID: 405517551414105120}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3247449430999495194 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2932391042034279994, guid: b2325f9031a3a4ede8a77679fd6b7c29, type: 3}

@@ -27,10 +27,8 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 90.90839}
-          offset: {x: 0, y: 45.454193}
+          offset: {x: 0, y: 7.5}
           type: 0
-          isFrist: 1
-          isLast: 0
         obstacleData:
         - position: {x: 0, y: 26, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -67,11 +65,11 @@ MonoBehaviour:
           type: 0
           cooltime: 0
           limitRelativeLevel: 0
-        - position: {x: 0, y: 41, z: 0}
+        - position: {x: 0, y: 59.81, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.55, y: 0.86}
+          size: {x: 11.5, y: 2}
           offset: {x: 0, y: 0}
-          type: 0
+          type: 1
           cooltime: 0
           limitRelativeLevel: 0
         mergeableData:
@@ -110,8 +108,6 @@ MonoBehaviour:
           size: {x: 11.5, y: 90.90839}
           offset: {x: 0, y: 7.5}
           type: 0
-          isFrist: 1
-          isLast: 0
         obstacleData:
         - position: {x: 0, y: 64.2, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -163,8 +159,6 @@ MonoBehaviour:
           size: {x: 11.5, y: 90.90839}
           offset: {x: 0, y: 45.454193}
           type: 0
-          isFrist: 1
-          isLast: 0
         obstacleData:
         - position: {x: 0, y: 26, z: 0}
           scale: {x: 1, y: 1, z: 1}

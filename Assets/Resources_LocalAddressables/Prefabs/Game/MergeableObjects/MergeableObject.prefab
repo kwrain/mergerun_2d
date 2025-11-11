@@ -356,6 +356,7 @@ MonoBehaviour:
     speed: 1
     accel: 3
     scale: 1
+    animationSpeed: 1
   <Level>k__BackingField: 1
   <RelativeLevel>k__BackingField: 0
 --- !u!50 &3803570439086252669

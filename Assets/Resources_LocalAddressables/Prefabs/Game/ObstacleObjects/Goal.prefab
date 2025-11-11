@@ -330,6 +330,7 @@ MonoBehaviour:
   boxCollider: {fileID: 8680537499206238652}
   overlapPercentage: 0.1
   limitRelativeLevel: 0
+  animator: {fileID: 4386788343904531332}
 --- !u!114 &403711766806546266
 MonoBehaviour:
   m_ObjectHideFlags: 0
