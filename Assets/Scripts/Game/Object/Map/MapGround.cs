@@ -55,7 +55,7 @@ public class MapGroundEditor : Editor
           if (srTexture.size != mainSize)
           {
             Undo.RecordObject(srTexture, "Sync SpriteRenderer Texture Size");
-            mapGround.boxCollider.offset = new Vector2(0, mainSize.y * 0.5f);
+            // mapGround.boxCollider.offset = new Vector2(0, mainSize.y * 0.5f);
             mapGround.boxCollider.size = mainSize;
             var size = mainSize - Vector2.one * 0.5f;
             size.x *= 0.91f;

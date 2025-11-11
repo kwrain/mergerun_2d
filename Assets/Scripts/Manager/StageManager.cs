@@ -284,6 +284,12 @@ public partial class StageManager : Singleton<StageManager>
     stageMergeables.Clear();
   }
 
+  void InterstitialAdCompleted()
+  {
+    SOManager.Instance.GameModel.StageComplete = false;
+    StartStage();
+  }
+
   #region Normal
 
   public void LoadStage(bool restart = false)
@@ -321,7 +327,12 @@ public partial class StageManager : Singleton<StageManager>
         // 최대 레벨이 아닌 경우
         if (level < SOManager.Instance.PlayerPrefsModel.MaxSavedLevel)
         {
-          SOManager.Instance.PlayerPrefsModel.UserSavedLevel = ++level;
+          var stageData = StageDataTable.GetStageData(level, Infinity);
+          if (stageData != null)
+          {
+            SOManager.Instance.PlayerPrefsModel.UserSavedLevel = ++level;
+          }
+
           currExp = currExp + exp - expData.exp;
           expData = SOManager.Instance.GameDataTable.GetExpData(level);
         }
@@ -356,15 +367,10 @@ public partial class StageManager : Singleton<StageManager>
 #else
       AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
 #endif
+
     }));
 
     // 레벨 완료 연출 시간 보장(3 ~ 5초) -> 광고 노출 이후 스테이지 재시작 처리를 한다.
-
-    void InterstitialAdCompleted()
-    {
-      SOManager.Instance.GameModel.StageComplete = false;
-      StartStage();
-    }
   } 
   #endregion
 
@@ -378,8 +384,9 @@ public partial class StageManager : Singleton<StageManager>
     {
       if (ReadyInterstitialAd)
       {
-#if !UNITY_EDITOR
         AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
+
+#if !UNITY_EDITOR
 #endif
         ReadyInterstitialAd = false;
       }

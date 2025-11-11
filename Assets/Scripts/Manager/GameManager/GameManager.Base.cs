@@ -55,14 +55,14 @@ public partial class GameManager
 
       RamScore *= UnityEngine.Device.SystemInfo.systemMemorySize / systemMemorySize;
 #else
-      CpuScore *= SystemInfo.processorFrequency / referenceSpec.processorFrequency;
-      CpuScore *= SystemInfo.processorCount / referenceSpec.processorCount;
+      CpuScore *= SystemInfo.processorFrequency / processorFrequency;
+      CpuScore *= SystemInfo.processorCount / processorCount;
 
-      GpuScore *= SystemInfo.graphicsMemorySize / referenceSpec.graphicsMemorySize;
-      GpuScore *= SystemInfo.graphicsShaderLevel / referenceSpec.graphicsShaderLevel;
-      GpuScore *= SystemInfo.maxTextureSize / referenceSpec.maxTextureSize;
+      GpuScore *= SystemInfo.graphicsMemorySize / graphicsMemorySize;
+      GpuScore *= SystemInfo.graphicsShaderLevel / graphicsShaderLevel;
+      GpuScore *= SystemInfo.maxTextureSize / maxTextureSize;
 
-      RamScore *= SystemInfo.systemMemorySize / referenceSpec.systemMemorySize;
+      RamScore *= SystemInfo.systemMemorySize / systemMemorySize;
 #endif
 
       Debug.Log($"Device Score : CPU : {CpuScore} / GPU : {GpuScore} / RAM : {RamScore}");

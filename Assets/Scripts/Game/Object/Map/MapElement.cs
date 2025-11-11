@@ -36,6 +36,7 @@ public class MapElement : MonoBehaviour
     transform.position = mapData.position;
     transform.localScale = mapData.scale;
 
+    boxCollider.offset = new Vector2(0, mapData.size.y * 0.5f);
     boxCollider.size = spriteRenderer.size = mapData.size;
   }
 }

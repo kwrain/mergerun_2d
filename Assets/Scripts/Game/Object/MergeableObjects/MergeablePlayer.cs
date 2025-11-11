@@ -369,19 +369,22 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           // 이동을 멈추고, 죽는 연출 이후, 광고를 노출한다.
           // 리워드광고 완료 이후 스테이지 재시작 처리를 한다.
           Movable = false;
-          goal.Animator.SetTrigger("");
-          StageManager.Instance.StartStage(restart: true);
+          goal.Animator.SetTrigger("fail");
+          StartCoroutine(Timer(1f, () =>
+          {
+            StageManager.Instance.StartStage(restart: true);
+          }));
+          
         }
         else
         {
-          goal.Animator.SetTrigger("");
+          goal.Animator.SetTrigger("pass");
           StageManager.Instance.PushObstacleInPool(goal);
         }
       }
       else
       {
-        goal.Animator.SetTrigger("");
-
+        goal.Animator.SetTrigger("pass");
         StageManager.Instance.CompleteStage();
       }
 
