@@ -26,11 +26,7 @@ MonoBehaviour:
         mapData:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
-<<<<<<< Updated upstream
-          size: {x: 11.5, y: 90.90839}
-=======
           size: {x: 11.5, y: 150}
->>>>>>> Stashed changes
           offset: {x: 0, y: 7.5}
           type: 0
         obstacleData:
@@ -3356,11 +3352,7 @@ MonoBehaviour:
           type: 0
           cooltime: 0
           limitRelativeLevel: 0
-<<<<<<< Updated upstream
-        - position: {x: 0, y: 59.81, z: 0}
-=======
         - position: {x: 0, y: 40, z: 0}
->>>>>>> Stashed changes
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 2}
           offset: {x: 0, y: 0}
