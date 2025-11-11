@@ -95,8 +95,10 @@ public class MergeableBase : BaseObject
   protected virtual void UpdateLevelData()
   {
     var table = SOManager.Instance.GameDataTable;
-    levelData = table.GetLevelData(Level);
     spriteRenderer.sprite = table.SpriteAtlas.GetSprite($"m{(Level - 1) % 11 + 1}");
+
+    levelData = table.GetLevelData(Level);
+    Debug.Log($"levelData : {levelData} / Level : {Level}");
     text.text = levelData.PowerOfTwoString;
   }
 
