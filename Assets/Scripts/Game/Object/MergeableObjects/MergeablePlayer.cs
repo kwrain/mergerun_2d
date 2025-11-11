@@ -205,9 +205,8 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   public override void SetData(StageDataTable.MergeableData mergeableData)
   {
     base.SetData(mergeableData);
-
-
-
+    baseYSpeed = levelData.speed;
+    accelerationY = levelData.accel;
     IsMerging = ignoreSpike = false;
     gameObject.SetActive(true);
     StartGame();
@@ -217,7 +216,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   {
     base.UpdateLevelData();
 
-    baseXSpeed = levelData.speed;
+    baseYSpeed = levelData.speed;
     accelerationY = levelData.accel;
 
     armLegSpeedControl.Speed= levelData.animationSpeed;
@@ -363,6 +362,10 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
 
   private void Goal(ObstacleGoal goal)
   {
+    if (goal.IsChecked)
+      return;
+
+    goal.IsChecked = true;
     if (goal != null)
     {
       if (StageManager.Instance.Infinity)
@@ -379,7 +382,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           {
             StageManager.Instance.StartStage(restart: true);
           }));
-          
+
         }
         else
         {

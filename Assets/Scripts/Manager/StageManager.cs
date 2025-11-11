@@ -9,7 +9,6 @@ using static MapElement;
 using static ObstacleBase;
 using FAIRSTUDIOS.Manager;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif 
@@ -30,6 +29,12 @@ public partial class StageManager : Singleton<StageManager>
 
   [Header("[Data]")]
   [SerializeField] private StageDataTable stageDataTable;
+
+#if UNITY_EDITOR
+  [HideInInspector, SerializeField] private int stageIdForEditor;
+  [HideInInspector, SerializeField] private bool infinityForEditor;
+  [HideInInspector, SerializeField] private bool isTest; 
+#endif
 
   private StageData prevStageData;
   private StageData stageData;
@@ -114,6 +119,7 @@ public partial class StageManager : Singleton<StageManager>
     if (GUI.Button(new Rect(Screen.width - 210, 10, 200, 60), "Reset UserData", buttonStyle))
     {
       ClearUserData();
+      StartStage();
     }
   }
 
@@ -510,9 +516,17 @@ public partial class StageManager : Singleton<StageManager>
 [CustomEditor(typeof(StageManager))]
 public class StageManagerEditor : Editor
 {
-  private int stageId;
-  // private int nextStageId;
-  private bool infinity;       // 무한모드 여부
+  private SerializedProperty stageIdForEditor;
+  private SerializedProperty infinityForEditor;
+
+  protected void OnEnable()
+  {
+    if (!target)
+      return;
+
+    stageIdForEditor = serializedObject.FindProperty("stageIdForEditor");
+    infinityForEditor = serializedObject.FindProperty("infinityForEditor");
+  }
 
   public override void OnInspectorGUI()
   {
@@ -521,11 +535,10 @@ public class StageManagerEditor : Editor
     serializedObject.Update();
     StageManager stage = (StageManager)target;
 
+    EditorGUILayout.PropertyField(stageIdForEditor);
+    EditorGUILayout.PropertyField(infinityForEditor);
+
     EditorGUILayout.Space();
-    EditorGUILayout.LabelField("[Editor Only]", EditorStyles.boldLabel);
-    stageId = EditorGUILayout.IntField("Stage ID", stageId);
-    // nextStageId = EditorGUILayout.IntField("Next Stage ID", nextStageId);
-    infinity = EditorGUILayout.Toggle("Infinity", infinity);
 
     // --- ScriptableObject 섹션 ---
     if (stage.StageDataTable != null)
@@ -570,6 +583,10 @@ public class StageManagerEditor : Editor
       Debug.LogError("StageDataTable가 할당되지 않았습니다!");
       return;
     }
+
+    var stageId = stageIdForEditor.intValue;
+    var infinity = infinityForEditor.boolValue;
+
 
     var stageData = CreateDataFromScene(stage);
     var table = infinity ? stage.StageDataTable.infinityStagedata : stage.StageDataTable.stageData;
@@ -676,7 +693,7 @@ public class StageManagerEditor : Editor
       return;
     }
 
-    var data = stage.StageDataTable.GetStageData(stageId, infinity);
+    var data = stage.StageDataTable.GetStageData(stageIdForEditor.intValue, infinityForEditor.boolValue);
     if (data != null)
     {
       GenerateSceneFromData(stage, data);
