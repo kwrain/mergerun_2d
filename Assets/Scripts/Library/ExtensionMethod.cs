@@ -746,6 +746,15 @@ public static class ExtensionMethod
 
   #endregion
 
+  #region Vector2
+
+  public static Vector2 Abs(this Vector2 v)
+  {
+    return new Vector2(Mathf.Abs(v.x), Mathf.Abs(v.y));
+  }
+
+  #endregion 
+
   #region DateTime
 
   public static long ToUnixTimestamp(this DateTime date)
