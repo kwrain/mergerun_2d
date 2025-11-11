@@ -88,12 +88,18 @@ public class GameDataTable : ScriptableObject
 
   public ExpData GetExpData(int level)
   {
-    return expDatas.Find(data => data.level == level);
+    var data = expDatas.Find(data => data.level == level);
+    data ??= expDatas[^1];
+
+    return data;
   }
 
   public LevelData GetLevelData(int level)
   {
-    return levelDatas.Find(data => data.level == level);
+    var data = levelDatas.Find(data => data.level == level);
+    data ??= levelDatas[^1];
+
+    return data;
   }
 
   public string PowerOfTwoString(int level)
