@@ -11,13 +11,13 @@ namespace FAIRSTUDIOS.Manager
   public class AdManager : Singleton<AdManager>//, IUnityAdsListener
   {
 #if UNITY_ANDROID
-    string appKey = "85460dcd";
-    string bannerAdUnitId = "8rq4fqtq2jzm69e8";
-    string interstitialAdUnitId = "hn1fhcekk77q387e";
+    string appKey = "2433a4d65";
+    string bannerAdUnitId = "jyn2eahywlsut710";
+    string interstitialAdUnitId = "g4982qh27z7shhmg";
 #elif UNITY_IOS
-    string appKey = "8545d445";
-    string bannerAdUnitId = "senewlo0jdeg8jni";
-    string interstitialAdUnitId = "8m7av4w0y85ko7d6";
+    string appKey = "2433a13dd";
+    string bannerAdUnitId = "zp66aptxldfm434s";
+    string interstitialAdUnitId = "od7n3duhhc9ow8xi";
 #else
     string appKey = "unexpected_platform";
     string bannerAdUnitId = "unexpected_platform";
@@ -34,7 +34,6 @@ namespace FAIRSTUDIOS.Manager
 
     private LevelPlayInterstitialAd interstitialAd;
     private Action onInterstitialAdCompleted;
-    private Action onInterstitialAdFailed;
 
     [Header("인터넷 체크 간격 (초)")]
     [SerializeField] private float internetCheckInterval = 3f;
