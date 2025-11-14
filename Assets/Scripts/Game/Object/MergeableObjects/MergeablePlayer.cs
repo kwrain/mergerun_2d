@@ -381,6 +381,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           goal.Animator.SetTrigger("fail");
           StartCoroutine(Timer(1f, () =>
           {
+            goal.Animator.SetTrigger("idle");
             StageManager.Instance.StartStage(restart: true);
           }));
 
@@ -388,13 +389,21 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
         else
         {
           goal.Animator.SetTrigger("pass");
-          StageManager.Instance.PushObstacleInPool(goal);
+          StartCoroutine(Timer(1f, () =>
+          {
+            goal.Animator.SetTrigger("idle");
+            StageManager.Instance.PushObstacleInPool(goal);
+          }));
         }
       }
       else
       {
         goal.Animator.SetTrigger("pass");
-        StageManager.Instance.CompleteStage();
+        StartCoroutine(Timer(1f, () =>
+        {
+          goal.Animator.SetTrigger("idle");
+          StageManager.Instance.CompleteStage();
+        }));
       }
 
     }

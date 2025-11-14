@@ -27,6 +27,8 @@ public class BaseScene : MonoBehaviour
     // 4. 풀빌드가 아닌 경우 (!__FULL_BUILD__)
     // => 실제 스토어에 배포될 빌드의 경우, 로그 출력을 막도록 처리 (LOG 디파인이 없어야함)
     // 반면 에디터이거나, LOG 디파인이 있거나, 라이브 서버가 아니거나, 풀빌드인 경우에는 로그 활성화
+    Application.targetFrameRate = 45;
+    
 #if !UNITY_EDITOR && !LOG && LIVE_SERVER && !__FULL_BUILD__
     Debug.unityLogger.logEnabled = true;
     Debug.unityLogger.filterLogType = LogType.Error; // lds - 25.2.14, Error 및 Exception 로그 메시지만 발생
@@ -56,22 +58,6 @@ public class BaseScene : MonoBehaviour
   protected virtual void OnDisable()
   {
     //WebManager.RemoveListenerWebResponse(this);
-  }
-
-  protected virtual void Update()
-  {
-#if !UNITY_EDITOR && UNITY_ANDROID
-    if(Input.deviceOrientation == DeviceOrientation.LandscapeLeft
-    && UnityEngine.Device.Screen.orientation != ScreenOrientation.LandscapeLeft)
-    {
-      UnityEngine.Device.Screen.orientation = ScreenOrientation.LandscapeLeft;
-    }
-    else if(Input.deviceOrientation == DeviceOrientation.LandscapeRight
-    && UnityEngine.Device.Screen.orientation != ScreenOrientation.LandscapeRight)
-    {
-      UnityEngine.Device.Screen.orientation = ScreenOrientation.LandscapeRight;
-    }
-#endif
   }
 
   public virtual void LoadScene(ESceneName eSceneName) { KSceneManager.Instance.LoadScene(eSceneName); }

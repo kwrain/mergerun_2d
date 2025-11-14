@@ -243,6 +243,7 @@ public partial class StageManager : Singleton<StageManager>
   {
     StopAllCoroutines();
     stageCompleteAnimator.SetActive(false);
+    SOManager.Instance.GameModel.StageComplete = false;
 
     if (infinity)
     {
@@ -292,7 +293,6 @@ public partial class StageManager : Singleton<StageManager>
 
   void InterstitialAdCompleted()
   {
-    SOManager.Instance.GameModel.StageComplete = false;
     StartStage();
   }
 
@@ -371,7 +371,8 @@ public partial class StageManager : Singleton<StageManager>
 #if UNITY_EDITOR
       InterstitialAdCompleted();
 #else
-      AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
+      // AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
+      InterstitialAdCompleted();
 #endif
 
     }));
@@ -390,7 +391,7 @@ public partial class StageManager : Singleton<StageManager>
     {
       if (ReadyInterstitialAd)
       {
-        AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
+        // AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
 
 #if !UNITY_EDITOR
 #endif
