@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9009949299392495102}
   - component: {fileID: 5229882009039117408}
-  - component: {fileID: 6262331201608055906}
+  - component: {fileID: 2198481183130887912}
   - component: {fileID: 1520310748235901913}
   m_Layer: 10
   m_Name: Bridge
@@ -89,8 +89,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &6262331201608055906
-BoxCollider2D:
+--- !u!60 &2198481183130887912
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -121,9 +121,9 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 1
+  m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 2.735}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0.48999998, y: 0.04, z: 0.48999998, w: 0.04}
     pivot: {x: 0.5, y: 0}
@@ -133,8 +133,13 @@ BoxCollider2D:
     drawMode: 1
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.31, y: 5.47}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.515, y: 0.08}
+      - {x: -0.515, y: 0.01}
+      - {x: 0.515, y: 0.01}
+      - {x: 0.515, y: 0.08}
+  m_UseDelaunayMesh: 0
 --- !u!114 &1520310748235901913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7269003d15d484a36b6640121402cac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementType: 1
-  boxCollider: {fileID: 6262331201608055906}
+  elementType: 10
+  polygonCollider: {fileID: 2198481183130887912}
   spriteRenderer: {fileID: 5229882009039117408}

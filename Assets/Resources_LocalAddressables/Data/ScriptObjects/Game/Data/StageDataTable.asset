@@ -211,7 +211,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 8.85}
           offset: {x: 0, y: 4.425}
-          type: 1
+          type: 10
         - position: {x: 0, y: 62, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 80}
@@ -1205,7 +1205,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 9}
           offset: {x: 0, y: 4.5}
-          type: 1
+          type: 10
         - position: {x: 0, y: 32, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 110}
@@ -1420,7 +1420,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 3, y: 8}
           offset: {x: 0, y: 4}
-          type: 1
+          type: 10
         - position: {x: 0, y: 37.319, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 40}
@@ -1430,7 +1430,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 3, y: 8}
           offset: {x: 0, y: 4}
-          type: 1
+          type: 10
         - position: {x: 0, y: 84.653, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 60}
@@ -1677,7 +1677,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.5, y: 7.35}
           offset: {x: 0, y: 3.675}
-          type: 1
+          type: 10
         - position: {x: 0, y: 26.34, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 6}
@@ -1687,7 +1687,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.5, y: 7.35}
           offset: {x: 0, y: 3.675}
-          type: 1
+          type: 10
         - position: {x: 0, y: 38.669, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 6}
@@ -1697,7 +1697,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.5, y: 7.35}
           offset: {x: 0, y: 3.675}
-          type: 1
+          type: 10
         - position: {x: 0, y: 51, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 100}
@@ -1851,7 +1851,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 8}
           offset: {x: 0, y: 4}
-          type: 1
+          type: 10
         - position: {x: 0, y: 37, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 20}
@@ -1861,7 +1861,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 10}
           offset: {x: 0, y: 5}
-          type: 1
+          type: 10
         - position: {x: 0, y: 66, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 80}
@@ -2312,7 +2312,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 9}
           offset: {x: 0, y: 4.5}
-          type: 1
+          type: 10
         - position: {x: 0, y: 41, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 90}
@@ -2551,7 +2551,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 9}
           offset: {x: 0, y: 4.5}
-          type: 1
+          type: 10
         - position: {x: 0, y: 43, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 80}
@@ -2679,7 +2679,7 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 9}
           offset: {x: 0, y: 4.5}
-          type: 1
+          type: 10
         - position: {x: 0, y: 32, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 90}
@@ -4150,12 +4150,12 @@ MonoBehaviour:
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 9}
           offset: {x: 0, y: 4.5}
-          type: 1
+          type: 10
         - position: {x: 3.5, y: 70.81, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 2.8, y: 9}
           offset: {x: 0, y: 4.5}
-          type: 1
+          type: 10
         obstacleData:
         - position: {x: 1.1, y: 19, z: 0}
           scale: {x: 1, y: 1, z: 1}
