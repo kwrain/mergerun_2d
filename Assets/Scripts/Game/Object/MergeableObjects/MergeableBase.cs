@@ -63,7 +63,11 @@ public class MergeableBase : BaseObject
     if (otherObject != null)
     {
       if (otherObject.IsMerging || (Level != otherObject.Level))
+      {
+        // 합성이 불가능한 충돌 → 튕김 사운드
+        SoundManager.Instance.PlayFX(SoundFxTypes.BOUNCE);
         return;
+      }
 
       // 병합 처리
       Merge(otherObject);
@@ -169,6 +173,9 @@ public class MergeableBase : BaseObject
         return;
 
       TweenScale(Vector3.one * levelData.scale, scaleDownDuration, Ease.OutQuad);
+
+      // 합성 완료 사운드
+      SoundManager.Instance.PlayFX(SoundFxTypes.MERGE);
     }
   }
 

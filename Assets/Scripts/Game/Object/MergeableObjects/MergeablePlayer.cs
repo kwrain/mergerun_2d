@@ -221,7 +221,10 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     accelerationY = levelData.accel;
 
     armLegSpeedControl.Speed= levelData.animationSpeed;
-    
+
+    // 레벨 데이터에 따른 BGM 재생 속도 변경
+    SoundManager.Instance.SetBGMSpeed(levelData.bgmSpeed);
+
     var color = GetArmLegColor(Level);
     foreach (var sr in armLegs)
     {
@@ -286,6 +289,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     }
 
     StageManager.Instance.StartStage(restart:true);
+    SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
   }
 
 
@@ -301,6 +305,9 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   {
     if (ignoreSpike)
       return;
+
+    // 가시에 맞았을 때 데미지 사운드
+    SoundManager.Instance.PlayFX(SoundFxTypes.DAMAGE);
 
     if (Level > 1)
     {
@@ -358,6 +365,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     {
       // 게임오버 -> 재시작
       StageManager.Instance.StartStage(restart: true);
+      SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
     }
   }
 
@@ -365,6 +373,9 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
   {
     if (goal.IsChecked)
       return;
+
+    // 골 지점에 도달했을 때 사운드
+    SoundManager.Instance.PlayFX(SoundFxTypes.GOAL);
 
     goal.IsChecked = true;
     if (goal != null)
@@ -383,6 +394,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           {
             goal.Animator.SetTrigger("idle");
             StageManager.Instance.StartStage(restart: true);
+            SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
           }));
 
         }
@@ -483,11 +495,11 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     // Y 터치에 의한 속도 보정 (기존 방식 유지)
     if (!appliedExtraYSpeed)
     {
-      if (extraYSpeed > 0f)
+      if (extraYSpeed != 0f)
       {
         extraYSpeed = 0f;
       }
-      
+
       float speedChange = delta.y * sensitivityY;
       extraYSpeed += speedChange;
       extraYSpeed = Mathf.Clamp(extraYSpeed, -maxExtraSpeed, maxExtraSpeed);

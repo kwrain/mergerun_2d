@@ -6,7 +6,7 @@ using System.Data.Common;
 
 public enum SoundBGMTypes
 {
-  SOUND_BGM_NONE = 0,
+  SOUND_BGM = 0,
 
   MAX
 }
@@ -21,6 +21,12 @@ public enum SoundFxTypes
 
   SHOW_POPUP,
   HIDE_POPUP,
+
+  BOUNCE,
+  DAMAGE,
+  DEFEAT,
+  GOAL,
+  MERGE,
 
   MAX
 }
@@ -115,17 +121,28 @@ public class SoundManager : Singleton<SoundManager>
   }
 
 
+  /// <summary>
+  /// BGM용 AudioSource가 없으면 생성합니다.
+  /// </summary>
+  private void EnsureBGMAudioSource()
+  {
+    if (bgmAudioSource != null)
+      return;
+
+    GameObject go = new("BGM");
+    go.SetParent(Instance);
+    bgmAudioSource = go.AddComponent<AudioSource>();
+  }
+
   protected override void Start()
   {
     base.Start();
 
     // mainMixer = gameObject.AddComponent<AudioMixer>();
 
-    GameObject go = new("BGM");
-    go.SetParent(Instance);
-    bgmAudioSource = go.AddComponent<AudioSource>();
+    EnsureBGMAudioSource();
 
-    go = new("FX_OneShot");
+    GameObject go = new("FX_OneShot");
     go.SetParent(Instance);
     sfxAudioSource = go.AddComponent<AudioSource>();
 
@@ -165,8 +182,11 @@ public class SoundManager : Singleton<SoundManager>
       }
     }
 
+    // BGM AudioSource가 없는 경우 생성
+    EnsureBGMAudioSource();
+
     var clip = soundDataCollection.SoundDataBGM.GetAudioClip(type.ToString());
-    if (bgmAudioSource.isPlaying)
+    if (bgmAudioSource != null && bgmAudioSource.isPlaying)
     {
       StopAllCoroutines();
       StartCoroutine(FadeOutAndPlay(clip, fadeDuration));
@@ -214,6 +234,20 @@ public class SoundManager : Singleton<SoundManager>
     bgmAudioSource.Stop();
     StartCoroutine(FadeIn(newClip, duration));
   }
+
+  /// <summary>
+  /// BGM 재생 속도(피치)를 설정합니다.
+  /// </summary>
+  /// <param name="speed">재생 속도 배율 (1.0f = 기본 속도)</param>
+  public void SetBGMSpeed(float speed)
+  {
+    if (bgmAudioSource == null)
+      return;
+
+    // 너무 극단적인 값 방지
+    float clamped = Mathf.Clamp(speed, 0.1f, 3f);
+    bgmAudioSource.pitch = clamped;
+  }
   #endregion BGM
 
   #region FX
@@ -233,7 +267,7 @@ public class SoundManager : Singleton<SoundManager>
 #endif
       }
     }
-    var data = soundDataCollection.SoundDataBGM.GetData(type.ToString());
+    var data = soundDataCollection.SoundDataFX.GetData(type.ToString());
     if (data == null)
       return;
 

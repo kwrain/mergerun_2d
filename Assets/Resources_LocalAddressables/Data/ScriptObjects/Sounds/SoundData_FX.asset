@@ -14,10 +14,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   values:
     list:
-    - Key: 
+    - Key: BOUNCE
       Value:
-        clip: {fileID: 0}
+        clip: {fileID: 8300000, guid: 36dacf6c8a46a4c42ab85f4538555a26, type: 3}
         volume: 0
         pitch: 0
+        delay: 0
+        loop: 0
+    - Key: DAMAGE
+      Value:
+        clip: {fileID: 8300000, guid: 4e7accab4861d46eb954ae65e184d56a, type: 3}
+        volume: 0
+        pitch: 0
+        delay: 0
+        loop: 0
+    - Key: DEFEAT
+      Value:
+        clip: {fileID: 8300000, guid: 2fb46dca880e24a66b60f71bc86c9f2d, type: 3}
+        volume: 0
+        pitch: 0
+        delay: 0
+        loop: 0
+    - Key: GOAL
+      Value:
+        clip: {fileID: 8300000, guid: 3af534f322ee242639d911504b7e301b, type: 3}
+        volume: 0.337
+        pitch: 0
+        delay: 0
+        loop: 0
+    - Key: MERGE
+      Value:
+        clip: {fileID: 8300000, guid: ff160661267264f718733d812b97b494, type: 3}
+        volume: 0
+        pitch: 0
+        delay: 0
         loop: 0
     keyCollision: 0

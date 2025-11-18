@@ -240,6 +240,9 @@ public partial class StageManager : Singleton<StageManager>
   /// </summary>
   public void StartStage(bool infinity = false, bool restart = false)
   {
+    // 스테이지가 시작될 때마다 BGM 재생(재시작)
+    SoundManager.Instance.PlayBGM(SoundBGMTypes.SOUND_BGM);
+
     StopAllCoroutines();
     stageCompleteAnimator.SetActive(false);
     SOManager.Instance.GameModel.StageComplete = false;
