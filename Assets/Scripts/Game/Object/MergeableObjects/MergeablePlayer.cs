@@ -481,8 +481,13 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     pendingXMove += moveXWorld;
 
     // Y 터치에 의한 속도 보정 (기존 방식 유지)
-    if (extraYSpeed == 0f && !appliedExtraYSpeed)
+    if (!appliedExtraYSpeed)
     {
+      if (extraYSpeed > 0f)
+      {
+        extraYSpeed = 0f;
+      }
+      
       float speedChange = delta.y * sensitivityY;
       extraYSpeed += speedChange;
       extraYSpeed = Mathf.Clamp(extraYSpeed, -maxExtraSpeed, maxExtraSpeed);
