@@ -168,7 +168,7 @@ public class Map : MonoBehaviour
   }
 
   [ContextMenu("ScanMergeableObjects")]
-  private void ScanMergeableObjects()
+  public void ScanMergeableObjects()
   {
     trackedObjects.Clear();
     droppingObjects.Clear(); // [추가] 떨어지는 목록도 초기화
