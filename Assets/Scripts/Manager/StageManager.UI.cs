@@ -4,7 +4,7 @@ using UnityEngine;
 
 public partial class StageManager
 {
-  [SerializeField] private KProgressBar expProgressBar;
+  [Header("[UI]"), SerializeField] private KProgressBar expProgressBar;
 
   [SerializeField] private KToggle toogleVibe;
   [SerializeField] private KToggle toogleStageMode;

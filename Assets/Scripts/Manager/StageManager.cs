@@ -20,9 +20,8 @@ public partial class StageManager : Singleton<StageManager>
   [SerializeField] private MergeablePlayer player;
 
   [Header("[Settings]")]
+  [SerializeField] private Map map;
   [SerializeField] private Transform startPosition;
-
-  [Header("[Parents]")]
   [SerializeField] private Transform mapParent;
   [SerializeField] private Transform mergeableParent;
   [SerializeField] private Transform obstacleParent;
@@ -252,6 +251,12 @@ public partial class StageManager : Singleton<StageManager>
     else
     {
       LoadStage(restart);
+    }
+
+    // Map의 MergeableObject 스캔
+    if (map != null)
+    {
+      map.ScanMergeableObjects();
     }
 
     PlayerSetting();

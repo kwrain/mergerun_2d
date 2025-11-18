@@ -237,15 +237,15 @@ MonoBehaviour:
   scaleUpFactor: 1.5
   scaleDownFactor: 0.7
   levelData:
-    level: 0
-    speed: 1
+    level: 1
+    speed: 2
     accel: 3
     scale: 1
     animationSpeed: 1
   <Level>k__BackingField: 1
   baseXSpeed: 10
   sensitivityX: 1
-  limitX: 5
+  limitX: 15
   baseYSpeed: 2
   accelerationY: 3
   sensitivityY: 1
@@ -502,7 +502,7 @@ SpriteRenderer:
   m_SortingLayerID: -757120449
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 815ef2e3246264122a031f8854a3789f, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -510,7 +510,7 @@ SpriteRenderer:
   m_Size: {x: 2.74, y: 3.52}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &405517551414105120

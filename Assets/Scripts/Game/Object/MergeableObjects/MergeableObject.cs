@@ -57,7 +57,7 @@ public class MergeableObject : MergeableBase
     }
   }
 
-  protected override void Drop()
+  public override void Drop()
   {
     base.Drop();
 

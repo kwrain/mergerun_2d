@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 7115564582807835601}
+  map: {fileID: 335934508283744116}
   startPosition: {fileID: 3199905625660298113}
   mapParent: {fileID: 2702391096628084847}
   mergeableParent: {fileID: 7814849120558249541}

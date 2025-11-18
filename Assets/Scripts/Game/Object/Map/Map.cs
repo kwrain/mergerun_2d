@@ -22,6 +22,11 @@ public class Map : MonoBehaviour
   private List<MergeableBase> objectsToTrack = new();
   private List<int> objectsToRemove = new();
 
+  // 트리거 콜백에서 들어온 딕셔너리 변경 요청을 모아 두는 큐
+  private List<MergeableBase> queuedAddTracked = new();
+  private List<MergeableBase> queuedRemoveTracked = new();
+  private List<MergeableBase> queuedRemoveDropping = new();
+
   // 컴포넌트를 미리 가져옵니다.
   protected virtual void Awake()
   {
@@ -44,6 +49,38 @@ public class Map : MonoBehaviour
     objectsToDrop.Clear();
     objectsToTrack.Clear();
     objectsToRemove.Clear();
+
+    // 0-1. 트리거 콜백에서 요청된 딕셔너리 변경을 여기서 한 번에 처리
+    if (queuedRemoveTracked.Count > 0)
+    {
+      foreach (var obj in queuedRemoveTracked)
+      {
+        if (obj == null) continue;
+        trackedObjects.Remove(obj.GetHashCode());
+      }
+      queuedRemoveTracked.Clear();
+    }
+
+    if (queuedRemoveDropping.Count > 0)
+    {
+      foreach (var obj in queuedRemoveDropping)
+      {
+        if (obj == null) continue;
+        droppingObjects.Remove(obj.GetHashCode());
+      }
+      queuedRemoveDropping.Clear();
+    }
+
+    if (queuedAddTracked.Count > 0)
+    {
+      foreach (var obj in queuedAddTracked)
+      {
+        if (obj == null || !obj.gameObject.activeSelf) continue;
+        var hash = obj.GetHashCode();
+        trackedObjects[hash] = obj;
+      }
+      queuedAddTracked.Clear();
+    }
 
     // 1. '추적 중인' 오브젝트(trackedObjects) 검사
     //    -> 겹침이 부족해지면 '떨어지는' 목록으로 이동 준비
@@ -73,7 +110,6 @@ public class Map : MonoBehaviour
       trackedObjects.Remove(hash);
     }
     objectsToRemove.Clear();
-
 
     // 2. '떨어지는 중인' 오브젝트(droppingObjects) 검사
     //    -> 겹침이 충분해지면 '추적' 목록으로 복귀 준비
@@ -168,17 +204,15 @@ public class Map : MonoBehaviour
     {
       var hash = obj.GetHashCode();
 
-      // [수정] '떨어지는' 중이었다면, 상태를 되돌립니다.
-      if (droppingObjects.Remove(hash))
+      // [수정] '떨어지는' 중이었다면, 상태를 되돌리도록 큐에 추가합니다.
+      if (droppingObjects.ContainsKey(hash))
       {
         obj.StopDropTimer();
+        queuedRemoveDropping.Add(obj);
       }
 
-      // '추적' 목록에 추가합니다.
-      if (!trackedObjects.ContainsKey(hash))
-      {
-        trackedObjects.Add(hash, obj);
-      }
+      // '추적' 목록에 추가하도록 큐에 등록합니다.
+      queuedAddTracked.Add(obj);
     }
   }
 
@@ -188,9 +222,9 @@ public class Map : MonoBehaviour
     {
       var hash = obj.GetHashCode();
 
-      // [수정] 두 목록 모두에서 제거합니다.
-      trackedObjects.Remove(hash);
-      droppingObjects.Remove(hash);
+      // [수정] 두 목록 모두에서 제거하도록 큐에 추가합니다.
+      queuedRemoveTracked.Add(obj);
+      queuedRemoveDropping.Add(obj);
     }
   }
 

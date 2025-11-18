@@ -271,7 +271,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     }
   }
 
-  protected override void Drop()
+  public override void Drop()
   {
     if (ignoreSpike)
     {

@@ -222,7 +222,7 @@ public class MergeableBase : BaseObject
     coDropTimer = null;
   }
 
-  protected virtual void Drop()
+  public virtual void Drop()
   {
     coDropTimer = null;
     spriteRenderer.material.SetFloat("_SineGlowFade", 0);
