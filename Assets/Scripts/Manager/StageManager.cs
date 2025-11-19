@@ -632,9 +632,8 @@ public class StageManagerEditor : Editor
           type = ground.ElementType,
           position = ground.transform.position,
           scale = ground.transform.localScale,
-          // size = ground.GetComponent<BoxCollider2D>().size
           size = ground.spriteRenderer.size,
-          offset = ground.GetComponent<BoxCollider2D>().offset
+          offset = ground.GetComponent<PolygonCollider2D>().offset
         };
 
         stageData.mapData.Add(data);
@@ -647,9 +646,8 @@ public class StageManagerEditor : Editor
           type = bridge.ElementType,
           position = bridge.transform.position,
           scale = bridge.transform.localScale,
-          // size = bridge.GetComponent<BoxCollider2D>().size,
           size = bridge.spriteRenderer.size,
-          offset = bridge.GetComponent<BoxCollider2D>().offset
+          offset = bridge.GetComponent<PolygonCollider2D>().offset
         };
 
         stageData.mapData.Add(data);
