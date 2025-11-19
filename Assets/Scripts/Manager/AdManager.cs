@@ -261,6 +261,15 @@ namespace FAIRSTUDIOS.Manager
     public void ShowInterstitial(Action onComplete = null, Action onFailed = null)
     {
       Debug.Log("unity-script: ShowInterstitialButtonClicked");
+
+      // SDK 또는 전면 광고 객체가 아직 준비되지 않은 경우 크래시 방지
+      if (!initialized || interstitialAd == null)
+      {
+        Debug.LogWarning("⚠️ InterstitialAd 가 아직 초기화되지 않았습니다. 광고 없이 진행합니다.");
+        onComplete?.Invoke();
+        return;
+      }
+
       if (!IsInternetAvailable)
       {
         Debug.Log("🚫 인터넷 연결 끊김. 광고 표시 대기.");
