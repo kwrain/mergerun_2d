@@ -17,7 +17,7 @@ MonoBehaviour:
     - Key: SOUND_BGM
       Value:
         clip: {fileID: 8300000, guid: a99be294a85ce4884b6237213b45aa7a, type: 3}
-        volume: 0.377
+        volume: 0.5
         pitch: 0
         delay: 0
         loop: 0
