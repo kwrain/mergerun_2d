@@ -256,13 +256,14 @@ public partial class StageManager : Singleton<StageManager>
       LoadStage(restart);
     }
 
+    PlayerSetting();
+
+
     // Map의 MergeableObject 스캔
     if (map != null)
     {
       map.ScanMergeableObjects();
     }
-
-    PlayerSetting();
   }
 
   private void ClearStageObjects()
