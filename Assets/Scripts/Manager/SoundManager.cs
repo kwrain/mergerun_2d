@@ -166,7 +166,7 @@ public class SoundManager : Singleton<SoundManager>
     /// </summary>
     /// <param name="clip">The AudioClip to play.</param>
     /// <param name="fadeDuration">The duration of the fade-in effect.</param>
-    public void PlayBGM(SoundBGMTypes type, float fadeDuration = 1.5f)
+    public void PlayBGM(SoundBGMTypes type, float fadeDuration = 0f)
   {
     if (soundDataCollection == null)
     {
