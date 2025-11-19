@@ -299,7 +299,12 @@ public partial class StageManager : Singleton<StageManager>
     stageMergeables.Clear();
   }
 
-  void InterstitialAdCompleted()
+  private void InterstitialAdCompleted()
+  {
+    StartStage();
+  }
+
+  private void InterstitialAdFailed()
   {
     StartStage();
   }
@@ -379,8 +384,7 @@ public partial class StageManager : Singleton<StageManager>
 #if UNITY_EDITOR
       InterstitialAdCompleted();
 #else
-      // AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
-      InterstitialAdCompleted();
+      AdManager.Instance.ShowInterstitial(InterstitialAdCompleted, InterstitialAdFailed);
 #endif
 
     }));
@@ -399,9 +403,8 @@ public partial class StageManager : Singleton<StageManager>
     {
       if (ReadyInterstitialAd)
       {
-        // AdManager.Instance.ShowInterstitial(InterstitialAdCompleted);
-
 #if !UNITY_EDITOR
+        AdManager.Instance.ShowInterstitial(InterstitialAdCompleted, InterstitialAdFailed);
 #endif
         ReadyInterstitialAd = false;
       }
