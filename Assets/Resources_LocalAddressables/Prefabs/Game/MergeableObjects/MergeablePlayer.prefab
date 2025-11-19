@@ -234,27 +234,28 @@ MonoBehaviour:
   moveDuration: 0.3
   scaleUpDuration: 0.15
   scaleDownDuration: 0.15
-  scaleUpFactor: 1.5
-  scaleDownFactor: 0.7
+  scaleUpFactor: 1.2
+  scaleDownFactor: 0.6
   levelData:
     level: 1
     speed: 2
     accel: 3
     scale: 1
     animationSpeed: 1
+    bgmSpeed: 1
   <Level>k__BackingField: 1
   baseXSpeed: 10
   sensitivityX: 1
   limitX: 15
   baseYSpeed: 2
   accelerationY: 3
-  sensitivityY: 1
-  extraSpeedDecayRate: 10
-  maxExtraSpeed: 5
+  sensitivityY: 0.2
+  extraSpeedDecayRate: 20
+  maxExtraSpeed: 13
   currentXSpeed: 0
   currentYSpeed: 0
   extraYSpeed: 0
-  obstacleDelay: 0.5
+  obstacleDelay: 1
   armLegs:
   - {fileID: 5431126411440966755}
   - {fileID: 810359387100612246}
@@ -323,7 +324,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 1.34
+  m_Radius: 1.19
 --- !u!1 &7599772681004740937
 GameObject:
   m_ObjectHideFlags: 0
