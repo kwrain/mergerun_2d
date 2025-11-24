@@ -14,7 +14,7 @@
   <files />
   <settings>
     <setting name="androidAbis" value="arm64-v8a" />
-    <setting name="bundleId" value="com.fairstudios.FruitRun2048" />
+    <setting name="bundleId" value="kr.fairstudios.fruitrun2048" />
     <setting name="explodeAars" value="True" />
     <setting name="gradleBuildEnabled" value="True" />
     <setting name="gradlePropertiesTemplateEnabled" value="True" />

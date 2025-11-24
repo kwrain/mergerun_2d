@@ -30,6 +30,17 @@ public partial class GameManager : Singleton<GameManager>
     base.Awake();
 
     AutoSetting();
+
+    // 화면 방향을 완전히 세로로 고정한다.
+    // OS 자동 회전 설정과 무관하게 Unity에서 강제.
+    Screen.orientation = ScreenOrientation.Portrait;
+
+    // 혹시 다른 코드에서 AutoRotation 으로 전환하더라도
+    // 가로는 허용되지 않도록 기본 플래그도 세로만 허용.
+    Screen.autorotateToPortrait = true;
+    Screen.autorotateToPortraitUpsideDown = true;
+    Screen.autorotateToLandscapeLeft = false;
+    Screen.autorotateToLandscapeRight = false;
   }
 
   protected override void ScenePreloadEvent(Scene currScene)
