@@ -83,7 +83,7 @@ public class Map : MonoBehaviour
     }
 
     // 1. '추적 중인' 오브젝트(trackedObjects) 검사
-    //    -> 겹침이 부족해지면 '떨어지는' 목록으로 이동 준비
+    //    -> 안전 반경 조건을 만족하지 못하면 '떨어지는' 목록으로 이동 준비
     foreach (var kvp in trackedObjects)
     {
       var obj = kvp.Value;
@@ -94,14 +94,14 @@ public class Map : MonoBehaviour
       }
 
       var circle = obj.circleCollider;
-      var currentOverlap = CalculateOverlapPercentage(circle);
+      bool isSafe = IsInsideSafeCircle(circle);
 
-      if (currentOverlap < overlapThresholdPercentage)
+      if (!isSafe)
       {
         // 겹침이 부족함 -> '떨어지는' 목록으로 이동
         objectsToDrop.Add(obj);
       }
-      // (else: 겹침이 충분하면 'trackedObjects'에 그대로 둡니다)
+      // (else: 안전 반경을 만족하면 'trackedObjects'에 그대로 둡니다)
     }
 
     // 1-1. 'trackedObjects'에서 제거할 오브젝트 처리
@@ -112,7 +112,7 @@ public class Map : MonoBehaviour
     objectsToRemove.Clear();
 
     // 2. '떨어지는 중인' 오브젝트(droppingObjects) 검사
-    //    -> 겹침이 충분해지면 '추적' 목록으로 복귀 준비
+    //    -> 안전 반경 조건을 다시 만족하면 '추적' 목록으로 복귀 준비
     foreach (var kvp in droppingObjects)
     {
       var obj = kvp.Value;
@@ -123,14 +123,14 @@ public class Map : MonoBehaviour
       }
 
       var circle = obj.circleCollider;
-      var currentOverlap = CalculateOverlapPercentage(circle);
+      bool isSafe = IsInsideSafeCircle(circle);
 
-      if (currentOverlap >= overlapThresholdPercentage)
+      if (isSafe)
       {
         // 겹침이 충분해짐 -> '추적' 목록으로 복귀
         objectsToTrack.Add(obj);
       }
-      // (else: 겹침이 여전히 부족하면 'droppingObjects'에 그대로 둡니다)
+      // (else: 여전히 안전 반경을 만족하지 못하면 'droppingObjects'에 그대로 둡니다)
     }
 
     // 2-1. 'droppingObjects'에서 제거할 오브젝트 처리
@@ -228,26 +228,43 @@ public class Map : MonoBehaviour
     }
   }
 
-  private float CalculateOverlapPercentage(CircleCollider2D circle)
+  /// <summary>
+  /// CircleCollider의 중심에서 overlapThresholdPercentage 만큼 작은 "안전 반경"을 잡고,
+  /// 그 둘레를 이루는 점들이 모두 맵 안에 있는지 검사합니다.
+  /// 하나라도 맵 밖이면 "겹침 부족(나감)"으로 간주합니다.
+  /// </summary>
+  /// <param name="circle">검사할 원형 콜라이더</param>
+  /// <param name="samples">둘레 샘플 개수</param>
+  private bool IsInsideSafeCircle(CircleCollider2D circle, int samples = 16)
   {
-    Bounds circleBounds = circle.bounds;
-    Bounds compositeBounds = compositeCollider.bounds;
+    if (circle == null || compositeCollider == null) return false;
+    if (samples <= 0) samples = 1;
 
-    float overlapMinX = Mathf.Max(circleBounds.min.x, compositeBounds.min.x);
-    float overlapMinY = Mathf.Max(circleBounds.min.y, compositeBounds.min.y);
-    float overlapMaxX = Mathf.Min(circleBounds.max.x, compositeBounds.max.x);
-    float overlapMaxY = Mathf.Min(circleBounds.max.y, compositeBounds.max.y);
+    // 월드 기준 중심/반지름
+    Bounds bounds = circle.bounds;
+    Vector2 center = bounds.center;
+    float radius = Mathf.Max(bounds.extents.x, bounds.extents.y);
 
-    float overlapWidth = overlapMaxX - overlapMinX;
-    float overlapHeight = overlapMaxY - overlapMinY;
+    // overlapThresholdPercentage(0~100)를 "겹침이 이 값(%) 미만이면 벗어난 것"으로 사용하므로
+    // 안전 반경 비율은 (1 - threshold) 로 해석합니다.
+    // 예) threshold = 30 -> 반지름의 70% 지점까지는 반드시 맵 안에 있어야 한다.
+    float rate = 1f - Mathf.Clamp01(overlapThresholdPercentage / 100f);
+    float safeRadius = radius * rate;
 
-    if (overlapWidth <= 0 || overlapHeight <= 0) return 0f;
+    for (int i = 0; i < samples; i++)
+    {
+      float angle = (Mathf.PI * 2f) * i / samples;
+      Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+      Vector2 p = center + dir * safeRadius;
 
-    float overlapArea = overlapWidth * overlapHeight;
-    float circleArea = circleBounds.size.x * circleBounds.size.y;
+      // 안전 반경 둘레 중 하나라도 맵 밖이면 "안전하지 않다"
+      if (!compositeCollider.OverlapPoint(p))
+      {
+        return false;
+      }
+    }
 
-    if (circleArea == 0) return 0f;
-
-    return (overlapArea / circleArea) * 100f;
+    // 안전 반경 둘레 전체가 맵 안
+    return true;
   }
 }

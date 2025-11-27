@@ -6,19 +6,31 @@ using static ObstacleBase;
 public partial class StageManager
 {
   #region Map
-
-  private Queue<MapElement> mapElementPool = new();
+  
+  private Dictionary<MapElementTypes, Queue<MapElement>> mapElementPool = new();
 
   public MapElement PeekMapElementInPool(MapElementTypes elementType)
   {
     MapElement element = null;
-    if (mapElementPool.Count == 0)
+    if (mapElementPool.ContainsKey(elementType))
     {
-      element = Create();
+      if (mapElementPool[elementType].Count == 0)
+      {
+        element = Create();
+      }
+      else
+      {
+        element = mapElementPool[elementType].Dequeue();
+      }
     }
     else
     {
-      element = mapElementPool.Dequeue();
+      element = Create();
+    }
+
+    if (element == null)
+    {
+      return null;
     }
 
     element.SetActive(true);
@@ -43,18 +55,26 @@ public partial class StageManager
 
   public void PushMapElementInPool(MapElement element)
   {
-    if (mapElementPool.Contains(element))
-      return;
+    var type = element.ElementType;
+    if (mapElementPool.ContainsKey(type))
+    {
+      if (mapElementPool[type].Contains(element))
+        return;
+    }
+    else
+    {
+      mapElementPool.Add(type, new Queue<MapElement>());
+    }
 
     element.SetActive(false);
 
-    if (mapElementPool.Count >= POOLING_MAX_SIZE)
+    if (mapElementPool[type].Count >= POOLING_MAX_SIZE)
     {
       GameManager.Instance.ScheduleForDestruction(element.gameObject);
     }
     else
     {
-      mapElementPool.Enqueue(element);
+      mapElementPool[type].Enqueue(element);
     }
   }
 

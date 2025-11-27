@@ -151,7 +151,7 @@ MonoBehaviour:
   mergeableParent: {fileID: 7814849120558249541}
   obstacleParent: {fileID: 1220654561798453450}
   stageDataTable: {fileID: 11400000, guid: 93e424c98b8d94ee599ab0544dfafa5c, type: 2}
-  stageIdForEditor: 1
+  stageIdForEditor: 12
   infinityForEditor: 0
   isTest: 0
   expProgressBar: {fileID: 0}
@@ -295,8 +295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   compositeCollider: {fileID: 6359205470999149629}
   overlapThresholdPercentage: 30
-  immediateDropThresholdPercentage: 0
-  delayBeforeAction: 1.5
+  delayBeforeAction: 0.3
   trackedObjects:
     list:
     - Key: -368752
@@ -376,7 +375,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths: []

@@ -406,6 +406,8 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
             goal.Animator.SetTrigger("idle");
             StageManager.Instance.PushObstacleInPool(goal);
           }));
+
+          StageManager.Instance.CompleteInfinityStage();
         }
       }
       else

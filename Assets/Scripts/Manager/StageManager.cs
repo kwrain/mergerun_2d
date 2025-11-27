@@ -139,6 +139,8 @@ public partial class StageManager : Singleton<StageManager>
 
   private void PlayerSetting()
   {
+    StopAllCoroutines();
+    
     if (player != null)
     {
       var savedLevel = SOManager.Instance.PlayerPrefsModel.UserSavedLevel;
