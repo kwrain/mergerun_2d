@@ -34,6 +34,7 @@ namespace FAIRSTUDIOS.Manager
 
     private LevelPlayInterstitialAd interstitialAd;
     private Action onInterstitialAdCompleted;
+    private Action<int> onInterstitialAdFailed; // 에러 코드를 함께 넘기는 실패 콜백
 
     [Header("인터넷 체크 간격 (초)")]
     [SerializeField] private float internetCheckInterval = 3f;
@@ -71,12 +72,12 @@ namespace FAIRSTUDIOS.Manager
 
       if (nowConnected && !isConnected)
       {
-        Debug.Log("🌐 인터넷 복구됨");
+        Debug.Log("🌐 Internet connection restored");
         OnInternetRestored();
       }
       else if (!nowConnected && isConnected)
       {
-        Debug.Log("❌ 인터넷 끊김 감지");
+        Debug.Log("❌ Internet connection lost");
         OnInternetLost();
       }
 
@@ -101,6 +102,18 @@ namespace FAIRSTUDIOS.Manager
       bannerAd.OnAdLeftApplication += BannerOnAdLeftApplicationEvent;
       bannerAd.OnAdExpanded += BannerOnAdExpandedEvent;
 
+      // 배너 / 전면 광고 선로드
+#if !UNITY_EDITOR
+      try
+      {
+        bannerAd.LoadAd();       // 배너 선로드
+      }
+      catch (Exception e)
+      {
+        Debug.LogError($"[AdManager] 초기 배너 LoadAd 호출 중 예외 발생: {e}");
+      }
+#endif
+
       // Create Interstitial object
       interstitialAd = new LevelPlayInterstitialAd(interstitialAdUnitId);
 
@@ -111,6 +124,18 @@ namespace FAIRSTUDIOS.Manager
       interstitialAd.OnAdClicked += InterstitialOnAdClickedEvent;
       interstitialAd.OnAdClosed += InterstitialOnAdClosedEvent;
       interstitialAd.OnAdInfoChanged += InterstitialOnAdInfoChangedEvent;
+
+      // 초기화 완료 후 전면 광고는 미리 로드해 둔다.
+#if !UNITY_EDITOR
+      try
+      {
+        interstitialAd.LoadAd();
+      }
+      catch (Exception e)
+      {
+        Debug.LogError($"[AdManager] 초기 전면광고 LoadAd 호출 중 예외 발생: {e}");
+      }
+#endif
     }
 
     private void OnApplicationPause(bool isPaused)
@@ -139,21 +164,37 @@ namespace FAIRSTUDIOS.Manager
     void InterstitialOnAdLoadedEvent(LevelPlayAdInfo adInfo)
     {
       Debug.Log("unity-script: I got InterstitialOnAdLoadedEvent With AdInfo " + adInfo);
-
-      if (WaitingForInternet && onInterstitialAdCompleted != null)
-      {
-        WaitingForInternet = false;
-        ShowInterstitial(onInterstitialAdCompleted);
-      }
+      WaitingForInternet = false;
     }
 
     void InterstitialOnAdLoadFailedEvent(LevelPlayAdError error)
     {
       Debug.Log("unity-script: I got InterstitialOnAdLoadFailedEvent With Error " + error);
-      if (error.ErrorCode == 520)
+
+      int code = error.ErrorCode;
+
+      // 에러 코드에 따른 분기
+      switch (code)
       {
-        WaitingForInternet = true;
+        case 520: // 네트워크 단절
+          Debug.LogWarning("[AdManager][Interstitial] Network connection lost. Please check your internet connection.");
+          WaitingForInternet = true;
+          break;
+        case 508: // 타임아웃
+          Debug.LogWarning("[AdManager][Interstitial] Ad request timed out.");
+          break;
+        case 507: // No Fill
+          Debug.LogWarning("[AdManager][Interstitial] No fill from ad network. (No Fill)");
+          break;
+        default:
+          Debug.LogWarning($"[AdManager][Interstitial] 알 수 없는 에러 코드: {code}, message: {error.ErrorMessage}");
+          break;
       }
+
+      // 실패 콜백 호출 (에러 코드 전달)
+      onInterstitialAdFailed?.Invoke(code);
+      onInterstitialAdFailed = null;
+      onInterstitialAdCompleted = null;
     }
 
     void InterstitialOnAdDisplayedEvent(LevelPlayAdInfo adInfo)
@@ -172,6 +213,7 @@ namespace FAIRSTUDIOS.Manager
 
       onInterstitialAdCompleted?.Invoke();
       onInterstitialAdCompleted = null;
+      onInterstitialAdFailed = null;
       interstitialAd.LoadAd();
     }
 
@@ -193,18 +235,26 @@ namespace FAIRSTUDIOS.Manager
     {
       Debug.Log("unity-script: I got BannerOnAdLoadFailedEvent With Error " + error);
       int code = error.ErrorCode;
-      if (code == 520)
+
+      // 에러 코드에 따른 처리: 스위치문으로 세분화
+      switch (code)
       {
-        Debug.LogWarning("❌ 인터넷 연결이 끊겨 있습니다. 네트워크를 확인하세요.");
+        case 520: // 네트워크 단절
+          Debug.LogWarning("❌ [AdManager][Banner] Internet connection lost. Please check your network.");
+          break;
+        case 508: // 타임아웃
+          Debug.LogWarning("⚠️ [AdManager][Banner] Ad request timed out. Please check your internet speed.");
+          break;
+        case 507: // No Fill
+          Debug.LogWarning("🕓 [AdManager][Banner] No ads available from the ad network. (Network No Fill)");
+          break;
+        default:
+          Debug.LogWarning($"[AdManager][Banner] 알 수 없는 에러 코드: {code}, message: {error.ErrorMessage}");
+          break;
       }
-      else if (code == 508)
-      {
-        Debug.LogWarning("⚠️ 광고 요청이 타임아웃 되었습니다. 인터넷 속도를 확인하세요.");
-      }
-      else if (code == 507)
-      {
-        Debug.LogWarning("🕓 광고 네트워크에서 광고가 없습니다. (Network No Fill)");
-      }
+
+      // 로드 실패 이후에도, 외부에서 ShowBannerAd 를 다시 호출하면
+      // bannerAd.LoadAd() 를 통해 재시도할 수 있도록 특별히 막지 않는다.
     }
 
     void BannerOnAdClickedEvent(LevelPlayAdInfo adInfo)
@@ -258,37 +308,37 @@ namespace FAIRSTUDIOS.Manager
     /// <summary>
     /// 디스플레이 전면 광고 호출
     /// </summary>
-    public void ShowInterstitial(Action onComplete = null, Action onFailed = null)
+    public void ShowInterstitial(Action onComplete = null, Action<int> onFailed = null)
     {
       Debug.Log("unity-script: ShowInterstitialButtonClicked");
 
       // SDK 또는 전면 광고 객체가 아직 준비되지 않은 경우 크래시 방지
       if (!initialized || interstitialAd == null)
       {
-        Debug.LogWarning("⚠️ InterstitialAd 가 아직 초기화되지 않았습니다. 광고 없이 진행합니다.");
-        onComplete?.Invoke();
+        Debug.LogWarning("[AdManager] ShowInterstitial 호출 시 SDK 미초기화 또는 interstitialAd == null");
+        onFailed?.Invoke(-1); // 내부적인 에러 코드(-1) 전달
         return;
       }
+
+      // 콜백 보관 (성공/실패) — 실제 ShowAd 가 호출되는 시점 기준으로 유효
+      onInterstitialAdCompleted = onComplete;
+      onInterstitialAdFailed = onFailed;
 
       if (!IsInternetAvailable)
       {
         Debug.Log("🚫 인터넷 연결 끊김. 광고 표시 대기.");
         WaitingForInternet = true;
-        onInterstitialAdCompleted = onComplete;
-        onFailed?.Invoke();
         return;
       }
 
       if (interstitialAd.IsAdReady())
       {
-        Debug.Log("✅ 전면 광고 표시");
+        Debug.Log("ShowInterstitial / IsAdReady() = true");
         interstitialAd.ShowAd();
-        onComplete?.Invoke();
       }
       else
       {
-        Debug.Log("📭 광고 준비 중. 로드 후 재시도 예정");
-        onInterstitialAdCompleted = onComplete;
+        Debug.Log("ShowInterstitial / IsAdReady() = false");
         interstitialAd.LoadAd();
       }
     }
@@ -323,17 +373,21 @@ namespace FAIRSTUDIOS.Manager
     private void OnInternetRestored()
     {
       // 전면 광고 다시 로드
-      interstitialAd?.LoadAd();
-
-      // 배너 다시 표시
-      ShowBannerAd();
-
-      // 전면 광고 콜백 대기 중이면 재시도
-      if (WaitingForInternet && onInterstitialAdCompleted != null)
+      if (WaitingForInternet && (onInterstitialAdCompleted != null || onInterstitialAdFailed != null))
       {
         Debug.Log("🔄 인터넷 복구로 인한 전면 광고 재시도");
         WaitingForInternet = false;
-        ShowInterstitial(onInterstitialAdCompleted);
+        ShowInterstitial(onInterstitialAdCompleted, onInterstitialAdFailed);
+      }
+      else
+      {
+        interstitialAd?.LoadAd();
+      }
+
+      // 배너 다시 표시 (원래 배너가 노출 중이었던 경우에만)
+      if (IsShowBanner)
+      {
+        ShowBannerAd();
       }
 
       onInternetRestoredEvent?.Invoke();

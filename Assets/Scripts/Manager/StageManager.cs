@@ -305,7 +305,7 @@ public partial class StageManager : Singleton<StageManager>
     StartStage();
   }
 
-  private void InterstitialAdFailed()
+  private void InterstitialAdFailed(int code)
   {
     StartStage();
   }
@@ -369,7 +369,7 @@ public partial class StageManager : Singleton<StageManager>
       SOManager.Instance.PlayerPrefsModel.UserSavedExp = currExp;
 
       // expProgressBar.AutoProgress()
-      expProgressBar.SetProgress(currExp / expData.exp);
+      expProgressBar.SetProgress((float)currExp / expData.exp);
       expProgressBar.SetText($"{currExp}/{expData.exp}");
     }
 
