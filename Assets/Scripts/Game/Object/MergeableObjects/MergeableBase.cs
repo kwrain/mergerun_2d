@@ -102,7 +102,7 @@ public class MergeableBase : BaseObject
     spriteRenderer.sprite = table.SpriteAtlas.GetSprite($"m{(Level - 1) % 11 + 1}");
 
     levelData = table.GetLevelData(Level);
-    Debug.Log($"levelData : {levelData} / Level : {Level}");
+    // Debug.Log($"levelData : {levelData} / Level : {Level}");
     text.text = levelData.PowerOfTwoString;
   }
 
