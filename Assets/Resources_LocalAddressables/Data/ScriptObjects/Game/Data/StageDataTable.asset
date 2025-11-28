@@ -205,18 +205,18 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 64}
-          offset: {x: 0, y: 32}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 0, y: 53.664, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.8, y: 8.85}
-          offset: {x: 0, y: 4.425}
-          type: 10
         - position: {x: 0, y: 62, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 80}
-          offset: {x: 0, y: 40}
+          offset: {x: 0, y: 0}
           type: 0
+        - position: {x: 0, y: 53.9391, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.8, y: 8.125925}
+          offset: {x: 0, y: 0}
+          type: 10
         obstacleData:
         - position: {x: 3.5, y: 14, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -304,7 +304,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 100, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -1199,18 +1199,18 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 34}
-          offset: {x: 0, y: 17}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 0, y: 23.5, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.8, y: 9}
-          offset: {x: 0, y: 4.5}
-          type: 10
         - position: {x: 0, y: 32, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 110}
-          offset: {x: 0, y: 55}
+          offset: {x: 0, y: 0}
           type: 0
+        - position: {x: 0, y: 23.9381, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.8, y: 8.128315}
+          offset: {x: 0, y: 0}
+          type: 10
         obstacleData:
         - position: {x: -3, y: 60, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -1235,7 +1235,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 98, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -1414,28 +1414,28 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 40}
-          offset: {x: 0, y: 20}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 0, y: 29.658, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 3, y: 8}
-          offset: {x: 0, y: 4}
-          type: 10
         - position: {x: 0, y: 37.319, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 40}
-          offset: {x: 0, y: 20}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: -3.3, y: 76.987, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 3, y: 8}
-          offset: {x: 0, y: 4}
-          type: 10
         - position: {x: 0, y: 84.653, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 60}
-          offset: {x: 0, y: 30}
+          offset: {x: 0, y: 0}
           type: 0
+        - position: {x: 0, y: 29.9344, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 3, y: 7.450201}
+          offset: {x: 0, y: 0}
+          type: 10
+        - position: {x: -3.3, y: 77.254, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 3, y: 7.463089}
+          offset: {x: 0, y: 0}
+          type: 10
         obstacleData:
         - position: {x: 0, y: 43, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -1502,7 +1502,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 100, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -1671,38 +1671,38 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 30}
-          offset: {x: 0, y: 15}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: -3.5, y: 19.495, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.5, y: 7.35}
-          offset: {x: 0, y: 3.675}
-          type: 10
         - position: {x: 0, y: 26.34, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 6}
-          offset: {x: 0, y: 3}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 3.5, y: 31.816, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.5, y: 7.35}
-          offset: {x: 0, y: 3.675}
-          type: 10
         - position: {x: 0, y: 38.669, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 6}
-          offset: {x: 0, y: 3}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 3.5, y: 44.164, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.5, y: 7.35}
-          offset: {x: 0, y: 3.675}
-          type: 10
         - position: {x: 0, y: 51, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 100}
-          offset: {x: 0, y: 50}
+          offset: {x: 0, y: 0}
           type: 0
+        - position: {x: -3.5, y: 19.9374, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.5, y: 6.4687057}
+          offset: {x: 0, y: 0}
+          type: 10
+        - position: {x: 3.5, y: 32.2726, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.5, y: 6.462169}
+          offset: {x: 0, y: 0}
+          type: 10
+        - position: {x: 3.5, y: 44.6056, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.5, y: 6.459394}
+          offset: {x: 0, y: 0}
+          type: 10
         obstacleData:
         - position: {x: 1.1, y: 58, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -1776,7 +1776,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 90, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -1845,28 +1845,28 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 40}
-          offset: {x: 0, y: 20}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 0, y: 29.5, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.8, y: 8}
-          offset: {x: 0, y: 4}
-          type: 10
         - position: {x: 0, y: 37, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 20}
-          offset: {x: 0, y: 10}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: -2.3, y: 56.5, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.8, y: 10}
-          offset: {x: 0, y: 5}
-          type: 10
         - position: {x: 0, y: 66, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 80}
-          offset: {x: 0, y: 40}
+          offset: {x: 0, y: 0}
           type: 0
+        - position: {x: 0, y: 29.9398, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.8, y: 7.120409}
+          offset: {x: 0, y: 0}
+          type: 10
+        - position: {x: -2.3, y: 56.9352, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.8, y: 9.127525}
+          offset: {x: 0, y: 0}
+          type: 10
         obstacleData:
         - position: {x: 0, y: 11, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -1947,7 +1947,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 97, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -2306,22 +2306,22 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 43}
-          offset: {x: 0, y: 21.5}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 0, y: 32.5, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.8, y: 9}
-          offset: {x: 0, y: 4.5}
-          type: 10
         - position: {x: 0, y: 41, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 90}
-          offset: {x: 0, y: 45}
+          offset: {x: 0, y: 0}
           type: 0
+        - position: {x: 0, y: 32.9362, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.8, y: 8.127991}
+          offset: {x: 0, y: 0}
+          type: 10
         obstacleData:
         - position: {x: 0, y: 90, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -2545,18 +2545,18 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 45}
-          offset: {x: 0, y: 22.5}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 0, y: 34.5, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.8, y: 9}
-          offset: {x: 0, y: 4.5}
-          type: 10
         - position: {x: 0, y: 43, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 80}
-          offset: {x: 0, y: 40}
+          offset: {x: 0, y: 0}
           type: 0
+        - position: {x: 0, y: 34.937, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.8, y: 8.127796}
+          offset: {x: 0, y: 0}
+          type: 10
         obstacleData:
         - position: {x: -2.5, y: 12, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -2609,7 +2609,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 80, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -2673,18 +2673,18 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 34}
-          offset: {x: 0, y: 17}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 0, y: 23.5, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 2.8, y: 9}
-          offset: {x: 0, y: 4.5}
-          type: 10
         - position: {x: 0, y: 32, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 90}
-          offset: {x: 0, y: 45}
+          offset: {x: 0, y: 0}
           type: 0
+        - position: {x: 0, y: 23.9352, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 2.8, y: 8.128255}
+          offset: {x: 0, y: 0}
+          type: 10
         obstacleData:
         - position: {x: 0, y: 38, z: 0}
           scale: {x: 1, y: 1, z: 1}
@@ -2772,7 +2772,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 77, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -3675,9 +3675,9 @@ MonoBehaviour:
           size: {x: 11.5, y: 38}
           offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 4.25, y: 27.5, z: 0}
+        - position: {x: 4.25, y: 27.93278, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 3, y: 6}
+          size: {x: 3, y: 5.1349893}
           offset: {x: 0, y: 0}
           type: 0
         - position: {x: 0, y: 33, z: 0}
@@ -3695,24 +3695,24 @@ MonoBehaviour:
           size: {x: 11.5, y: 4}
           offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 4.25, y: 45.5, z: 0}
+        - position: {x: 4.25, y: 45.93343, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 3, y: 6}
+          size: {x: 3, y: 5.134244}
           offset: {x: 0, y: 0}
           type: 0
         - position: {x: 3, y: 51, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 5.5, y: 5}
+          size: {x: 5.5, y: 4.5680275}
           offset: {x: 0, y: 0}
           type: 0
         - position: {x: 0, y: 55.5, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 5.5, y: 5}
+          size: {x: 5.5, y: 4.564602}
           offset: {x: 0, y: 0}
           type: 0
         - position: {x: -3, y: 60, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 5.5, y: 5}
+          size: {x: 5.5, y: 4.568222}
           offset: {x: 0, y: 0}
           type: 0
         - position: {x: 0, y: 64.5, z: 0}
@@ -3821,7 +3821,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 93, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 3}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
@@ -3925,32 +3925,32 @@ MonoBehaviour:
         - position: {x: 0, y: -10, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 11.5, y: 33}
-          offset: {x: 0, y: 16.5}
+          offset: {x: 0, y: 0}
           type: 0
         - position: {x: 0, y: 22.5, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 18, y: 7}
-          offset: {x: 0, y: 3.5}
-          type: 0
-        - position: {x: -6.5, y: 29, z: 0}
-          scale: {x: 1, y: 1, z: 1}
-          size: {x: 5, y: 25}
-          offset: {x: 0, y: 12.5}
+          offset: {x: 0, y: 0}
           type: 0
         - position: {x: 6.5, y: 29, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 5, y: 25}
-          offset: {x: 0, y: 12.5}
+          offset: {x: 0, y: 0}
+          type: 0
+        - position: {x: -6.5, y: 29.43251, z: 0}
+          scale: {x: 1, y: 1, z: 1}
+          size: {x: 5, y: 24.134546}
+          offset: {x: 0, y: 0}
           type: 0
         - position: {x: 0, y: 53.5, z: 0}
           scale: {x: 1, y: 1, z: 1}
           size: {x: 18, y: 7}
-          offset: {x: 0, y: 3.5}
+          offset: {x: 0, y: 0}
           type: 0
-        - position: {x: 0, y: 60, z: 0}
+        - position: {x: 0, y: 60.43625, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 65}
-          offset: {x: 0, y: 32.5}
+          size: {x: 11.5, y: 64.563705}
+          offset: {x: 0, y: 0}
           type: 0
         obstacleData:
         - position: {x: -3.3, y: 18, z: 0}
@@ -3990,7 +3990,7 @@ MonoBehaviour:
           limitRelativeLevel: 0
         - position: {x: 0, y: 85, z: 0}
           scale: {x: 1, y: 1, z: 1}
-          size: {x: 11.5, y: 2}
+          size: {x: 1000, y: 3}
           offset: {x: 0, y: 0}
           type: 1
           cooltime: 0
