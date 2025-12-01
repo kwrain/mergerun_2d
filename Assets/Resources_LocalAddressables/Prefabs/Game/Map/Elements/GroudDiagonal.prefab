@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8319b8f3305d4b35afac23d6157f4cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementType: 0
+  elementType: 1
   polygonCollider: {fileID: 6304595285840837999}
   spriteRenderer: {fileID: 2228134145240061094}
   atlas: {fileID: 100100200, guid: 5963ca0f1ac484806a61686c8e660ac2, type: 3}
