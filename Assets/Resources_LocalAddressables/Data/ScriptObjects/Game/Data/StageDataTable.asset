@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: StageDataTable
   m_EditorClassIdentifier: 
   mapElementGround: {fileID: -3880125375115993909, guid: 7514b362f39334d6ea900f78380dcd2f, type: 3}
+  mapElementGroundDiagonal: {fileID: 6674384579376162647, guid: 0a8ab9ab9593b4686b5fbda35d9adfa8, type: 3}
   mapElementBridge: {fileID: 1520310748235901913, guid: c16e020ccd45b414a9770a1361907a41, type: 3}
   obstacleSpike: {fileID: 5044510788286921569, guid: 5bbedc1f03a6b47e2a0030bdf64eac29, type: 3}
   obstacleGoal: {fileID: 5035774991657833407, guid: 556a28f1126a046abbda1c575834449c, type: 3}
