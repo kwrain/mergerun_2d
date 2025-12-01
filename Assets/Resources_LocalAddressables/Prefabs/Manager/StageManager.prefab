@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   compositeCollider: {fileID: 6359205470999149629}
-  overlapThresholdPercentage: 30
+  overlapThresholdPercentage: 60
   delayBeforeAction: 0.3
   trackedObjects:
     list:
