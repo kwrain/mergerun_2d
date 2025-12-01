@@ -44,6 +44,10 @@ public partial class StageManager
           element = Instantiate(stageDataTable.mapElementGround, mapParent);
           break;
 
+        case MapElementTypes.GroundDiagonal:
+          element = Instantiate(stageDataTable.mapElementGroundDiagonal, mapParent);
+          break;
+
         case MapElementTypes.Bridge:
           element = Instantiate(stageDataTable.mapElementBridge, mapParent);
           break;

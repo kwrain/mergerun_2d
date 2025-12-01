@@ -52,6 +52,7 @@ public class StageDataTable : ScriptableObject
   }
 
   [Header("[Prefabs]")] public MapGround mapElementGround;
+  public MapGround mapElementGroundDiagonal;
   public MapBridge mapElementBridge;
   [Space]
   public ObstacleSpike obstacleSpike;

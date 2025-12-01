@@ -737,6 +737,10 @@ public class StageManagerEditor : Editor
             element = Instantiate(stage.StageDataTable.mapElementGround, mapParent);
             break;
 
+          case MapElementTypes.GroundDiagonal:
+            element = Instantiate(stage.StageDataTable.mapElementGroundDiagonal, mapParent);
+            break;
+
           case MapElementTypes.Bridge:
             element = Instantiate(stage.StageDataTable.mapElementBridge, mapParent);
             break;
