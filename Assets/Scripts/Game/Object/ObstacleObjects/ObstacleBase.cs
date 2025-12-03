@@ -98,7 +98,7 @@ public class ObstacleBase : MonoBehaviour
     return overlapArea / boxArea * 100f;
   }
 
-  public void SetData(ObstacleData obstacleData)
+  public virtual void SetData(ObstacleData obstacleData)
   {
     transform.position = obstacleData.position;
     transform.localScale = obstacleData.scale;

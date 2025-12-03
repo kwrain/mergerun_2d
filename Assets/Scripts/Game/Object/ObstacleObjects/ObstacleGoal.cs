@@ -23,4 +23,11 @@ public class ObstacleGoal : ObstacleBase
   {
     IsChecked = false;
   }
+
+  public override void SetData(StageDataTable.ObstacleData obstacleData)
+  {
+    base.SetData(obstacleData);
+
+    limitRelativeLevel = obstacleData.limitRelativeLevel;
+  }
 }
