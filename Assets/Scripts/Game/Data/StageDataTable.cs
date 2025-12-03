@@ -70,6 +70,15 @@ public class StageDataTable : ScriptableObject
     if (datas.ContainsKey(stageID))
       return datas[stageID];
     else
+    {
+      // infinity가 false일 때 stageID가 존재하지 않으면 랜덤으로 추출
+      if (!infinity && datas.Count > 0)
+      {
+        var keys = new List<int>(datas.Keys);
+        var randomKey = keys[UnityEngine.Random.Range(0, keys.Count)];
+        return datas[randomKey];
+      }
       return null;
+    }
   }
 }
