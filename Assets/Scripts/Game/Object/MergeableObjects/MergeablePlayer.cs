@@ -44,9 +44,9 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     {
       base.Level = value;
 
-      if (!StageManager.Instance.Infinity)
+      if (StageManager.Instance.StageData != null && !StageManager.Instance.Infinity)
       {
-        GameModel.Global.ObstacleGoalColor = GetObstacleGoalColor(value);
+        GameModel.Global.ObstacleGoalColor = ObstacleGoal.GetObstacleGoalColor(value);
       }
     }
   }
@@ -152,31 +152,15 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     });
   }
 
-  public Color GetObstacleGoalColor(int level)
-  {
-    string hex = level switch
-    {
-      1 => "EF471C",// 2 : #EF471C
-      2 => "FF6B32",// 4 : #FF6B32
-      3 => "A04EC0",// 8 : #A04EC0
-      4 => "FF9102",// 16 : #FFB902
-      5 => "FC8C1C",// 32 : #FC8C1C
-      6 => "EF471C",// 64 : #EF471C
-      7 => "CEDA0D",// 128 : #CEDA0D
-      8 => "FF8661",// 256 : #FF8661
-      9 => "FF9102",// 512 : #F5BD26
-      10 => "A2D03C",// 1024 : #A2D03C
-      11 => "49A837",// 2048 : #49A837
-      _ => null,
-    };
 
-    return hex.ToColorFromHex();
-  }
 
   public Color GetArmLegColor(int level)
   {
     // 팔다리 Mergeable Object 별 Color HexCode
-    string hex = level switch
+    // 12보다 큰 경우 1부터 다시 시작 (12 -> 1, 13 -> 2, ...)
+    int normalizedLevel = ((level - 1) % 12) + 1;
+    
+    string hex = normalizedLevel switch
     {
       1 => "C01B09",// 2 : #C01B09
       2 => "AA3D1E",// 4 : #AA3D1E
@@ -396,7 +380,6 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
             StageManager.Instance.StartStage(true, true);
             SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
           }));
-
         }
         else
         {
@@ -404,7 +387,6 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           StartCoroutine(Timer(1f, () =>
           {
             goal.Animator.SetTrigger("idle");
-            StageManager.Instance.PushObstacleInPool(goal);
           }));
 
           StageManager.Instance.CompleteInfinityStage();

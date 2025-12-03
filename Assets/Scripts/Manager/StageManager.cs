@@ -48,6 +48,7 @@ public partial class StageManager : Singleton<StageManager>
 
   public StageDataTable StageDataTable => stageDataTable;
 
+  public StageData StageData => stageData;
   public int StageID => stageData.stageId;
   public bool Infinity => stageData.infinity;
 
@@ -138,14 +139,15 @@ public partial class StageManager : Singleton<StageManager>
     onComplete?.Invoke();
   }
 
-  private void PlayerSetting()
+  private void PlayerSetting(bool infinity)
   {
     StopAllCoroutines();
     
     if (player != null)
     {
-      var savedLevel = SOManager.Instance.PlayerPrefsModel.UserSavedLevel;
-      var levelData = SOManager.Instance.GameDataTable.GetLevelData(savedLevel);
+      var level = infinity ? 1 : SOManager.Instance.PlayerPrefsModel.UserSavedLevel;
+      var levelData = SOManager.Instance.GameDataTable.GetLevelData(level);
+
       if (levelData != null)
       {
         MergeableData data = new()
@@ -154,11 +156,10 @@ public partial class StageManager : Singleton<StageManager>
         };
 
         player.SetData(data);
-        player.SetLevel(savedLevel);
+        player.SetLevel(level);
       }
     }
   }
-
 
   private void GenerateStageObjects(StageData data, float offsetY = 0f, bool active = true)
   { 
@@ -181,7 +182,7 @@ public partial class StageManager : Singleton<StageManager>
       var element = PeekMapElementInPool(mapData.type);
       if (element != null)
       {
-        var pos = mapData.position;
+        var pos =  mapData.position;
         pos.y += offsetY;
         element.SetData(mapData);
         element.transform.position = pos;
@@ -231,6 +232,14 @@ public partial class StageManager : Singleton<StageManager>
     stageCompleteAnimator.SetActive(false);
     SOManager.Instance.GameModel.StageComplete = false;
 
+    // Map의 Update 비활성화 (스테이지 로딩 중에는 Update가 실행되지 않도록)
+    if (map != null)
+    {
+      map.SetUpdateEnabled(false);
+    }
+
+    PlayerSetting(infinity);
+
     if (infinity)
     {
       LoadInfinityStage(restart);
@@ -240,13 +249,13 @@ public partial class StageManager : Singleton<StageManager>
       LoadStage(restart);
     }
 
-    PlayerSetting();
-
 
     // Map의 MergeableObject 스캔
     if (map != null)
     {
       map.ScanMergeableObjects();
+      // 스캔 완료 후 Update 다시 활성화
+      map.SetUpdateEnabled(true);
     }
   }
 
@@ -447,9 +456,6 @@ public partial class StageManager : Singleton<StageManager>
 
     GenerateStageObjects(stageData, 0f, true);
 
-    // 다음 스테이지 미리 로드
-    PreloadNextInfinityStage();
-
     // interstitialAdTimerCoroutine = StartCoroutine(Timer(30,
     // () =>
     //  {
@@ -558,13 +564,19 @@ public partial class StageManager : Singleton<StageManager>
 
   public void CompleteInfinityStage()
   {
+    if (map != null)
+    {
+      map.SetUpdateEnabled(false);
+    }
+
     UnloadPrevInfiniytyStage();
-
-    prevStageData = stageData;
-    stageData = nextStageData;
-    nextStageData = null;
-
     PreloadNextInfinityStage();
+    stageData = nextStageData;
+
+    if (map != null)
+    {
+      map.SetUpdateEnabled(true);
+    }
   }
 
   #endregion

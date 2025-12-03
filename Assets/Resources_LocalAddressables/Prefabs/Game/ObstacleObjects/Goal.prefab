@@ -331,6 +331,8 @@ MonoBehaviour:
   overlapPercentage: 0.1
   limitRelativeLevel: 0
   animator: {fileID: 4386788343904531332}
+  spriteRenderer: {fileID: 5002694711803973284}
+  textMeshPro: {fileID: 2163351022864266561}
 --- !u!114 &403711766806546266
 MonoBehaviour:
   m_ObjectHideFlags: 0

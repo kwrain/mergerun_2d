@@ -27,6 +27,9 @@ public class Map : MonoBehaviour
   private List<MergeableBase> queuedRemoveTracked = new();
   private List<MergeableBase> queuedRemoveDropping = new();
 
+  // Update 실행 제어 플래그
+  private bool isUpdateEnabled = true;
+
   // 컴포넌트를 미리 가져옵니다.
   protected virtual void Awake()
   {
@@ -45,6 +48,10 @@ public class Map : MonoBehaviour
 
   private void Update()
   {
+    // Update가 비활성화되어 있으면 실행하지 않음
+    if (!isUpdateEnabled)
+      return;
+
     // 0. 임시 리스트 초기화
     objectsToDrop.Clear();
     objectsToTrack.Clear();
@@ -165,6 +172,15 @@ public class Map : MonoBehaviour
         trackedObjects[hash] = obj;
       }
     }
+  }
+
+  /// <summary>
+  /// Update 함수의 실행 여부를 설정합니다.
+  /// </summary>
+  /// <param name="enabled">true면 Update 실행, false면 실행하지 않음</param>
+  public void SetUpdateEnabled(bool enabled)
+  {
+    isUpdateEnabled = enabled;
   }
 
   [ContextMenu("ScanMergeableObjects")]
