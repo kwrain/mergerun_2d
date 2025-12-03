@@ -152,14 +152,12 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     });
   }
 
-
-
   public Color GetArmLegColor(int level)
   {
     // 팔다리 Mergeable Object 별 Color HexCode
-    // 12보다 큰 경우 1부터 다시 시작 (12 -> 1, 13 -> 2, ...)
-    int normalizedLevel = ((level - 1) % 12) + 1;
-    
+    // 11보다 큰 경우 1부터 다시 시작 (12 -> 1, 13 -> 2, ...)
+    int normalizedLevel = ((level - 1) % 11) + 1;
+    Debug.Log("normalizedLevel: " + normalizedLevel + " / level: " + level);
     string hex = normalizedLevel switch
     {
       1 => "C01B09",// 2 : #C01B09

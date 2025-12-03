@@ -64,7 +64,13 @@ public class StageDataTable : ScriptableObject
   public GenericDictionary<int, StageData> stageData;
   public GenericDictionary<int, StageData> infinityStagedata;
 
-  public StageData GetStageData(int stageID, bool infinity)
+  public bool VaildStageData(int stageID, bool infinity)
+  {
+    var datas = infinity ? infinityStagedata : stageData;
+    return datas.ContainsKey(stageID);
+  }
+
+  public StageData GetStageData(int stageID, bool infinity, params int[] excludeIds)
   {
     var datas = infinity ? infinityStagedata : stageData;
     if (datas.ContainsKey(stageID))
@@ -75,8 +81,29 @@ public class StageDataTable : ScriptableObject
       if (!infinity && datas.Count > 0)
       {
         var keys = new List<int>(datas.Keys);
-        var randomKey = keys[UnityEngine.Random.Range(0, keys.Count)];
-        return datas[randomKey];
+        
+        // 제외할 ID가 있으면 필터링
+        if (excludeIds != null && excludeIds.Length > 0)
+        {
+          keys.RemoveAll(id => System.Array.IndexOf(excludeIds, id) >= 0);
+        }
+        
+        // 필터링 후 남은 키가 있는지 확인
+        if (keys.Count > 0)
+        {
+          var randomKey = keys[UnityEngine.Random.Range(0, keys.Count)];
+          return datas[randomKey];
+        }
+        else
+        {
+          // 모든 키가 제외되었을 경우 원본 키에서 랜덤 추출
+          var allKeys = new List<int>(datas.Keys);
+          if (allKeys.Count > 0)
+          {
+            var randomKey = allKeys[UnityEngine.Random.Range(0, allKeys.Count)];
+            return datas[randomKey];
+          }
+        }
       }
       return null;
     }

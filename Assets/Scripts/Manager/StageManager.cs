@@ -319,15 +319,23 @@ public partial class StageManager : Singleton<StageManager>
     ClearStageObjects();
 
     var stage = SOManager.Instance.PlayerPrefsModel.UserSavedStage;
-    var data = stageDataTable.GetStageData(stage, false);
-    if (data == null)
-      return;
 
-    stageData = data;
-    
     if (!restart)
     {
-      SetText((data.stageId + 1).ToString());
+      StageData data = null;
+      if (stageData != null)
+      {
+        data = stageDataTable.GetStageData(stage, false, stageData.stageId);
+      }
+      else
+      {
+        data = stageDataTable.GetStageData(stage, false);
+      }
+      if (data == null)
+        return;
+
+      stageData = data;
+      SetText((stage + 1).ToString());
     }
 
     GenerateStageObjects(stageData, 0, true);
@@ -377,7 +385,15 @@ public partial class StageManager : Singleton<StageManager>
     }
 
     SOManager.Instance.GameModel.StageComplete = true;
-    SOManager.Instance.PlayerPrefsModel.UserSavedStage = StageID + 1;
+
+    if (stageDataTable.VaildStageData(StageID + 1, false))
+    {
+      SOManager.Instance.PlayerPrefsModel.UserSavedStage++;
+    }
+    else
+    {
+      SOManager.Instance.PlayerPrefsModel.UserSavedStage = StageID + 1;
+    }
 
     stageCompleteAnimator.SetActive(true);
     stageCompleteAnimator.SetTrigger("Show");
