@@ -21,7 +21,14 @@ public class MergeableObject : MergeableBase
     RelativeLevel = mergeableData.relativeLevel;
     if (Application.isPlaying)
     {
-      SetLevel(SOManager.Instance.PlayerPrefsModel.UserSavedLevel + RelativeLevel);
+      if (StageManager.Instance.Infinity)
+      {
+        SetLevel(StageManager.Instance.Player.Level + RelativeLevel);
+      }
+      else
+      {
+        SetLevel(SOManager.Instance.PlayerPrefsModel.UserSavedLevel + RelativeLevel);
+      }
     }
     else
     {
