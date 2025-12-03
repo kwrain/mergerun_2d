@@ -159,31 +159,6 @@ public partial class StageManager : Singleton<StageManager>
     }
   }
 
-  private float CalculateStageEndY(List<MapElement> mapElements)
-  {
-    if (mapElements.Count == 0)
-      return 0f;
-
-    float maxY = float.MinValue;
-    foreach (var e in mapElements)
-    {
-      if (e == null) continue;
-      var collider = e.polygonCollider;
-      if (collider != null)
-      {
-        // 콜라이더의 상단 끝점 (bounds.max.y)
-        maxY = Mathf.Max(maxY, collider.bounds.max.y);
-      }
-      else
-      {
-        // 폴백: transform의 Y + localScale.y
-        float endY = e.transform.position.y + e.transform.localScale.y * 0.5f;
-        maxY = Mathf.Max(maxY, endY);
-      }
-    }
-
-    return maxY; // 다음 스테이지 시작 기준점
-  }
 
   private void GenerateStageObjects(StageData data, float offsetY = 0f, bool active = true)
   { 
@@ -475,12 +450,12 @@ public partial class StageManager : Singleton<StageManager>
     // 다음 스테이지 미리 로드
     PreloadNextInfinityStage();
 
-    interstitialAdTimerCoroutine = StartCoroutine(Timer(30,
-    () =>
-     {
-       ReadyInterstitialAd = true;
-       interstitialAdTimerCoroutine = null;
-     }));
+    // interstitialAdTimerCoroutine = StartCoroutine(Timer(30,
+    // () =>
+    //  {
+    //    ReadyInterstitialAd = true;
+    //    interstitialAdTimerCoroutine = null;
+    //  }));
   }
 
   public void UnloadPrevInfiniytyStage()
@@ -556,13 +531,23 @@ public partial class StageManager : Singleton<StageManager>
       return;
 
     var offsetY = 0f;
-    // 안전하게 접근: ContainsKey로 확인 후 접근
-    if (stageMapElements.ContainsKey(stageData.stageId))
+    // 무한모드에서는 ObstacleGoal이 스테이지별로 하나씩만 존재하므로 이를 사용
+    if (stageObstalces.ContainsKey(stageData.stageId))
     {
-      var mepElements = stageMapElements[stageData.stageId];
-      if (mepElements != null && mepElements.Count > 0)
+      var obstacles = stageObstalces[stageData.stageId];
+      if (obstacles != null && obstacles.Count > 0)
       {
-        offsetY = CalculateStageEndY(mepElements);
+        // ObstacleGoal 찾기
+        var goal = obstacles.FirstOrDefault(o => o != null && o.Type == ObstacleTypes.Goal) as ObstacleGoal;
+        if (goal != null)
+        {
+          var collider = goal.GetComponent<BoxCollider2D>();
+          if (collider != null)
+          {
+            // ObstacleGoal의 상단 끝점 (bounds.max.y)
+            offsetY = collider.bounds.size.y * 0.5f + goal.transform.position.y;
+          }
+        }
       }
     }
 
