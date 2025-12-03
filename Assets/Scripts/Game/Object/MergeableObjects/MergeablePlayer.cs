@@ -236,9 +236,12 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     // 최대 합성 단계를 기록해야한다.
     if (StageManager.Instance.Infinity)
     {
-      SOManager.Instance.PlayerPrefsModel.UserBestLevel = Level;
-      var text = SOManager.Instance.GameDataTable.PowerOfTwoString(Level);
-      StageManager.Instance.SetText(text);
+      if (Level > SOManager.Instance.PlayerPrefsModel.UserBestLevel)
+      {
+        SOManager.Instance.PlayerPrefsModel.UserBestLevel = Level;
+        var text = SOManager.Instance.GameDataTable.PowerOfTwoString(Level);
+        StageManager.Instance.SetText(text);
+      }
     }
   }
 
@@ -285,7 +288,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       base.Drop();
     }
 
-    StageManager.Instance.StartStage(restart:true);
+    StageManager.Instance.StartStage(StageManager.Instance.Infinity, true);
     SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
   }
 
@@ -361,7 +364,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     else
     {
       // 게임오버 -> 재시작
-      StageManager.Instance.StartStage(restart: true);
+      StageManager.Instance.StartStage(StageManager.Instance.Infinity, true);
       SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
     }
   }
@@ -390,7 +393,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           StartCoroutine(Timer(1f, () =>
           {
             goal.Animator.SetTrigger("idle");
-            StageManager.Instance.StartStage(restart: true);
+            StageManager.Instance.StartStage(true, true);
             SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
           }));
 

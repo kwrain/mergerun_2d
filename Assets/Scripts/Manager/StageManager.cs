@@ -44,6 +44,7 @@ public partial class StageManager : Singleton<StageManager>
   private Dictionary<int, List<ObstacleBase>> stageObstalces = new();
 
   private bool ReadyInterstitialAd { get; set; }
+  private Coroutine interstitialAdTimerCoroutine;
 
   public StageDataTable StageDataTable => stageDataTable;
 
@@ -118,7 +119,7 @@ public partial class StageManager : Singleton<StageManager>
     if (GUI.Button(new Rect(Screen.width - 210, 10, 200, 60), "Reset UserData", buttonStyle))
     {
       ClearUserData();
-      StartStage();
+      StartStage(Infinity);
     }
   }
 
@@ -163,20 +164,29 @@ public partial class StageManager : Singleton<StageManager>
     if (mapElements.Count == 0)
       return 0f;
 
-    float value = 0;
+    float maxY = float.MinValue;
     foreach (var e in mapElements)
     {
       if (e == null) continue;
-      var sprite = e.GetComponent<SpriteRenderer>();
-      float sizeY = sprite ? sprite.bounds.size.y : e.transform.localScale.y;
-      value = e.transform.position.y + sizeY;
+      var collider = e.polygonCollider;
+      if (collider != null)
+      {
+        // 콜라이더의 상단 끝점 (bounds.max.y)
+        maxY = Mathf.Max(maxY, collider.bounds.max.y);
+      }
+      else
+      {
+        // 폴백: transform의 Y + localScale.y
+        float endY = e.transform.position.y + e.transform.localScale.y * 0.5f;
+        maxY = Mathf.Max(maxY, endY);
+      }
     }
 
-    return value; // 다음 스테이지 시작 기준점
+    return maxY; // 다음 스테이지 시작 기준점
   }
 
   private void GenerateStageObjects(StageData data, float offsetY = 0f, bool active = true)
-  {
+  { 
     var stageId = data.stageId;
     if (!stageMapElements.ContainsKey(stageId))
     {
@@ -310,12 +320,12 @@ public partial class StageManager : Singleton<StageManager>
 
   private void InterstitialAdCompleted()
   {
-    StartStage();
+    StartStage(Infinity);
   }
 
   private void InterstitialAdFailed(int code)
   {
-    StartStage();
+    StartStage(Infinity);
   }
 
   #region Normal
@@ -409,6 +419,13 @@ public partial class StageManager : Singleton<StageManager>
   {
     ClearStageObjects();
 
+    // 기존 코루틴 중지
+    if (interstitialAdTimerCoroutine != null)
+    {
+      StopCoroutine(interstitialAdTimerCoroutine);
+      interstitialAdTimerCoroutine = null;
+    }
+
     if (restart)
     {
       if (ReadyInterstitialAd)
@@ -417,6 +434,18 @@ public partial class StageManager : Singleton<StageManager>
         AdManager.Instance.ShowInterstitial(InterstitialAdCompleted, InterstitialAdFailed);
 #endif
         ReadyInterstitialAd = false;
+      }
+      
+      // restart일 때 stageData가 null이면 새로 로드
+      if (stageData == null)
+      {
+        var infinityStages = stageDataTable.infinityStagedata.Values.ToList();
+        if (infinityStages.Count == 0)
+        {
+          Debug.LogError("Infinity stage data is empty!");
+          return;
+        }
+        stageData = infinityStages[UnityEngine.Random.Range(0, infinityStages.Count)];
       }
     }
     else
@@ -433,7 +462,12 @@ public partial class StageManager : Singleton<StageManager>
       var level = SOManager.Instance.PlayerPrefsModel.UserBestLevel;
       var text = SOManager.Instance.GameDataTable.PowerOfTwoString(level);
       SetText(text);
+    }
 
+    if (stageData == null)
+    {
+      Debug.LogError("StageData is null!");
+      return;
     }
 
     GenerateStageObjects(stageData, 0f, true);
@@ -441,10 +475,11 @@ public partial class StageManager : Singleton<StageManager>
     // 다음 스테이지 미리 로드
     PreloadNextInfinityStage();
 
-    StartCoroutine(Timer(30,
+    interstitialAdTimerCoroutine = StartCoroutine(Timer(30,
     () =>
      {
        ReadyInterstitialAd = true;
+       interstitialAdTimerCoroutine = null;
      }));
   }
 
@@ -498,8 +533,14 @@ public partial class StageManager : Singleton<StageManager>
     }
   }
 
-  private void PreloadNextInfinityStage(float offsetY = -1f)
+  private void PreloadNextInfinityStage()
   {
+    if (stageData == null)
+    {
+      Debug.LogWarning("PreloadNextInfinityStage: stageData is null!");
+      return;
+    }
+
     var infinityStages = stageDataTable.infinityStagedata.Values.ToList();
     infinityStages.RemoveAll(s => s.stageId == stageData.stageId);
     if (nextStageData != null)
@@ -514,10 +555,12 @@ public partial class StageManager : Singleton<StageManager>
     if (infinityStages.Count == 0)
       return;
 
-    // 오프셋 계산 (파라미터로 전달된 값이 없으면 현재 스테이지의 마지막 Y 사용)
-    if (offsetY < 0f)
+    var offsetY = 0f;
+    // 안전하게 접근: ContainsKey로 확인 후 접근
+    if (stageMapElements.ContainsKey(stageData.stageId))
     {
-      if (stageMapElements.TryGetValue(stageData.stageId, out var mepElements) && mepElements != null)
+      var mepElements = stageMapElements[stageData.stageId];
+      if (mepElements != null && mepElements.Count > 0)
       {
         offsetY = CalculateStageEndY(mepElements);
       }
@@ -530,31 +573,13 @@ public partial class StageManager : Singleton<StageManager>
 
   public void CompleteInfinityStage()
   {
-    // nextStageData가 null인 경우 처리
-    if (nextStageData == null)
-    {
-      Debug.LogWarning("CompleteInfinityStage: nextStageData is null. Cannot proceed to next stage.");
-      return;
-    }
-
-    // 오프셋 계산을 위해 현재 stageData의 끝점을 먼저 계산
-    float currentStageEndY = 0f;
-    if (stageMapElements.TryGetValue(stageData.stageId, out var currentElements) && currentElements != null)
-    {
-      currentStageEndY = CalculateStageEndY(currentElements);
-    }
-
     UnloadPrevInfiniytyStage();
 
     prevStageData = stageData;
     stageData = nextStageData;
     nextStageData = null;
 
-    // PreloadNextInfinityStage 호출 전에 오프셋을 미리 계산해야 하지만,
-    // PreloadNextInfinityStage 내부에서 stageData를 기준으로 계산하므로
-    // 여기서는 stageData가 이미 변경된 상태입니다.
-    // 따라서 PreloadNextInfinityStage 내부 로직을 수정해야 합니다.
-    PreloadNextInfinityStage(currentStageEndY);
+    PreloadNextInfinityStage();
   }
 
   #endregion
