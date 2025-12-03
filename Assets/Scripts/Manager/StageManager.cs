@@ -242,9 +242,6 @@ public partial class StageManager : Singleton<StageManager>
   /// </summary>
   public void StartStage(bool infinity = false, bool restart = false)
   {
-    // 스테이지가 시작될 때마다 BGM 재생(재시작)
-    SoundManager.Instance.PlayBGM(SoundBGMTypes.SOUND_BGM);
-
     StopAllCoroutines();
     stageCompleteAnimator.SetActive(false);
     SOManager.Instance.GameModel.StageComplete = false;
@@ -275,7 +272,10 @@ public partial class StageManager : Singleton<StageManager>
       for (int i = kv.Value.Count - 1; i >= 0; i--)
       {
         var value = kv.Value[i];
-        PushMapElementInPool(value);
+        if (value != null)
+        {
+          PushMapElementInPool(value);
+        }
       }
     }
 
@@ -284,7 +284,10 @@ public partial class StageManager : Singleton<StageManager>
       for (int i = kv.Value.Count - 1; i >= 0; i--)
       {
         var value = kv.Value[i];
-        PushObstacleInPool(value);
+        if (value != null)
+        {
+          PushObstacleInPool(value);
+        }
       }
     }
 
@@ -293,7 +296,10 @@ public partial class StageManager : Singleton<StageManager>
       for (int i = kv.Value.Count - 1; i >= 0; i--)
       {
         var value = kv.Value[i];
-        PushMergeableInPool(value);
+        if (value != null)
+        {
+          PushMergeableInPool(value);
+        }
       }
     }
 
@@ -318,14 +324,15 @@ public partial class StageManager : Singleton<StageManager>
   {
     ClearStageObjects();
 
+    var stage = SOManager.Instance.PlayerPrefsModel.UserSavedStage;
+    var data = stageDataTable.GetStageData(stage, false);
+    if (data == null)
+      return;
+
+    stageData = data;
+    
     if (!restart)
     {
-      var stage = SOManager.Instance.PlayerPrefsModel.UserSavedStage;
-      var data = stageDataTable.GetStageData(stage, false);
-      if (data == null)
-        return;
-
-      stageData = data;
       SetText((data.stageId + 1).ToString());
     }
 
@@ -448,29 +455,50 @@ public partial class StageManager : Singleton<StageManager>
 
     // 이전 스테이지 정보가 있으면 풀에 넣어준다.
     var stageId = prevStageData.stageId;
-    var mapElements = stageMapElements[stageId];
-    for (int i = mapElements.Count - 1; i >= 0; i--)
+    if (stageMapElements.ContainsKey(stageId))
     {
-      var value = mapElements[i];
-      PushMapElementInPool(value);
+      var mapElements = stageMapElements[stageId];
+      for (int i = mapElements.Count - 1; i >= 0; i--)
+      {
+        var value = mapElements[i];
+        if (value != null)
+        {
+          PushMapElementInPool(value);
+        }
+      }
+      stageMapElements.Remove(stageId);
     }
 
-    var obstacles = stageObstalces[stageId];
-    for (int i = obstacles.Count - 1; i >= 0; i--)
+    if (stageObstalces.ContainsKey(stageId))
     {
-      var value = obstacles[i];
-      PushObstacleInPool(value);
+      var obstacles = stageObstalces[stageId];
+      for (int i = obstacles.Count - 1; i >= 0; i--)
+      {
+        var value = obstacles[i];
+        if (value != null)
+        {
+          PushObstacleInPool(value);
+        }
+      }
+      stageObstalces.Remove(stageId);
     }
 
-    var mergeables = stageMergeables[stageId];
-    for (int i = mergeables.Count - 1; i >= 0; i--)
+    if (stageMergeables.ContainsKey(stageId))
     {
-      var value = mergeables[i];
-      PushMergeableInPool(value);
+      var mergeables = stageMergeables[stageId];
+      for (int i = mergeables.Count - 1; i >= 0; i--)
+      {
+        var value = mergeables[i];
+        if (value != null)
+        {
+          PushMergeableInPool(value);
+        }
+      }
+      stageMergeables.Remove(stageId);
     }
   }
 
-  private void PreloadNextInfinityStage()
+  private void PreloadNextInfinityStage(float offsetY = -1f)
   {
     var infinityStages = stageDataTable.infinityStagedata.Values.ToList();
     infinityStages.RemoveAll(s => s.stageId == stageData.stageId);
@@ -486,12 +514,13 @@ public partial class StageManager : Singleton<StageManager>
     if (infinityStages.Count == 0)
       return;
 
-    // 오프셋 계산 (이전 스테이지의 마지막 Y)
-    var offsetY = 0f;
-    var mepElements = stageMapElements[stageData.stageId];
-    if (mepElements != null)
+    // 오프셋 계산 (파라미터로 전달된 값이 없으면 현재 스테이지의 마지막 Y 사용)
+    if (offsetY < 0f)
     {
-      offsetY = CalculateStageEndY(mepElements);
+      if (stageMapElements.TryGetValue(stageData.stageId, out var mepElements) && mepElements != null)
+      {
+        offsetY = CalculateStageEndY(mepElements);
+      }
     }
 
     nextStageData = infinityStages[UnityEngine.Random.Range(0, infinityStages.Count)];
@@ -501,13 +530,31 @@ public partial class StageManager : Singleton<StageManager>
 
   public void CompleteInfinityStage()
   {
+    // nextStageData가 null인 경우 처리
+    if (nextStageData == null)
+    {
+      Debug.LogWarning("CompleteInfinityStage: nextStageData is null. Cannot proceed to next stage.");
+      return;
+    }
+
+    // 오프셋 계산을 위해 현재 stageData의 끝점을 먼저 계산
+    float currentStageEndY = 0f;
+    if (stageMapElements.TryGetValue(stageData.stageId, out var currentElements) && currentElements != null)
+    {
+      currentStageEndY = CalculateStageEndY(currentElements);
+    }
+
     UnloadPrevInfiniytyStage();
 
     prevStageData = stageData;
     stageData = nextStageData;
     nextStageData = null;
 
-    PreloadNextInfinityStage();
+    // PreloadNextInfinityStage 호출 전에 오프셋을 미리 계산해야 하지만,
+    // PreloadNextInfinityStage 내부에서 stageData를 기준으로 계산하므로
+    // 여기서는 stageData가 이미 변경된 상태입니다.
+    // 따라서 PreloadNextInfinityStage 내부 로직을 수정해야 합니다.
+    PreloadNextInfinityStage(currentStageEndY);
   }
 
   #endregion

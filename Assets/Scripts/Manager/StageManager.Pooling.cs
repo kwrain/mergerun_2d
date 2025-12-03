@@ -59,6 +59,9 @@ public partial class StageManager
 
   public void PushMapElementInPool(MapElement element)
   {
+    if (element == null)
+      return;
+
     var type = element.ElementType;
     if (mapElementPool.ContainsKey(type))
     {
@@ -134,6 +137,9 @@ public partial class StageManager
 
   public void PushObstacleInPool(ObstacleBase obstacle)
   {
+    if (obstacle == null)
+      return;
+
     var type = obstacle.Type;
     if (obstaclePool.ContainsKey(type))
     {
@@ -200,6 +206,9 @@ public partial class StageManager
 
   public void PushMergeableInPool(MergeableObject obj)
   {
+    if (obj == null)
+      return;
+
     if (mergeablePool.Contains(obj))
       return;
 

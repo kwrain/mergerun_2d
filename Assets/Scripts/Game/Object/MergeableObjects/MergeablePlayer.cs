@@ -222,9 +222,6 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
 
     armLegSpeedControl.Speed= levelData.animationSpeed;
 
-    // 레벨 데이터에 따른 BGM 재생 속도 변경
-    SoundManager.Instance.SetBGMSpeed(levelData.bgmSpeed);
-
     var color = GetArmLegColor(Level);
     foreach (var sr in armLegs)
     {
