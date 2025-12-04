@@ -13,6 +13,7 @@ public class ObstacleGoal : ObstacleBase
   public Animator Animator => animator;
 
   public int LimitRelativeLevel => limitRelativeLevel;
+  public int LimitLevel { get; private set; }
   public bool IsChecked { get; set; }
 
   public static Color GetObstacleGoalColor(int level)
@@ -57,16 +58,20 @@ public class ObstacleGoal : ObstacleBase
 
     limitRelativeLevel = obstacleData.limitRelativeLevel;
 
-    if (StageManager.Instance.Infinity)
-    {
-      UpdateLevel();
-    }
+    UpdateLevel();
   }
 
   public void UpdateLevel()
   {
-    var level = StageManager.Instance.Player.Level + limitRelativeLevel;
-    textMeshPro.text = SOManager.Instance.GameDataTable.PowerOfTwoString(level);
-    spriteRenderer.color = GetObstacleGoalColor(level);
+    if (StageManager.Instance.Infinity)
+    {
+      LimitLevel = StageManager.Instance.Player.Level + limitRelativeLevel;
+      textMeshPro.text = SOManager.Instance.GameDataTable.PowerOfTwoString(LimitLevel);
+      spriteRenderer.color = GetObstacleGoalColor(LimitLevel);
+    }
+    else
+    {
+      textMeshPro.text = "GOAL!";
+    }
   }
 }

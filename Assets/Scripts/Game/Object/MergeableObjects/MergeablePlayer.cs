@@ -365,7 +365,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       if (StageManager.Instance.Infinity)
       {
         // 지정된 단계를 초과하지 못하는 경우
-        if (Level < SOManager.Instance.PlayerPrefsModel.UserSavedLevel + goal.LimitRelativeLevel)
+        if (Level < goal.LimitLevel)
         {
           // 벽에 부딪힌 경우 더 이상 진행이 불가능할때,
           // 이동을 멈추고, 죽는 연출 이후, 광고를 노출한다.
