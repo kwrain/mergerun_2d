@@ -344,8 +344,6 @@ public partial class StageManager : Singleton<StageManager>
   [ContextMenu("CompleteStage")]
   public void CompleteStage()
   {
-    player.Movable = false;
-
     // 경험치 체크
     var level = SOManager.Instance.PlayerPrefsModel.UserSavedLevel;
     var expData = SOManager.Instance.GameDataTable.GetExpData(level);
@@ -400,6 +398,8 @@ public partial class StageManager : Singleton<StageManager>
 
     StartCoroutine(Timer(stageCompleteWaitTime, () =>
     {
+      player.Movable = false;
+
       // 전면 광고 노출
 #if UNITY_EDITOR
       InterstitialAdCompleted();

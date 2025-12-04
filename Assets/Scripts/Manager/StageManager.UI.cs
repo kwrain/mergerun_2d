@@ -12,7 +12,7 @@ public partial class StageManager
   [SerializeField] private TextMeshProUGUI text;
 
   [SerializeField] private Animator stageCompleteAnimator;
-  [SerializeField] private float stageCompleteWaitTime = 3f;
+  [SerializeField] private float stageCompleteWaitTime = 1f;
 
   private void SetUI()
   {
