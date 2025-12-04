@@ -472,12 +472,12 @@ public partial class StageManager : Singleton<StageManager>
 
     GenerateStageObjects(stageData, 0f, true);
 
-    // interstitialAdTimerCoroutine = StartCoroutine(Timer(30,
-    // () =>
-    //  {
-    //    ReadyInterstitialAd = true;
-    //    interstitialAdTimerCoroutine = null;
-    //  }));
+    interstitialAdTimerCoroutine = StartCoroutine(Timer(30,
+    () =>
+     {
+       ReadyInterstitialAd = true;
+       interstitialAdTimerCoroutine = null;
+     }));
   }
 
   public void UnloadPrevInfiniytyStage()
