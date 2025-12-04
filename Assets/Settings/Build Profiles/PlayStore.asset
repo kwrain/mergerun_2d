@@ -32,7 +32,7 @@ MonoBehaviour:
     - line: '|   AndroidProfiler: 0'
     - line: '|   AndroidFilterTouchesWhenObscured: 0'
     - line: '|   AndroidEnableSustainedPerformanceMode: 0'
-    - line: '|   defaultScreenOrientation: 1'
+    - line: '|   defaultScreenOrientation: 0'
     - line: '|   targetDevice: 2'
     - line: '|   useOnDemandResources: 0'
     - line: '|   accelerometerFrequency: 60'
@@ -199,7 +199,7 @@ MonoBehaviour:
     - line: '|     iPhone: 0'
     - line: '|     tvOS: 0'
     - line: '|   overrideDefaultApplicationIdentifier: 1'
-    - line: '|   AndroidBundleVersionCode: 1'
+    - line: '|   AndroidBundleVersionCode: 6'
     - line: '|   AndroidMinSdkVersion: 26'
     - line: '|   AndroidTargetSdkVersion: 0'
     - line: '|   AndroidPreferredInstallLocation: 1'
@@ -207,7 +207,7 @@ MonoBehaviour:
     - line: '|   stripEngineCode: 1'
     - line: '|   iPhoneStrippingLevel: 0'
     - line: '|   iPhoneScriptCallOptimization: 0'
-    - line: '|   ForceInternetPermission: 0'
+    - line: '|   ForceInternetPermission: 1'
     - line: '|   ForceSDCardPermission: 0'
     - line: '|   CreateWallpaper: 0'
     - line: '|   androidSplitApplicationBinary: 0'
@@ -943,7 +943,7 @@ MonoBehaviour:
     - line: '|   cloudProjectId: 910ed4ba-e775-4342-b1c6-fce6ae1699e8'
     - line: '|   framebufferDepthMemorylessMode: 0'
     - line: '|   qualitySettingsNames: []'
-    - line: '|   projectName: FruitRun2D'
+    - line: '|   projectName: FruitRun2048'
     - line: '|   organizationId: fairstudios'
     - line: '|   cloudEnabled: 0'
     - line: '|   legacyClampBlendShapeWeights: 0'
@@ -976,7 +976,7 @@ MonoBehaviour:
         m_ExportAsGoogleAndroidProject: 0
         m_DebugSymbolLevel: 1
         m_DebugSymbolFormat: 5
-        m_CurrentDeploymentTargetId: 6355a494
+        m_CurrentDeploymentTargetId: HA1XRFTC
         m_BuildType: 2
         m_BuildAppBundle: 1
         m_IPAddressToConnect: 

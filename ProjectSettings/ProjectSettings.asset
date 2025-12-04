@@ -775,7 +775,7 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
-    Android: DOTWEEN
+    Android: DOTWEEN;LEVELPLAY_DEPENDENCIES_INSTALLED
     EmbeddedLinux: DOTWEEN
     GameCoreScarlett: DOTWEEN
     GameCoreXboxOne: DOTWEEN
@@ -893,7 +893,7 @@ PlayerSettings:
   cloudProjectId: 910ed4ba-e775-4342-b1c6-fce6ae1699e8
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: FruitRun2D
+  projectName: FruitRun2048
   organizationId: fairstudios
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

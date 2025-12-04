@@ -334,7 +334,11 @@ namespace FAIRSTUDIOS.Manager
       if (interstitialAd.IsAdReady())
       {
         Debug.Log("ShowInterstitial / IsAdReady() = true");
-        interstitialAd.ShowAd();
+#if UNITY_IOS
+        interstitialAd.ShowAd("Interstitial_iOS");
+#elif UNITY_ANDROID
+        interstitialAd.ShowAd("Interstitial_Android");
+#endif
       }
       else
       {
