@@ -553,21 +553,25 @@ public partial class StageManager : Singleton<StageManager>
       return;
 
     var offsetY = 0f;
-    // 무한모드에서는 ObstacleGoal이 스테이지별로 하나씩만 존재하므로 이를 사용
-    if (stageObstalces.ContainsKey(stageData.stageId))
+    // stageMapElements에서 현재 스테이지의 MapElement 중 가장 큰 offset 값을 찾기
+    if (stageMapElements.ContainsKey(stageData.stageId))
     {
-      var obstacles = stageObstalces[stageData.stageId];
-      if (obstacles != null && obstacles.Count > 0)
+      var mapElements = stageMapElements[stageData.stageId];
+      if (mapElements != null && mapElements.Count > 0)
       {
-        // ObstacleGoal 찾기
-        var goal = obstacles.FirstOrDefault(o => o != null && o.Type == ObstacleTypes.Goal) as ObstacleGoal;
-        if (goal != null)
+        foreach (var element in mapElements)
         {
-          var collider = goal.GetComponent<BoxCollider2D>();
-          if (collider != null)
+          if (element != null)
           {
-            // ObstacleGoal의 상단 끝점 (bounds.max.y)
-            offsetY = collider.bounds.size.y * 0.5f + goal.transform.position.y;
+            var spriteRenderer = element.spriteRenderer;
+            if (spriteRenderer != null)
+            {
+              var currentOffset = spriteRenderer.bounds.size.y * 0.5f + element.transform.position.y;
+              if (currentOffset > offsetY)
+              {
+                offsetY = currentOffset;
+              }
+            }
           }
         }
       }
