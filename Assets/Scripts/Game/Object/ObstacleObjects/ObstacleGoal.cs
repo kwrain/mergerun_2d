@@ -63,6 +63,9 @@ public class ObstacleGoal : ObstacleBase
 
   public void UpdateLevel()
   {
+    if(!Application.isPlaying)
+      return;
+
     if (StageManager.Instance.Infinity)
     {
       LimitLevel = StageManager.Instance.Player.Level + limitRelativeLevel;
