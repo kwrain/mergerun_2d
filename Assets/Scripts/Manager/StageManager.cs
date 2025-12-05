@@ -566,7 +566,7 @@ public partial class StageManager : Singleton<StageManager>
             var spriteRenderer = element.spriteRenderer;
             if (spriteRenderer != null)
             {
-              var currentOffset = spriteRenderer.bounds.size.y * 0.5f + element.transform.position.y;
+              var currentOffset = spriteRenderer.bounds.size.y + element.transform.position.y;
               if (currentOffset > offsetY)
               {
                 offsetY = currentOffset;
@@ -591,6 +591,7 @@ public partial class StageManager : Singleton<StageManager>
 
     UnloadPrevInfiniytyStage();
     PreloadNextInfinityStage();
+    prevStageData = stageData;
     stageData = nextStageData;
 
     if (map != null)
