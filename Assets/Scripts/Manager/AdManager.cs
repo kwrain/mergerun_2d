@@ -53,6 +53,52 @@ namespace FAIRSTUDIOS.Manager
 
       Debug.Log("unity-script: IronSource.Agent.validateIntegration");
 
+      // iOS에서 ATT 권한 요청 (광고 초기화 전에 수행)
+#if UNITY_IOS && !UNITY_EDITOR
+      RequestTrackingAuthorization();
+#else
+      // iOS가 아닌 경우 바로 SDK 초기화
+      InitializeSDK();
+#endif
+    }
+
+#if UNITY_IOS && !UNITY_EDITOR
+    /// <summary>
+    /// iOS에서 ATT 권한 요청
+    /// </summary>
+    private void RequestTrackingAuthorization()
+    {
+      var attBridge = AppTrackingTransparencyBridge.Instance;
+      var currentStatus = attBridge.GetStatus();
+
+      Debug.Log($"[AdManager] 현재 ATT 권한 상태: {currentStatus}");
+
+      // 아직 요청하지 않은 경우에만 권한 요청
+      if (currentStatus == AppTrackingTransparencyBridge.TrackingAuthorizationStatus.NotDetermined)
+      {
+        Debug.Log("[AdManager] ATT 권한 요청 시작");
+        attBridge.RequestAuthorization((status) =>
+        {
+          Debug.Log($"[AdManager] ATT 권한 요청 완료: {status}");
+          
+          // 권한 요청 완료 후 SDK 초기화
+          InitializeSDK();
+        });
+      }
+      else
+      {
+        // 이미 권한이 결정된 경우 바로 SDK 초기화
+        Debug.Log($"[AdManager] ATT 권한이 이미 결정되어 있습니다: {currentStatus}");
+        InitializeSDK();
+      }
+    }
+#endif
+
+    /// <summary>
+    /// LevelPlay SDK 초기화
+    /// </summary>
+    private void InitializeSDK()
+    {
       // SDK init
       Debug.Log("unity-script: LevelPlay SDK initialization");
 
