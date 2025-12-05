@@ -225,6 +225,12 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
         StageManager.Instance.SetText(text);
       }
     }
+
+    // 합성 시 진동
+    if (GameManager.Instance != null)
+    {
+      GameManager.Instance.VibrateMedium();
+    }
   }
 
   public override void StartDropTimer(float time)
@@ -290,6 +296,12 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
 
     // 가시에 맞았을 때 데미지 사운드
     SoundManager.Instance.PlayFX(SoundFxTypes.DAMAGE);
+    
+    // 가시 충돌 시 진동
+    if (GameManager.Instance != null)
+    {
+      GameManager.Instance.VibrateShort();
+    }
 
     if (Level > 1)
     {
@@ -358,6 +370,12 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
 
     // 골 지점에 도달했을 때 사운드
     SoundManager.Instance.PlayFX(SoundFxTypes.GOAL);
+    
+    // 골 도달 시 진동
+    if (GameManager.Instance != null)
+    {
+      GameManager.Instance.VibrateLong();
+    }
 
     goal.IsChecked = true;
     if (goal != null)

@@ -27,8 +27,8 @@ public partial class StageManager
 
   public void OnToggleVibration(bool value)
   {
-    // Vibration.Vibrate(100);
-    SOManager.Instance.PlayerPrefsModel.VibrationEnabled = value;
+    GameManager.instance.IsVibrationEnabled = value;
+    GameManager.instance.VibrateShort();
   }
 
   public void OnToggleModeChange(bool value)
