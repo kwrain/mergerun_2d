@@ -31,7 +31,7 @@ MonoBehaviour:
     - Key: DEFEAT
       Value:
         clip: {fileID: 8300000, guid: 2fb46dca880e24a66b60f71bc86c9f2d, type: 3}
-        volume: 0
+        volume: 1
         pitch: 0
         delay: 0
         loop: 0

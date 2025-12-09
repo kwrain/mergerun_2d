@@ -278,6 +278,10 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
 
     StageManager.Instance.StartStage(StageManager.Instance.Infinity, true);
     SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
+    if (GameManager.Instance != null)
+    {
+      GameManager.Instance.VibrateLong();
+    }
   }
 
 
@@ -390,11 +394,15 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           // 리워드광고 완료 이후 스테이지 재시작 처리를 한다.
           Movable = false;
           goal.Animator.SetTrigger("fail");
+          SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);  
+          if (GameManager.Instance != null)
+          {
+            GameManager.Instance.VibrateLong();
+          }
           StartCoroutine(Timer(1f, () =>
           {
             goal.Animator.SetTrigger("idle");
             StageManager.Instance.StartStage(true, true);
-            SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
           }));
         }
         else
