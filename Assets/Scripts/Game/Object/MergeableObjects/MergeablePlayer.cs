@@ -229,7 +229,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     // 합성 시 진동
     if (GameManager.Instance != null)
     {
-      GameManager.Instance.VibrateMedium();
+      GameManager.Instance.VibrateShort();
     }
   }
 
@@ -374,7 +374,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     // 골 도달 시 진동
     if (GameManager.Instance != null)
     {
-      GameManager.Instance.VibrateLong();
+      GameManager.Instance.VibrateShort();
     }
 
     goal.IsChecked = true;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Runtime.InteropServices;
 
 /**
 * GameManager.Vibration.cs
@@ -8,6 +9,29 @@ using UnityEngine;
 public partial class GameManager
 {
   #region Vibration
+
+#if UNITY_IOS && !UNITY_EDITOR
+  // iOS CoreHaptics 네이티브 함수 선언
+  [DllImport("__Internal")]
+  private static extern void InitializeCoreHaptics();
+
+  [DllImport("__Internal")]
+  private static extern bool StartCoreHapticsEngine();
+
+  [DllImport("__Internal")]
+  private static extern void VibrateWithDuration(float duration);
+
+  [DllImport("__Internal")]
+  private static extern void VibrateWithIntensityAndDuration(float intensity, float duration);
+
+  [DllImport("__Internal")]
+  private static extern void VibrateWithPattern(long[] pattern, int patternLength);
+
+  [DllImport("__Internal")]
+  private static extern void StopCoreHapticsEngine();
+
+  private static bool s_iOSHapticsInitialized = false;
+#endif
 
   /// <summary>
   /// 진동이 활성화되어 있는지 확인합니다.
@@ -44,8 +68,13 @@ public partial class GameManager
     // Android에서 진동
     Handheld.Vibrate();
 #elif UNITY_IOS && !UNITY_EDITOR
-    // iOS에서 진동 (iOS는 duration 파라미터를 지원하지 않음)
-    Handheld.Vibrate();
+    // iOS에서 CoreHaptics 사용
+    if (!s_iOSHapticsInitialized)
+    {
+      InitializeCoreHaptics();
+      s_iOSHapticsInitialized = true;
+    }
+    VibrateWithIntensityAndDuration(1f, duration);
 #elif UNITY_EDITOR
     // 에디터에서는 로그만 출력
     Debug.Log($"[GameManager] 진동 발생 (설정: 활성화, 지속시간: {duration}ms)");
@@ -60,7 +89,7 @@ public partial class GameManager
   /// </summary>
   public void VibrateShort()
   {
-    Vibrate(50);
+    Vibrate(10);
   }
 
   /// <summary>
@@ -88,6 +117,9 @@ public partial class GameManager
     if (!IsVibrationEnabled)
       return;
 
+    if (pattern == null || pattern.Length == 0)
+      return;
+
 #if UNITY_ANDROID && !UNITY_EDITOR
     // Android에서 패턴 진동 지원
     using (var vibrator = new AndroidJavaClass("android.os.Vibrator"))
@@ -102,8 +134,13 @@ public partial class GameManager
       }
     }
 #elif UNITY_IOS && !UNITY_EDITOR
-    // iOS는 패턴 진동을 지원하지 않으므로 기본 진동
-    Handheld.Vibrate();
+    // iOS에서 CoreHaptics를 사용한 패턴 진동 지원
+    if (!s_iOSHapticsInitialized)
+    {
+      InitializeCoreHaptics();
+      s_iOSHapticsInitialized = true;
+    }
+    VibrateWithPattern(pattern, pattern.Length);
 #elif UNITY_EDITOR
     Debug.Log($"[GameManager] 패턴 진동 발생: {string.Join(", ", pattern)}");
 #else

@@ -13,6 +13,47 @@ public class iOSPostProcess
   {
     if (buildTarget == BuildTarget.iOS)
     {
+      // Xcode 프로젝트에 CoreHaptics 프레임워크 추가
+      string projectPath = Path.Combine(path, "Unity-iPhone.xcodeproj/project.pbxproj");
+      if (File.Exists(projectPath))
+      {
+        PBXProject project = new PBXProject();
+        project.ReadFromFile(projectPath);
+
+        // UnityFramework 타겟에 프레임워크 추가
+        string unityFrameworkTargetGuid = project.GetUnityFrameworkTargetGuid();
+        
+        if (!string.IsNullOrEmpty(unityFrameworkTargetGuid))
+        {
+          // CoreHaptics 프레임워크 추가 (iOS 13+)
+          project.AddFrameworkToProject(unityFrameworkTargetGuid, "CoreHaptics.framework", false);
+          
+          // AudioToolbox 프레임워크 추가 (AudioServicesPlaySystemSound 사용)
+          project.AddFrameworkToProject(unityFrameworkTargetGuid, "AudioToolbox.framework", false);
+          
+          Debug.Log("[iOS PostProcess] CoreHaptics 및 AudioToolbox 프레임워크가 UnityFramework 타겟에 추가되었습니다.");
+        }
+        else
+        {
+          Debug.LogWarning("[iOS PostProcess] UnityFramework 타겟을 찾을 수 없습니다. 메인 타겟에 프레임워크를 추가합니다.");
+          
+          // 메인 타겟에도 추가 시도
+          string mainTargetGuid = project.GetUnityMainTargetGuid();
+          if (!string.IsNullOrEmpty(mainTargetGuid))
+          {
+            project.AddFrameworkToProject(mainTargetGuid, "CoreHaptics.framework", false);
+            project.AddFrameworkToProject(mainTargetGuid, "AudioToolbox.framework", false);
+            Debug.Log("[iOS PostProcess] CoreHaptics 및 AudioToolbox 프레임워크가 메인 타겟에 추가되었습니다.");
+          }
+        }
+
+        project.WriteToFile(projectPath);
+      }
+      else
+      {
+        Debug.LogWarning($"[iOS PostProcess] Xcode 프로젝트 파일을 찾을 수 없습니다: {projectPath}");
+      }
+
       string plistPath = Path.Combine(path, "Info.plist");
 
       if (File.Exists(plistPath))
