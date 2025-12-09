@@ -112,54 +112,180 @@ MonoBehaviour:
     animationSpeed: 1
     bgmSpeed: 1
   - level: 12
-    speed: 13
-    accel: 15
+    speed: 12.2
+    accel: 20
     scale: 1.25
     animationSpeed: 1
     bgmSpeed: 11.25
   - level: 13
-    speed: 14
-    accel: 16
+    speed: 12.4
+    accel: 20
     scale: 1.25
     animationSpeed: 1
     bgmSpeed: 11.25
   - level: 14
-    speed: 15
-    accel: 17
+    speed: 12.6
+    accel: 15
     scale: 1.25
     animationSpeed: 1
     bgmSpeed: 11.25
   - level: 15
-    speed: 16
-    accel: 18
+    speed: 12.8
+    accel: 20
     scale: 1.25
     animationSpeed: 1
     bgmSpeed: 11.25
   - level: 16
-    speed: 17
-    accel: 19
+    speed: 13
+    accel: 20
     scale: 1.25
     animationSpeed: 1
     bgmSpeed: 11.25
   - level: 17
-    speed: 18
+    speed: 13.2
     accel: 20
     scale: 1.25
     animationSpeed: 1
     bgmSpeed: 11.25
   - level: 18
-    speed: 19
-    accel: 21
+    speed: 13.4
+    accel: 20
     scale: 1.25
     animationSpeed: 1
     bgmSpeed: 11.25
   - level: 19
-    speed: 20
-    accel: 22
+    speed: 13.6
+    accel: 20
     scale: 1.25
     animationSpeed: 1
     bgmSpeed: 11.25
   - level: 20
+    speed: 13.8
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 21
+    speed: 14
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 22
+    speed: 14.2
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 23
+    speed: 14.4
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 24
+    speed: 14.6
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 25
+    speed: 14.8
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 26
+    speed: 15
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 27
+    speed: 15.4
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 28
+    speed: 15.8
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 29
+    speed: 16.2
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 30
+    speed: 16.6
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 31
+    speed: 17
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 32
+    speed: 17.4
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 33
+    speed: 17.8
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 34
+    speed: 18.2
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 35
+    speed: 18.6
+    accel: 20
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 36
+    speed: 19
+    accel: 23
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 37
+    speed: 19.4
+    accel: 23
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 38
+    speed: 19.8
+    accel: 23
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 39
+    speed: 20.2
+    accel: 23
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 40
+    speed: 20.6
+    accel: 23
+    scale: 1.25
+    animationSpeed: 1
+    bgmSpeed: 11.25
+  - level: 41
     speed: 21
     accel: 23
     scale: 1.25
