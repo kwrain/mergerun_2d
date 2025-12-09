@@ -62,11 +62,127 @@ public partial class GameManager
   public void Vibrate(int duration = 100)
   {
     if (!IsVibrationEnabled)
+    {
+      Debug.Log($"[GameManager] 진동 비활성화 상태로 인해 진동을 발생시키지 않습니다.");
       return;
+    }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-    // Android에서 진동
-    Handheld.Vibrate();
+    // Android에서 Vibrator 서비스를 직접 사용하여 duration 지원
+    try
+    {
+      using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+      {
+        using (var currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+        {
+          if (currentActivity == null)
+          {
+            Debug.LogError("[GameManager] currentActivity가 null입니다.");
+            return;
+          }
+
+          // Android API 레벨 확인
+          int sdkVersion = new AndroidJavaClass("android.os.Build$VERSION").GetStatic<int>("SDK_INT");
+          Debug.Log($"[GameManager] Android SDK 버전: {sdkVersion}, 진동 지속시간: {duration}ms");
+
+          AndroidJavaObject vibratorService = null;
+
+          // Android 13 (API 33) 이상에서는 VibratorManager 사용
+          if (sdkVersion >= 33)
+          {
+            try
+            {
+              var vibratorManager = currentActivity.Call<AndroidJavaObject>("getSystemService", "vibrator_manager");
+              if (vibratorManager != null)
+              {
+                vibratorService = vibratorManager.Call<AndroidJavaObject>("getDefaultVibrator");
+                Debug.Log("[GameManager] VibratorManager를 통해 Vibrator를 가져왔습니다.");
+              }
+            }
+            catch (System.Exception e)
+            {
+              Debug.LogWarning($"[GameManager] VibratorManager 사용 실패, 기본 방법 시도: {e.Message}");
+            }
+          }
+
+          // VibratorManager가 실패했거나 API 33 미만인 경우 기본 방법 사용
+          if (vibratorService == null)
+          {
+            vibratorService = currentActivity.Call<AndroidJavaObject>("getSystemService", "vibrator");
+          }
+
+          if (vibratorService == null)
+          {
+            Debug.LogError("[GameManager] Vibrator 서비스를 가져올 수 없습니다.");
+            return;
+          }
+
+          // 진동 가능 여부 확인
+          bool hasVibrator = vibratorService.Call<bool>("hasVibrator");
+          if (!hasVibrator)
+          {
+            Debug.LogWarning("[GameManager] 디바이스가 진동을 지원하지 않습니다.");
+            return;
+          }
+
+          // duration 최소값 보장 (Android는 최소 1ms 이상 필요, 하지만 실제로는 50ms 이상이 감지 가능)
+          // 너무 짧은 duration은 사용자가 느끼기 어려우므로 최소 50ms로 제한
+          long vibrationDuration = System.Math.Max(50, duration);
+          if (duration < 50)
+          {
+            Debug.LogWarning($"[GameManager] duration이 너무 짧습니다 ({duration}ms). 최소 50ms로 조정합니다.");
+          }
+          
+          // Android API 26 이상에서는 VibrationEffect 사용
+          if (sdkVersion >= 26)
+          {
+            using (var vibrationEffectClass = new AndroidJavaClass("android.os.VibrationEffect"))
+            {
+              // DEFAULT_AMPLITUDE는 -1이며, 시스템 기본 강도 사용
+              var defaultAmplitude = vibrationEffectClass.GetStatic<int>("DEFAULT_AMPLITUDE");
+              
+              // createOneShot은 밀리초 단위를 받습니다
+              var vibrationEffect = vibrationEffectClass.CallStatic<AndroidJavaObject>("createOneShot", vibrationDuration, defaultAmplitude);
+              
+              if (vibrationEffect != null)
+              {
+                // VibrationEffect를 사용하여 진동 발생
+                // Android 13 이상에서도 VibrationEffect만으로 작동 가능
+                vibratorService.Call("vibrate", vibrationEffect);
+                Debug.Log($"[GameManager] 진동 발생 성공 (VibrationEffect 사용, duration: {vibrationDuration}ms, amplitude: {defaultAmplitude})");
+              }
+              else
+              {
+                Debug.LogError("[GameManager] VibrationEffect 생성 실패");
+                // 대체 방법: 직접 duration 전달 시도
+                vibratorService.Call("vibrate", vibrationDuration);
+                Debug.Log($"[GameManager] 대체 방법으로 진동 발생 (직접 duration 전달, {vibrationDuration}ms)");
+              }
+            }
+          }
+          else
+          {
+            // Android API 26 미만에서는 직접 duration 전달 (밀리초 단위)
+            vibratorService.Call("vibrate", vibrationDuration);
+            Debug.Log($"[GameManager] 진동 발생 성공 (직접 duration 전달, {vibrationDuration}ms)");
+          }
+        }
+      }
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[GameManager] 안드로이드 진동 발생 실패: {e.Message}\n스택 트레이스: {e.StackTrace}");
+      // 실패 시 기본 진동 시도
+      try
+      {
+        Handheld.Vibrate();
+        Debug.Log("[GameManager] Handheld.Vibrate()로 대체 진동 시도");
+      }
+      catch (System.Exception fallbackException)
+      {
+        Debug.LogError($"[GameManager] 대체 진동도 실패: {fallbackException.Message}");
+      }
+    }
 #elif UNITY_IOS && !UNITY_EDITOR
     // iOS에서 CoreHaptics 사용
     if (!s_iOSHapticsInitialized)
@@ -89,7 +205,7 @@ public partial class GameManager
   /// </summary>
   public void VibrateShort()
   {
-    Vibrate(10);
+    Vibrate(50); // 최소 50ms로 변경 (10ms는 너무 짧아 감지하기 어려움)
   }
 
   /// <summary>
