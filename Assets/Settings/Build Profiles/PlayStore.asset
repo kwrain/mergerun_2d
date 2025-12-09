@@ -199,7 +199,7 @@ MonoBehaviour:
     - line: '|     iPhone: 0'
     - line: '|     tvOS: 0'
     - line: '|   overrideDefaultApplicationIdentifier: 1'
-    - line: '|   AndroidBundleVersionCode: 6'
+    - line: '|   AndroidBundleVersionCode: 8'
     - line: '|   AndroidMinSdkVersion: 26'
     - line: '|   AndroidTargetSdkVersion: 0'
     - line: '|   AndroidPreferredInstallLocation: 1'
@@ -976,7 +976,7 @@ MonoBehaviour:
         m_ExportAsGoogleAndroidProject: 0
         m_DebugSymbolLevel: 1
         m_DebugSymbolFormat: 5
-        m_CurrentDeploymentTargetId: HA1XRFTC
+        m_CurrentDeploymentTargetId: __builtin__target_default
         m_BuildType: 2
         m_BuildAppBundle: 1
         m_IPAddressToConnect: 
