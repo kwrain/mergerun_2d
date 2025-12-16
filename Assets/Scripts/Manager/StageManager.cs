@@ -110,6 +110,7 @@ public partial class StageManager : Singleton<StageManager>
 
   private void OnGUI()
   {
+    #if DEV || UNITY_EDITOR
     // OnGUI는 매 프레임 여러 번 호출될 수 있으므로, 
     // GUI 스타일을 한 번만 설정하는 것이 좋습니다.
     GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
@@ -122,6 +123,7 @@ public partial class StageManager : Singleton<StageManager>
       ClearUserData();
       StartStage(Infinity);
     }
+    #endif
   }
 
   [ContextMenu("ClearUserData")]
