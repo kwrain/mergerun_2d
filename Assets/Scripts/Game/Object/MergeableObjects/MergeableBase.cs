@@ -8,6 +8,8 @@ using static StageDataTable;
 public class MergeableBase : BaseObject
 {
   protected Coroutine coDropTimer;
+  protected Coroutine coMoveTowardsTarget;
+  protected MergeableObject mergingTarget; // 현재 병합 중인 대상 오브젝트
   protected Sequence fadeOutSequence;
 
   [SerializeField] protected Rigidbody2D rb;
@@ -62,7 +64,28 @@ public class MergeableBase : BaseObject
     var otherObject = collision.gameObject.GetComponent<MergeableObject>();
     if (otherObject != null)
     {
-      if (otherObject.IsMerging || (Level != otherObject.Level))
+      Debug.Log($"otherObject.IsMerging : {otherObject.IsMerging} / Level : {otherObject.Level} / Level : {Level}");
+      
+      // otherObject가 병합 중인 경우, 진행 중인 MoveComplete를 즉시 완료하고 Merge 실행
+      if (otherObject.IsMerging)
+      {
+        // 병합 중인 오브젝트의 원래 레벨 확인 (병합 중이면 Level이 이미 증가했을 수 있음)
+        int otherOriginalLevel = otherObject.Level - 1; // 병합 중이면 이미 증가했으므로 1 감소
+        if (Level == otherOriginalLevel)
+        {
+          otherObject.CompleteMoveImmediately();
+          Merge(otherObject);
+          return;
+        }
+        else
+        {
+          // 합성이 불가능한 충돌 → 튕김 사운드
+          SoundManager.Instance.PlayFX(SoundFxTypes.BOUNCE);
+          return;
+        }
+      }
+      
+      if (Level != otherObject.Level)
       {
         // 합성이 불가능한 충돌 → 튕김 사운드
         SoundManager.Instance.PlayFX(SoundFxTypes.BOUNCE);
@@ -77,6 +100,8 @@ public class MergeableBase : BaseObject
   protected virtual void Initialize()
   {
     IsMerging = false;
+    mergingTarget = null;
+    coMoveTowardsTarget = null;
 
     rb.simulated = true;
     circleCollider.enabled = true;
@@ -128,8 +153,9 @@ public class MergeableBase : BaseObject
     Level++;
     // 2. 'other' 오브젝트를 0.3초간 'this'의 위치로 이동
 
+    mergingTarget = other;
     other.circleCollider.enabled = false;
-    StartCoroutine(MoveTowardsTarget(other, transform));
+    coMoveTowardsTarget = StartCoroutine(MoveTowardsTarget(other, transform));
 
     IEnumerator MoveTowardsTarget(MergeableObject from, Transform to)
     {
@@ -150,32 +176,58 @@ public class MergeableBase : BaseObject
       from.transform.position = to.position;
       MoveComplete();
     }
+  }
 
-    void MoveComplete()
+  protected virtual void MoveComplete()
+  {
+    IsMerging = false;
+    coMoveTowardsTarget = null;
+
+    if (!gameObject.activeSelf)
     {
-      IsMerging = false;
-
-      if (!gameObject.activeSelf)
-        return;
-
-      // 이동 완료 후, other 오브젝트를 풀링하기 전에 스케일 애니메이션 시작
-      // 3. 이동이 완료되면 'this' 오브젝트의 스케일을 변경하는 시퀀스 시작
-      // 먼저 커지는 애니메이션
-
-      SetLevel(Level);
-      StageManager.Instance.PushMergeableInPool(other);
-      TweenScale(Vector3.one * levelData.scale * scaleUpFactor, scaleUpDuration, Ease.InQuad, ScaleComplete);
+      mergingTarget = null;
+      return;
     }
 
-    void ScaleComplete()
+    // 이동 완료 후, other 오브젝트를 풀링하기 전에 스케일 애니메이션 시작
+    // 3. 이동이 완료되면 'this' 오브젝트의 스케일을 변경하는 시퀀스 시작
+    // 먼저 커지는 애니메이션
+
+    var target = mergingTarget;
+    mergingTarget = null;
+
+    SetLevel(Level);
+    StageManager.Instance.PushMergeableInPool(target);
+    TweenScale(Vector3.one * levelData.scale * scaleUpFactor, scaleUpDuration, Ease.InQuad, ScaleComplete);
+  }
+
+  protected virtual void ScaleComplete()
+  {
+    if (!gameObject.activeSelf)
+      return;
+
+    TweenScale(Vector3.one * levelData.scale, scaleDownDuration, Ease.OutQuad);
+
+    // 합성 완료 사운드
+    SoundManager.Instance.PlayFX(SoundFxTypes.MERGE);
+  }
+
+  // 진행 중인 MoveTowardsTarget 코루틴을 즉시 완료시키는 함수
+  public void CompleteMoveImmediately()
+  {
+    if (coMoveTowardsTarget != null)
     {
-      if (!gameObject.activeSelf)
-        return;
-
-      TweenScale(Vector3.one * levelData.scale, scaleDownDuration, Ease.OutQuad);
-
-      // 합성 완료 사운드
-      SoundManager.Instance.PlayFX(SoundFxTypes.MERGE);
+      StopCoroutine(coMoveTowardsTarget);
+      coMoveTowardsTarget = null;
+      
+      // 병합 대상 오브젝트를 현재 위치로 즉시 이동
+      if (mergingTarget != null && mergingTarget.gameObject != null)
+      {
+        mergingTarget.transform.position = transform.position;
+      }
+      
+      // MoveComplete 로직 실행
+      MoveComplete();
     }
   }
 
