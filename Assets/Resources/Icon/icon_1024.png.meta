@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2a9e90aa41077444695b9dbbe409ef77
+guid: c8768a6effd824396a21c477616e2faf
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 882074314238418509
-    second: icon_1024_0
+      213: 4592501696061368805
+    second: icon_1024 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -97,19 +97,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: iOS
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -126,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: icon_1024_0
+      name: icon_1024 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d4e5da55ae1cd3c00800000000000000
-      internalID: 882074314238418509
+      spriteID: 5e9ed10e5f7dbbf30800000000000000
+      internalID: 4592501696061368805
       vertices: []
       indices: 
       edges: []
@@ -161,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      icon_1024_0: 882074314238418509
+      icon_1024 1_0: 4592501696061368805
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
