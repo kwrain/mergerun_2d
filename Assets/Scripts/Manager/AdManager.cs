@@ -237,6 +237,12 @@ namespace FAIRSTUDIOS.Manager
           break;
       }
 
+      // Analytics: ad_fail 이벤트 전송
+      if (GameManager.Instance != null)
+      {
+        GameManager.Instance.AnalyticsAdFailed("interstitial", errorCode: code, errorMessage: error.ErrorMessage);
+      }
+
       // 실패 콜백 호출 (에러 코드 전달)
       onInterstitialAdFailed?.Invoke(code);
       onInterstitialAdFailed = null;
@@ -246,16 +252,29 @@ namespace FAIRSTUDIOS.Manager
     void InterstitialOnAdDisplayedEvent(LevelPlayAdInfo adInfo)
     {
       Debug.Log("unity-script: I got InterstitialOnAdDisplayedEvent With AdInfo " + adInfo);
+      // ad_impression은 StageManager에서 광고 호출 시점에 전송됨
     }
 
     void InterstitialOnAdClickedEvent(LevelPlayAdInfo adInfo)
     {
       Debug.Log("unity-script: I got InterstitialOnAdClickedEvent With AdInfo " + adInfo);
+      
+      // Analytics: ad_click 이벤트 전송
+      if (GameManager.Instance != null)
+      {
+        GameManager.Instance.AnalyticsAdClick("interstitial");
+      }
     }
 
     void InterstitialOnAdClosedEvent(LevelPlayAdInfo adInfo)
     {
       Debug.Log("unity-script: I got InterstitialOnAdClosedEvent With AdInfo " + adInfo);
+
+      // Analytics: ad_complete 이벤트 전송
+      if (GameManager.Instance != null)
+      {
+        GameManager.Instance.AnalyticsAdComplete("interstitial");
+      }
 
       onInterstitialAdCompleted?.Invoke();
       onInterstitialAdCompleted = null;

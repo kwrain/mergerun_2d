@@ -46,6 +46,15 @@ public partial class StageManager : Singleton<StageManager>
   private bool ReadyInterstitialAd { get; set; }
   private Coroutine interstitialAdTimerCoroutine;
 
+  // Analytics 관련 변수
+  private float stageStartTime; // 스테이지 시작 시간
+  private int infinityStageClearCount = 0; // 무한 모드 스테이지 클리어 수
+  private int currentStageIdForAnalytics = 0; // 현재 스테이지 ID (Analytics용)
+
+  // Analytics 접근용 프로퍼티
+  public float StageStartTime => stageStartTime;
+  public int InfinityStageClearCount => infinityStageClearCount;
+
   public StageDataTable StageDataTable => stageDataTable;
 
   public StageData StageData => stageData;
@@ -78,7 +87,7 @@ public partial class StageManager : Singleton<StageManager>
     }
 
     var mergeables = mergeableParent.GetComponentsInChildren<MergeableObject>();
-    foreach (var mergeable in mergeables)
+    foreach (var mergeable in mergeables) 
     {
       PushMergeableInPool(mergeable);
     }
@@ -110,7 +119,7 @@ public partial class StageManager : Singleton<StageManager>
 
   private void OnGUI()
   {
-    #if DEV || UNITY_EDITOR
+    #if DEV
     // OnGUI는 매 프레임 여러 번 호출될 수 있으므로, 
     // GUI 스타일을 한 번만 설정하는 것이 좋습니다.
     GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
@@ -251,6 +260,32 @@ public partial class StageManager : Singleton<StageManager>
       LoadStage(restart);
     }
 
+    // 스테이지 시작 시간 기록
+    stageStartTime = Time.time;
+
+    // Analytics: stage_start 이벤트 전송
+    if (GameManager.Instance != null && stageData != null)
+    {
+      currentStageIdForAnalytics = infinity ? 0 : stageData.stageId;
+      string gameMode = infinity ? "endless" : "stage";
+      
+      // 재시도 횟수 가져오기
+      int retryCount = 0;
+      if (restart)
+      {
+        // 재시도 시 횟수 증가
+        retryCount = SOManager.Instance.PlayerPrefsModel.UserSavedStageRetryCount + 1;
+        SOManager.Instance.PlayerPrefsModel.UserSavedStageRetryCount = retryCount;
+      }
+      else
+      {
+        // 새 스테이지 시작 시 재시도 횟수 초기화
+        SOManager.Instance.PlayerPrefsModel.UserSavedStageRetryCount = 0;
+        retryCount = 0;
+      }
+
+      GameManager.Instance.AnalyticsStageStart(gameMode, currentStageIdForAnalytics, retryCount: retryCount);
+    }
 
     // Map의 MergeableObject 스캔
     if (map != null)
@@ -314,6 +349,45 @@ public partial class StageManager : Singleton<StageManager>
     StartStage(Infinity);
   }
 
+  /// <summary>
+  /// 진행률 계산 (선형 모드용)
+  /// </summary>
+  /// <param name="currentPosY">현재 위치 Y 좌표</param>
+  /// <returns>진행률 (0.0 ~ 1.0)</returns>
+  public float CalculateProgressRatio(float currentPosY)
+  {
+    if (Infinity || stageData == null)
+      return 0f;
+
+    // 시작 위치 찾기
+    float startY = startPosition != null ? startPosition.position.y : 0f;
+
+    // 골 위치 찾기
+    float goalY = startY;
+    if (stageObstalces.ContainsKey(stageData.stageId))
+    {
+      var obstacles = stageObstalces[stageData.stageId];
+      foreach (var obstacle in obstacles)
+      {
+        if (obstacle != null && obstacle.Type == ObstacleTypes.Goal)
+        {
+          goalY = obstacle.transform.position.y;
+          break;
+        }
+      }
+    }
+
+    // 진행률 계산
+    if (Mathf.Approximately(startY, goalY))
+      return 0f;
+
+    float totalDistance = Mathf.Abs(goalY - startY);
+    float currentDistance = Mathf.Abs(currentPosY - startY);
+    float ratio = Mathf.Clamp01(currentDistance / totalDistance);
+    
+    return ratio;
+  }
+
   #region Normal
 
   public void LoadStage(bool restart = false)
@@ -346,6 +420,9 @@ public partial class StageManager : Singleton<StageManager>
   [ContextMenu("CompleteStage")]
   public void CompleteStage()
   {
+    // 플레이 타임 계산
+    float playTimeSec = Time.time - stageStartTime;
+
     // 경험치 체크
     var level = SOManager.Instance.PlayerPrefsModel.UserSavedLevel;
     var expData = SOManager.Instance.GameDataTable.GetExpData(level);
@@ -395,12 +472,28 @@ public partial class StageManager : Singleton<StageManager>
       SOManager.Instance.PlayerPrefsModel.UserSavedStage = StageID + 1;
     }
 
+    // Analytics: stage_complete 이벤트 전송
+    if (GameManager.Instance != null && stageData != null)
+    {
+      int finalBallValue = player.Level;
+      GameManager.Instance.AnalyticsStageComplete("Stage", stageData.stageId, finalBallValue, playTimeSec);
+      
+      // 재시도 횟수 초기화 (클리어했으므로)
+      SOManager.Instance.PlayerPrefsModel.UserSavedStageRetryCount = 0;
+    }
+
     stageCompleteAnimator.SetActive(true);
     stageCompleteAnimator.SetTrigger("Show");
 
     StartCoroutine(Timer(stageCompleteWaitTime, () =>
     {
       player.Movable = false;
+
+      // Analytics: ad_impression 이벤트 전송 (선형 모드 스테이지 완료 후)
+      if (GameManager.Instance != null && stageData != null)
+      {
+        GameManager.Instance.AnalyticsAdImpression("interstitial", "next_stage", "stage", stageData.stageId);
+      }
 
       // 전면 광고 노출
 #if UNITY_EDITOR
@@ -432,6 +525,12 @@ public partial class StageManager : Singleton<StageManager>
     {
       if (ReadyInterstitialAd)
       {
+        // Analytics: ad_impression 이벤트 전송 (무한 모드 재시도)
+        if (GameManager.Instance != null)
+        {
+          GameManager.Instance.AnalyticsAdImpression("interstitial", "retry_endless", "endless", 0);
+        }
+
 #if !UNITY_EDITOR
         AdManager.Instance.ShowInterstitial(InterstitialAdCompleted, InterstitialAdFailed);
 #endif
@@ -591,10 +690,16 @@ public partial class StageManager : Singleton<StageManager>
       map.SetUpdateEnabled(false);
     }
 
+    // 무한 모드 스테이지 클리어 수 증가
+    infinityStageClearCount++;
+
     UnloadPrevInfiniytyStage();
     PreloadNextInfinityStage();
     prevStageData = stageData;
     stageData = nextStageData;
+
+    // 새로운 스테이지 시작 시간 기록
+    stageStartTime = Time.time;
 
     if (map != null)
     {

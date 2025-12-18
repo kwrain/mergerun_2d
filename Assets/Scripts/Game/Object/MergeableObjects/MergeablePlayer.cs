@@ -276,6 +276,9 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       base.Drop();
     }
 
+    // Analytics: stage_fail 이벤트 전송 (낙사)
+    SendStageFailAnalytics("fall");
+
     StageManager.Instance.StartStage(StageManager.Instance.Infinity, true);
     SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
     if (GameManager.Instance != null)
@@ -362,6 +365,9 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     else
     {
       // 게임오버 -> 재시작
+      // Analytics: stage_fail 이벤트 전송 (숫자 0됨)
+      SendStageFailAnalytics("value_zero");
+
       StageManager.Instance.StartStage(StageManager.Instance.Infinity, true);
       SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
     }
@@ -394,7 +400,11 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           // 리워드광고 완료 이후 스테이지 재시작 처리를 한다.
           Movable = false;
           goal.Animator.SetTrigger("fail");
-          SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);  
+          SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
+          
+          // Analytics: stage_fail 이벤트 전송 (무한 모드 벽 충돌)
+          SendStageFailAnalytics("value_zero");
+
           if (GameManager.Instance != null)
           {
             GameManager.Instance.VibrateLong();
@@ -447,6 +457,66 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
 #endif
         break;
     }
+  }
+
+  /// <summary>
+  /// stage_fail Analytics 이벤트 전송
+  /// </summary>
+  private void SendStageFailAnalytics(string failReason)
+  {
+    if (GameManager.Instance == null || StageManager.Instance == null)
+      return;
+
+    bool infinity = StageManager.Instance.Infinity;
+    string gameMode = infinity ? "endless" : "stage";
+    int stageId = infinity ? 0 : StageManager.Instance.StageID;
+    
+    float? progressRatio = null;
+    if (!infinity)
+    {
+      // 선형 모드: 진행률 계산
+      progressRatio = StageManager.Instance.CalculateProgressRatio(transform.position.y);
+    }
+
+    float? deathPosX = transform.position.x;
+    int currentBallValue = Level;
+    
+    // 플레이 타임 계산
+    float playTimeSec = Time.time - StageManager.Instance.StageStartTime;
+
+    // 무한 모드 관련 파라미터
+    int? maxNumberReached = null;
+    int? stageClear = null;
+    bool? isNewRecord = null;
+
+    if (infinity)
+    {
+      maxNumberReached = SOManager.Instance.PlayerPrefsModel.UserBestLevel;
+      stageClear = StageManager.Instance.InfinityStageClearCount;
+      
+      // 기록 갱신 여부 확인
+      int previousBest = SOManager.Instance.PlayerPrefsModel.UserBestLevel;
+      isNewRecord = Level > previousBest;
+    }
+
+    // 재시도 횟수 증가
+    if (!infinity)
+    {
+      SOManager.Instance.PlayerPrefsModel.UserSavedStageRetryCount++;
+    }
+
+    GameManager.Instance.AnalyticsStageFail(
+      gameMode: gameMode,
+      stageId: stageId,
+      progressRatio: progressRatio,
+      failReason: failReason,
+      deathPosX: deathPosX,
+      currentBallValue: currentBallValue,
+      maxNumberReached: maxNumberReached,
+      stageClear: stageClear,
+      playTimeSec: playTimeSec,
+      isNewRecord: isNewRecord
+    );
   }
 
   #endregion

@@ -140,6 +140,7 @@ public partial class PlayerPrefsModel : ModelBase
     USER_SAVED_EXP,
 
     USER_SAVED_STAGE, // 일반모드 진행 단계
+    USER_SAVED_STAGE_RETRY_COUNT, // 일반모드 진행 단계 재시도 횟수
 
     USER_BEST_LEVEL, // 무한모드 최고 합성 단계
 
@@ -193,6 +194,12 @@ public partial class PlayerPrefsModel : ModelBase
   {
     get => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_STAGE)];
     set => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_STAGE)] = value;
+  }
+
+  public int UserSavedStageRetryCount
+  {
+    get => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_STAGE_RETRY_COUNT)];
+    set => userPrefsInt[nameof(PlayerPrefsKey.USER_SAVED_STAGE_RETRY_COUNT)] = value;
   }
 
   public int UserBestLevel
