@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Services.Analytics;
+using Unity.Services.Core;
 using System.Collections.Generic;
 
 /**
@@ -19,13 +20,31 @@ public partial class GameManager
   /// <param name="retryCount">해당 스테이지 재시도 횟수</param>
   public void AnalyticsStageStart(string gameMode, int stageId, int retryCount = 0)
   {
-    var customEvent = new CustomEvent("stage_start");
-    customEvent["game_mode"] = gameMode;
-    customEvent["stage_id"] = stageId;
-    customEvent["retry_count"] = retryCount;
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
+    {
+      Debug.Log($"[Analytics] Stage Start (Editor - Skipped): Mode={gameMode}, StageID={stageId}, Retry={retryCount}");
+      return;
+    }
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Stage Start: Mode={gameMode}, StageID={stageId}, Retry={retryCount}");
+    try
+    {
+      var customEvent = new CustomEvent("stage_start");
+      customEvent["game_mode"] = gameMode;
+      customEvent["stage_id"] = stageId;
+      customEvent["retry_count"] = retryCount;
+
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Stage Start: Mode={gameMode}, StageID={stageId}, Retry={retryCount}");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   /// <summary>
@@ -37,14 +56,32 @@ public partial class GameManager
   /// <param name="playTimeSec">플레이 소요 시간 (초)</param>
   public void AnalyticsStageComplete(string gameMode, int stageId, int finalBallValue, float playTimeSec)
   {
-    var customEvent = new CustomEvent("stage_complete");
-    customEvent["game_mode"] = gameMode;
-    customEvent["stage_id"] = stageId;
-    customEvent["final_ball_value"] = finalBallValue;
-    customEvent["play_time_sec"] = playTimeSec;
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
+    {
+      Debug.Log($"[Analytics] Stage Complete (Editor - Skipped): Mode={gameMode}, StageID={stageId}, FinalValue={finalBallValue}, Time={playTimeSec:F2}s");
+      return;
+    }
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Stage Complete: Mode={gameMode}, StageID={stageId}, FinalValue={finalBallValue}, Time={playTimeSec:F2}s");
+    try
+    {
+      var customEvent = new CustomEvent("stage_complete");
+      customEvent["game_mode"] = gameMode;
+      customEvent["stage_id"] = stageId;
+      customEvent["final_ball_value"] = finalBallValue;
+      customEvent["play_time_sec"] = playTimeSec;
+
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Stage Complete: Mode={gameMode}, StageID={stageId}, FinalValue={finalBallValue}, Time={playTimeSec:F2}s");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   /// <summary>
@@ -93,8 +130,26 @@ public partial class GameManager
     if (isNewRecord.HasValue)
       customEvent["is_new_record"] = isNewRecord.Value;
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Stage Fail: Mode={gameMode}, StageID={stageId}, Reason={failReason ?? "N/A"}, Value={currentBallValue ?? -1}");
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
+    {
+      Debug.Log($"[Analytics] Stage Fail (Editor - Skipped): Mode={gameMode}, StageID={stageId}, Reason={failReason ?? "N/A"}, Value={currentBallValue ?? -1}");
+      return;
+    }
+
+    try
+    {
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Stage Fail: Mode={gameMode}, StageID={stageId}, Reason={failReason ?? "N/A"}, Value={currentBallValue ?? -1}");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   #region Ad Monetization Events
@@ -107,19 +162,37 @@ public partial class GameManager
   /// <param name="network">광고 네트워크 (선택사항)</param>
   public void AnalyticsAdStart(string adType, string placementId = null, string network = null)
   {
-    var customEvent = new CustomEvent("ad_start");
-    customEvent["ad_type"] = adType;
-    if (!string.IsNullOrEmpty(placementId))
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
     {
-      customEvent["placement_id"] = placementId;
-    }
-    if (!string.IsNullOrEmpty(network))
-    {
-      customEvent["network"] = network;
+      Debug.Log($"[Analytics] Ad Start (Editor - Skipped): Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+      return;
     }
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Ad Start: Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+    try
+    {
+      var customEvent = new CustomEvent("ad_start");
+      customEvent["ad_type"] = adType;
+      if (!string.IsNullOrEmpty(placementId))
+      {
+        customEvent["placement_id"] = placementId;
+      }
+      if (!string.IsNullOrEmpty(network))
+      {
+        customEvent["network"] = network;
+      }
+
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Ad Start: Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   /// <summary>
@@ -131,23 +204,41 @@ public partial class GameManager
   /// <param name="duration">광고 시청 시간 (초, 선택사항)</param>
   public void AnalyticsAdComplete(string adType, string placementId = null, string network = null, float? duration = null)
   {
-    var customEvent = new CustomEvent("ad_complete");
-    customEvent["ad_type"] = adType;
-    if (!string.IsNullOrEmpty(placementId))
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
     {
-      customEvent["placement_id"] = placementId;
-    }
-    if (!string.IsNullOrEmpty(network))
-    {
-      customEvent["network"] = network;
-    }
-    if (duration.HasValue)
-    {
-      customEvent["duration"] = duration.Value;
+      Debug.Log($"[Analytics] Ad Complete (Editor - Skipped): Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+      return;
     }
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Ad Complete: Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+    try
+    {
+      var customEvent = new CustomEvent("ad_complete");
+      customEvent["ad_type"] = adType;
+      if (!string.IsNullOrEmpty(placementId))
+      {
+        customEvent["placement_id"] = placementId;
+      }
+      if (!string.IsNullOrEmpty(network))
+      {
+        customEvent["network"] = network;
+      }
+      if (duration.HasValue)
+      {
+        customEvent["duration"] = duration.Value;
+      }
+
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Ad Complete: Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   /// <summary>
@@ -158,19 +249,37 @@ public partial class GameManager
   /// <param name="network">광고 네트워크 (선택사항)</param>
   public void AnalyticsAdClick(string adType, string placementId = null, string network = null)
   {
-    var customEvent = new CustomEvent("ad_click");
-    customEvent["ad_type"] = adType;
-    if (!string.IsNullOrEmpty(placementId))
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
     {
-      customEvent["placement_id"] = placementId;
-    }
-    if (!string.IsNullOrEmpty(network))
-    {
-      customEvent["network"] = network;
+      Debug.Log($"[Analytics] Ad Click (Editor - Skipped): Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+      return;
     }
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Ad Click: Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+    try
+    {
+      var customEvent = new CustomEvent("ad_click");
+      customEvent["ad_type"] = adType;
+      if (!string.IsNullOrEmpty(placementId))
+      {
+        customEvent["placement_id"] = placementId;
+      }
+      if (!string.IsNullOrEmpty(network))
+      {
+        customEvent["network"] = network;
+      }
+
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Ad Click: Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   /// <summary>
@@ -183,18 +292,36 @@ public partial class GameManager
   /// <param name="network">광고 네트워크 (선택사항)</param>
   public void AnalyticsAdImpression(string adType, string placement, string gameMode, int stageId, string network = null)
   {
-    var customEvent = new CustomEvent("ad_impression");
-    customEvent["ad_type"] = adType;
-    customEvent["placement"] = placement;
-    customEvent["game_mode"] = gameMode;
-    customEvent["stage_id"] = stageId;
-    if (!string.IsNullOrEmpty(network))
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
     {
-      customEvent["network"] = network;
+      Debug.Log($"[Analytics] Ad Impression (Editor - Skipped): Type={adType}, Placement={placement}, Mode={gameMode}, StageID={stageId}");
+      return;
     }
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Ad Impression: Type={adType}, Placement={placement}, Mode={gameMode}, StageID={stageId}");
+    try
+    {
+      var customEvent = new CustomEvent("ad_impression");
+      customEvent["ad_type"] = adType;
+      customEvent["placement"] = placement;
+      customEvent["game_mode"] = gameMode;
+      customEvent["stage_id"] = stageId;
+      if (!string.IsNullOrEmpty(network))
+      {
+        customEvent["network"] = network;
+      }
+
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Ad Impression: Type={adType}, Placement={placement}, Mode={gameMode}, StageID={stageId}");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   /// <summary>
@@ -207,27 +334,45 @@ public partial class GameManager
   /// <param name="errorMessage">에러 메시지 (선택사항)</param>
   public void AnalyticsAdFailed(string adType, string placementId = null, string network = null, int? errorCode = null, string errorMessage = null)
   {
-    var customEvent = new CustomEvent("ad_fail");
-    customEvent["ad_type"] = adType;
-    if (!string.IsNullOrEmpty(placementId))
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
     {
-      customEvent["placement_id"] = placementId;
-    }
-    if (!string.IsNullOrEmpty(network))
-    {
-      customEvent["network"] = network;
-    }
-    if (errorCode.HasValue)
-    {
-      customEvent["error_code"] = errorCode.Value;
-    }
-    if (!string.IsNullOrEmpty(errorMessage))
-    {
-      customEvent["error_message"] = errorMessage;
+      Debug.Log($"[Analytics] Ad Fail (Editor - Skipped): Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}, Error: {errorCode ?? -1}");
+      return;
     }
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Ad Fail: Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}, Error: {errorCode ?? -1}");
+    try
+    {
+      var customEvent = new CustomEvent("ad_fail");
+      customEvent["ad_type"] = adType;
+      if (!string.IsNullOrEmpty(placementId))
+      {
+        customEvent["placement_id"] = placementId;
+      }
+      if (!string.IsNullOrEmpty(network))
+      {
+        customEvent["network"] = network;
+      }
+      if (errorCode.HasValue)
+      {
+        customEvent["error_code"] = errorCode.Value;
+      }
+      if (!string.IsNullOrEmpty(errorMessage))
+      {
+        customEvent["error_message"] = errorMessage;
+      }
+
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Ad Fail: Type={adType}, Placement: {placementId ?? "N/A"}, Network: {network ?? "N/A"}, Error: {errorCode ?? -1}");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   #endregion
@@ -241,17 +386,35 @@ public partial class GameManager
     string eventName,
     Dictionary<string, object> parameters = null)
   {
-    var customEvent = new CustomEvent(eventName);
-    if (parameters != null)
+    // 에디터에서는 데이터 수집하지 않음
+    if (Application.isEditor)
     {
-      foreach (var kvp in parameters)
-      {
-        customEvent[kvp.Key] = kvp.Value;
-      }
+      Debug.Log($"[Analytics] Custom Event (Editor - Skipped): {eventName}");
+      return;
     }
 
-    AnalyticsService.Instance.RecordEvent(customEvent);
-    Debug.Log($"[Analytics] Custom Event: {eventName}");
+    try
+    {
+      var customEvent = new CustomEvent(eventName);
+      if (parameters != null)
+      {
+        foreach (var kvp in parameters)
+        {
+          customEvent[kvp.Key] = kvp.Value;
+        }
+      }
+
+      AnalyticsService.Instance.RecordEvent(customEvent);
+      Debug.Log($"[Analytics] Custom Event: {eventName}");
+    }
+    catch (ServicesInitializationException e)
+    {
+      Debug.LogWarning($"[Analytics] Analytics 서비스가 초기화되지 않았습니다: {e.Message}");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
+    }
   }
 
   #endregion

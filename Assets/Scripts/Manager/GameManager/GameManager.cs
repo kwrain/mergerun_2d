@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.Services.Core;
 
 /// <summary>
 /// 게임 코어로직 관련 매니저
@@ -134,6 +135,25 @@ public partial class GameManager : Singleton<GameManager>
   public override async Task Initialize()
   {
     await base.Initialize();
+    
+    // Unity Services 초기화 (Analytics 사용을 위해 필요)
+    await InitializeUnityServices();
+  }
+
+  /// <summary>
+  /// Unity Services 초기화
+  /// </summary>
+  private async Task InitializeUnityServices()
+  {
+    try
+    {
+      await UnityServices.InitializeAsync();
+      Debug.Log("[GameManager] Unity Services 초기화 완료");
+    }
+    catch (Exception e)
+    {
+      Debug.LogWarning($"[GameManager] Unity Services 초기화 실패: {e.Message}");
+    }
   }
 
   /// <summary>
