@@ -378,15 +378,6 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     if (goal.IsChecked)
       return;
 
-    // 골 지점에 도달했을 때 사운드
-    SoundManager.Instance.PlayFX(SoundFxTypes.GOAL);
-    
-    // 골 도달 시 진동
-    if (GameManager.Instance != null)
-    {
-      GameManager.Instance.VibrateShort();
-    }
-
     goal.IsChecked = true;
     if (goal != null)
     {
@@ -417,6 +408,15 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
         }
         else
         {
+          // 골 지점에 도달했을 때 사운드
+          SoundManager.Instance.PlayFX(SoundFxTypes.GOAL);
+
+          // 골 도달 시 진동
+          if (GameManager.Instance != null)
+          {
+            GameManager.Instance.VibrateShort();
+          }
+
           goal.SetAnimation("pass");
           StartCoroutine(Timer(1f, () =>
           {
@@ -428,6 +428,15 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       }
       else
       {
+        // 골 지점에 도달했을 때 사운드
+        SoundManager.Instance.PlayFX(SoundFxTypes.GOAL);
+
+        // 골 도달 시 진동
+        if (GameManager.Instance != null)
+        {
+          GameManager.Instance.VibrateShort();
+        }
+
         goal.SetAnimation("pass");
         StartCoroutine(Timer(1f, () =>
         {
