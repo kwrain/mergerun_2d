@@ -63,7 +63,9 @@ public partial class GameManager
   {
     if (!IsVibrationEnabled)
     {
+#if UNITY_EDITOR
       Debug.Log($"[GameManager] 진동 비활성화 상태로 인해 진동을 발생시키지 않습니다.");
+#endif
       return;
     }
 
@@ -77,13 +79,17 @@ public partial class GameManager
         {
           if (currentActivity == null)
           {
+#if UNITY_EDITOR
             Debug.LogError("[GameManager] currentActivity가 null입니다.");
+#endif
             return;
           }
 
           // Android API 레벨 확인
           int sdkVersion = new AndroidJavaClass("android.os.Build$VERSION").GetStatic<int>("SDK_INT");
+#if UNITY_EDITOR
           Debug.Log($"[GameManager] Android SDK 버전: {sdkVersion}, 진동 지속시간: {duration}ms");
+#endif
 
           AndroidJavaObject vibratorService = null;
 
@@ -96,12 +102,16 @@ public partial class GameManager
               if (vibratorManager != null)
               {
                 vibratorService = vibratorManager.Call<AndroidJavaObject>("getDefaultVibrator");
+#if UNITY_EDITOR
                 Debug.Log("[GameManager] VibratorManager를 통해 Vibrator를 가져왔습니다.");
+#endif
               }
             }
             catch (System.Exception e)
             {
+#if UNITY_EDITOR
               Debug.LogWarning($"[GameManager] VibratorManager 사용 실패, 기본 방법 시도: {e.Message}");
+#endif
             }
           }
 
@@ -113,7 +123,9 @@ public partial class GameManager
 
           if (vibratorService == null)
           {
+#if UNITY_EDITOR
             Debug.LogError("[GameManager] Vibrator 서비스를 가져올 수 없습니다.");
+#endif
             return;
           }
 
@@ -121,7 +133,9 @@ public partial class GameManager
           bool hasVibrator = vibratorService.Call<bool>("hasVibrator");
           if (!hasVibrator)
           {
+#if UNITY_EDITOR
             Debug.LogWarning("[GameManager] 디바이스가 진동을 지원하지 않습니다.");
+#endif
             return;
           }
 
@@ -130,7 +144,9 @@ public partial class GameManager
           long vibrationDuration = System.Math.Max(50, duration);
           if (duration < 50)
           {
+#if UNITY_EDITOR
             Debug.LogWarning($"[GameManager] duration이 너무 짧습니다 ({duration}ms). 최소 50ms로 조정합니다.");
+#endif
           }
           
           // Android API 26 이상에서는 VibrationEffect 사용
@@ -149,14 +165,20 @@ public partial class GameManager
                 // VibrationEffect를 사용하여 진동 발생
                 // Android 13 이상에서도 VibrationEffect만으로 작동 가능
                 vibratorService.Call("vibrate", vibrationEffect);
+#if UNITY_EDITOR
                 Debug.Log($"[GameManager] 진동 발생 성공 (VibrationEffect 사용, duration: {vibrationDuration}ms, amplitude: {defaultAmplitude})");
+#endif
               }
               else
               {
+#if UNITY_EDITOR
                 Debug.LogError("[GameManager] VibrationEffect 생성 실패");
+#endif
                 // 대체 방법: 직접 duration 전달 시도
                 vibratorService.Call("vibrate", vibrationDuration);
+#if UNITY_EDITOR
                 Debug.Log($"[GameManager] 대체 방법으로 진동 발생 (직접 duration 전달, {vibrationDuration}ms)");
+#endif
               }
             }
           }
@@ -164,23 +186,31 @@ public partial class GameManager
           {
             // Android API 26 미만에서는 직접 duration 전달 (밀리초 단위)
             vibratorService.Call("vibrate", vibrationDuration);
+#if UNITY_EDITOR
             Debug.Log($"[GameManager] 진동 발생 성공 (직접 duration 전달, {vibrationDuration}ms)");
+#endif
           }
         }
       }
     }
     catch (System.Exception e)
     {
+#if UNITY_EDITOR
       Debug.LogError($"[GameManager] 안드로이드 진동 발생 실패: {e.Message}\n스택 트레이스: {e.StackTrace}");
+#endif
       // 실패 시 기본 진동 시도
       try
       {
         Handheld.Vibrate();
+#if UNITY_EDITOR
         Debug.Log("[GameManager] Handheld.Vibrate()로 대체 진동 시도");
+#endif
       }
       catch (System.Exception fallbackException)
       {
+#if UNITY_EDITOR
         Debug.LogError($"[GameManager] 대체 진동도 실패: {fallbackException.Message}");
+#endif
       }
     }
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -260,6 +290,7 @@ public partial class GameManager
 #elif UNITY_EDITOR
     Debug.Log($"[GameManager] 패턴 진동 발생: {string.Join(", ", pattern)}");
 #else
+    // 기타 플랫폼
     Handheld.Vibrate();
 #endif
   }
