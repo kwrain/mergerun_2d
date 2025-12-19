@@ -25,6 +25,7 @@ public partial class StageManager : Singleton<StageManager>
   [SerializeField] private Transform mapParent;
   [SerializeField] private Transform mergeableParent;
   [SerializeField] private Transform obstacleParent;
+  [SerializeField] private float interstitialAdTimerDuration = 20f; // 무한모드 전면광고 타이머 시간 (초)
 
   [Header("[Data]")]
   [SerializeField] private StageDataTable stageDataTable;
@@ -45,6 +46,7 @@ public partial class StageManager : Singleton<StageManager>
 
   private bool ReadyInterstitialAd { get; set; }
   private Coroutine interstitialAdTimerCoroutine;
+  private bool prevInfinityMode = false; // 이전 모드를 추적 (스테이지 모드에서 무한모드로 전환 감지용)
 
   // Analytics 관련 변수
   private float stageStartTime; // 스테이지 시작 시간
@@ -251,14 +253,20 @@ public partial class StageManager : Singleton<StageManager>
 
     PlayerSetting(infinity);
 
+    // 모드 전환 감지: 스테이지 모드에서 무한모드로 전환되는 경우
+    bool isModeSwitched = !prevInfinityMode && infinity;
+    
     if (infinity)
     {
-      LoadInfinityStage(restart);
+      LoadInfinityStage(restart, isModeSwitched);
     }
     else
     {
       LoadStage(restart);
     }
+    
+    // 현재 모드 저장
+    prevInfinityMode = infinity;
 
     // 스테이지 시작 시간 기록
     stageStartTime = Time.time;
@@ -394,6 +402,14 @@ public partial class StageManager : Singleton<StageManager>
   {
     ClearStageObjects();
 
+    // 스테이지 모드로 변경될 때 무한모드 타이머 중지 및 상태 초기화
+    if (interstitialAdTimerCoroutine != null)
+    {
+      StopCoroutine(interstitialAdTimerCoroutine);
+      interstitialAdTimerCoroutine = null;
+    }
+    ReadyInterstitialAd = false;
+
     var stage = SOManager.Instance.PlayerPrefsModel.UserSavedStage;
 
     if (!restart)
@@ -510,19 +526,14 @@ public partial class StageManager : Singleton<StageManager>
 
   #region Infinity
 
-  private void LoadInfinityStage(bool restart = false)
+  private void LoadInfinityStage(bool restart = false, bool isModeSwitched = false)
   {
     ClearStageObjects();
 
-    // 기존 코루틴 중지
-    if (interstitialAdTimerCoroutine != null)
-    {
-      StopCoroutine(interstitialAdTimerCoroutine);
-      interstitialAdTimerCoroutine = null;
-    }
-
     if (restart)
     {
+      // 무한모드 재시작 시: 타이머를 중지하지 않고 유지
+      // ReadyInterstitialAd가 true면 광고를 보여주고 타이머를 다시 시작
       if (ReadyInterstitialAd)
       {
         // Analytics: ad_impression 이벤트 전송 (무한 모드 재시도)
@@ -534,8 +545,20 @@ public partial class StageManager : Singleton<StageManager>
 #if !UNITY_EDITOR
         AdManager.Instance.ShowInterstitial(InterstitialAdCompleted, InterstitialAdFailed);
 #endif
+        // 광고를 보여준 후 타이머를 다시 시작하여 다음 재시작 때도 광고가 노출되도록
         ReadyInterstitialAd = false;
+        // 타이머가 완료되어 null이 된 경우 다시 시작
+        if (interstitialAdTimerCoroutine == null)
+        {
+          interstitialAdTimerCoroutine = StartCoroutine(Timer(interstitialAdTimerDuration,
+          () =>
+           {
+             ReadyInterstitialAd = true;
+             interstitialAdTimerCoroutine = null;
+           }));
+        }
       }
+      // ReadyInterstitialAd가 false면 타이머가 아직 실행 중이므로 그대로 유지
       
       // restart일 때 stageData가 null이면 새로 로드
       if (stageData == null)
@@ -551,6 +574,36 @@ public partial class StageManager : Singleton<StageManager>
     }
     else
     {
+      // 무한모드 시작 시 (restart = false)
+      if (isModeSwitched)
+      {
+        // 스테이지 모드에서 무한모드로 전환: 기존 타이머 중지 후 새로 시작
+        if (interstitialAdTimerCoroutine != null)
+        {
+          StopCoroutine(interstitialAdTimerCoroutine);
+          interstitialAdTimerCoroutine = null;
+        }
+        ReadyInterstitialAd = false;
+        interstitialAdTimerCoroutine = StartCoroutine(Timer(interstitialAdTimerDuration,
+        () =>
+         {
+           ReadyInterstitialAd = true;
+           interstitialAdTimerCoroutine = null;
+         }));
+      }
+      else if (interstitialAdTimerCoroutine == null)
+      {
+        // 모드 전환이 아니지만 타이머가 없는 경우 (처음 무한모드 시작 등): 타이머 시작
+        ReadyInterstitialAd = false;
+        interstitialAdTimerCoroutine = StartCoroutine(Timer(interstitialAdTimerDuration,
+        () =>
+         {
+           ReadyInterstitialAd = true;
+           interstitialAdTimerCoroutine = null;
+         }));
+      }
+      // 모드 전환이 아니고 타이머가 이미 실행 중인 경우: 타이머 유지
+
       var infinityStages = stageDataTable.infinityStagedata.Values.ToList();
       if (infinityStages.Count == 0)
       {
@@ -572,13 +625,6 @@ public partial class StageManager : Singleton<StageManager>
     }
 
     GenerateStageObjects(stageData, 0f, true);
-
-    interstitialAdTimerCoroutine = StartCoroutine(Timer(30,
-    () =>
-     {
-       ReadyInterstitialAd = true;
-       interstitialAdTimerCoroutine = null;
-     }));
   }
 
   public void UnloadPrevInfiniytyStage()
