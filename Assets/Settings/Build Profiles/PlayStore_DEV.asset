@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 15003, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: PlayStore
+  m_Name: PlayStore_DEV
   m_EditorClassIdentifier: 
   m_AssetVersion: 1
   m_BuildTarget: 13
@@ -20,6 +20,8 @@ MonoBehaviour:
     rid: 4825450020651401468
   m_OverrideGlobalSceneList: 1
   m_Scenes:
+  - m_enabled: 1
+    m_path: Assets/Scenes/Splash.unity
   - m_enabled: 1
     m_path: Assets/Scenes/Game.unity
   m_ScriptingDefines: []
@@ -827,7 +829,7 @@ MonoBehaviour:
     - line: '|   webGLCloseOnQuit: 0'
     - line: '|   webWasm2023: 0'
     - line: '|   scriptingDefineSymbols:'
-    - line: '|     Android: DOTWEEN;LEVELPLAY_DEPENDENCIES_INSTALLED'
+    - line: '|     Android: DOTWEEN;LEVELPLAY_DEPENDENCIES_INSTALLED;DEV;UNITY_ANALYTICS_EVENT_LOGS'
     - line: '|     EmbeddedLinux: DOTWEEN'
     - line: '|     GameCoreScarlett: DOTWEEN'
     - line: '|     GameCoreXboxOne: DOTWEEN'
