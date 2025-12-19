@@ -128,7 +128,7 @@ public class MergeableBase : BaseObject
 
     levelData = table.GetLevelData(Level);
     // Debug.Log($"levelData : {levelData} / Level : {Level}");
-    text.text = levelData.PowerOfTwoString;
+    text.text = table.PowerOfTwoString(Level);
   }
 
   public virtual void SetData(MergeableData mergeableData)
