@@ -50,4 +50,4 @@ MonoBehaviour:
   gameModel: {fileID: 11400000, guid: e6ea52bc7da3a452983c7b6483d282f8, type: 2}
   deviceInfoModel: {fileID: 11400000, guid: 17f145298557947c5bc6c5ab9aa9ac78, type: 2}
   playerPrefsModel: {fileID: 11400000, guid: a241a515c520f4a7d98ea4ca306531e7, type: 2}
-  levelDataTable: {fileID: 11400000, guid: 2c101186326a24001904b285fa9c54c8, type: 2}
+  gameDataTable: {fileID: 11400000, guid: 2c101186326a24001904b285fa9c54c8, type: 2}

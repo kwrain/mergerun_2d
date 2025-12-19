@@ -33,7 +33,7 @@ public partial class GameManager
       customEvent["game_mode"] = gameMode;
       customEvent["stage_id"] = stageId;
       customEvent["retry_count"] = retryCount;
-
+      
       AnalyticsService.Instance.RecordEvent(customEvent);
       Debug.Log($"[Analytics] Stage Start: Mode={gameMode}, StageID={stageId}, Retry={retryCount}");
     }
@@ -310,7 +310,7 @@ public partial class GameManager
       {
         customEvent["network"] = network;
       }
-
+      
       AnalyticsService.Instance.RecordEvent(customEvent);
       Debug.Log($"[Analytics] Ad Impression: Type={adType}, Placement={placement}, Mode={gameMode}, StageID={stageId}");
     }
@@ -373,6 +373,7 @@ public partial class GameManager
     {
       Debug.LogError($"[Analytics] 이벤트 전송 실패: {e.Message}");
     }
+    
   }
 
   #endregion

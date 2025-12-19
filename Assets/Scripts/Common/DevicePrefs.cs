@@ -19,6 +19,8 @@ public enum EDevicePrefs
 
   ANDROID_NOTIFICATION_PERMISSION_CHECK,
 
+  ANDROID_ANALYTICS_CONSENT, // 안드로이드 애널리틱스 데이터 수집 동의 여부
+
   MAX,
 }
 
