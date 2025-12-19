@@ -157,7 +157,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
     // 팔다리 Mergeable Object 별 Color HexCode
     // 11보다 큰 경우 1부터 다시 시작 (12 -> 1, 13 -> 2, ...)
     int normalizedLevel = ((level - 1) % 11) + 1;
-    Debug.Log("normalizedLevel: " + normalizedLevel + " / level: " + level);
+    // Debug.Log("normalizedLevel: " + normalizedLevel + " / level: " + level);
     string hex = normalizedLevel switch
     {
       1 => "C01B09",// 2 : #C01B09
@@ -399,7 +399,7 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           // 이동을 멈추고, 죽는 연출 이후, 광고를 노출한다.
           // 리워드광고 완료 이후 스테이지 재시작 처리를 한다.
           Movable = false;
-          goal.Animator.SetTrigger("fail");
+          goal.SetAnimation("fail");
           SoundManager.Instance.PlayFX(SoundFxTypes.DEFEAT);
           
           // Analytics: stage_fail 이벤트 전송 (무한 모드 벽 충돌)
@@ -411,16 +411,16 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
           }
           StartCoroutine(Timer(1f, () =>
           {
-            goal.Animator.SetTrigger("idle");
+            goal.SetAnimation("idle");
             StageManager.Instance.StartStage(true, true);
           }));
         }
         else
         {
-          goal.Animator.SetTrigger("pass");
+          goal.SetAnimation("pass");
           StartCoroutine(Timer(1f, () =>
           {
-            goal.Animator.SetTrigger("idle");
+            goal.SetAnimation("idle");
           }));
 
           StageManager.Instance.CompleteInfinityStage();
@@ -428,10 +428,10 @@ public class MergeablePlayer : MergeableBase, ITouchEvent
       }
       else
       {
-        goal.Animator.SetTrigger("pass");
+        goal.SetAnimation("pass");
         StartCoroutine(Timer(1f, () =>
         {
-          goal.Animator.SetTrigger("idle");
+          goal.SetAnimation("idle");
           StageManager.Instance.CompleteStage();
         }));
       }

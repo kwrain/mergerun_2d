@@ -189,7 +189,6 @@ GameObject:
   - component: {fileID: 5002694711803973284}
   - component: {fileID: 5035774991657833407}
   - component: {fileID: 403711766806546266}
-  - component: {fileID: 4386788343904531332}
   m_Layer: 15
   m_Name: Goal
   m_TagString: Untagged
@@ -330,7 +329,7 @@ MonoBehaviour:
   boxCollider: {fileID: 8680537499206238652}
   overlapPercentage: 0.1
   limitRelativeLevel: 0
-  animator: {fileID: 4386788343904531332}
+  animator: {fileID: 0}
   spriteRenderer: {fileID: 5002694711803973284}
   textMeshPro: {fileID: 2163351022864266561}
 --- !u!114 &403711766806546266
@@ -368,27 +367,5 @@ MonoBehaviour:
   onViewChanged:
     m_PersistentCalls:
       m_Calls: []
-  foldoutEvents: 0
+  foldoutEvents: 1
   lastPropertyForInspector: 0
---- !u!95 &4386788343904531332
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513020725014085912}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: daa14cd22affe45679745d9d3a763a71, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
