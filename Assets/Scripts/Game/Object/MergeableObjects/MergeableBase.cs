@@ -64,14 +64,14 @@ public class MergeableBase : BaseObject
     var otherObject = collision.gameObject.GetComponent<MergeableObject>();
     if (otherObject != null)
     {
-      Debug.Log($"otherObject.IsMerging : {otherObject.IsMerging} / Level : {otherObject.Level} / Level : {Level}");
+      // Debug.Log($"otherObject.IsMerging : {otherObject.IsMerging} / Level : {otherObject.Level} / Level : {Level}");
       
       // otherObject가 병합 중인 경우, 진행 중인 MoveComplete를 즉시 완료하고 Merge 실행
       if (otherObject.IsMerging)
       {
         // 병합 중인 오브젝트의 원래 레벨 확인 (병합 중이면 Level이 이미 증가했을 수 있음)
-        int otherOriginalLevel = otherObject.Level - 1; // 병합 중이면 이미 증가했으므로 1 감소
-        if (Level == otherOriginalLevel)
+        // int otherOriginalLevel = otherObject.Level - 1; // 병합 중이면 이미 증가했으므로 1 감소
+        if (Level == otherObject.Level)
         {
           otherObject.CompleteMoveImmediately();
           Merge(otherObject);
