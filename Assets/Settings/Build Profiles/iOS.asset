@@ -20,7 +20,7 @@ MonoBehaviour:
     rid: 7790430302625857538
   m_OverrideGlobalSceneList: 1
   m_Scenes:
-  - m_enabled: 0
+  - m_enabled: 1
     m_path: Assets/Scenes/Splash.unity
   - m_enabled: 1
     m_path: Assets/Scenes/Game.unity
@@ -201,7 +201,7 @@ MonoBehaviour:
     - line: '|   buildNumber:'
     - line: '|     Standalone: 0'
     - line: '|     VisionOS: 0'
-    - line: '|     iPhone: 0'
+    - line: '|     iPhone: 17'
     - line: '|     tvOS: 0'
     - line: '|   overrideDefaultApplicationIdentifier: 1'
     - line: '|   AndroidBundleVersionCode: 1'
